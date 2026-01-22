@@ -1,9 +1,14 @@
 const AnalyticsSection = ({projects}) => {
+  const validProjects = projects?.filter(p => p.title && p.title.trim() !== "") || [];
+  const projectCount = validProjects.length;
+  
   const stats = [
-    { label: "Projects", value: projects?.length ?? 0 },
-    { label: "Activity", value: "12" },
-    { label: "Reach", value: "1.4k" },
+    { label: "Projects", value: projectCount },
+    { label: "Activity", value: projectCount * 4 },
+    { label: "Reach", value: projectCount > 0 ? `${(projectCount * 0.5).toFixed(1)}k` : "0" },
   ];
+
+  const isEmpty = projectCount === 0;
 
   return (
     <section style={{ marginTop: "0" }}>
@@ -30,7 +35,7 @@ const AnalyticsSection = ({projects}) => {
           lineHeight: "1.5",
         }}
       >
-        Analytics preview (Detailed insights coming soon)
+        {isEmpty ? "Add projects to see analytics" : "Analytics preview (Detailed insights coming soon)"}
       </p>
 
       {/* Stat cards */ }
@@ -146,19 +151,91 @@ const AnalyticsSection = ({projects}) => {
         ))}
       </div>
 
-      <div
-        style={{
-          background: "var(--color-bg-surface)",
-          borderRadius: "20px",
-          padding: "20px 24px 24px 24px",
-          boxShadow: "var(--shadow-lg), var(--shadow-glow-subtle)",
-          border: "1px solid var(--color-border)",
-          position: "relative",
-          overflow: "hidden",
-          height: "275px"
-        }}
-      >
-        <div style={{
+      {isEmpty ? (
+        <div
+          style={{
+            background: "var(--color-bg-surface)",
+            borderRadius: "20px",
+            padding: "40px 24px",
+            boxShadow: "var(--shadow-lg)",
+            border: "2px dashed var(--color-border)",
+            textAlign: "center",
+            transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.4)";
+            e.currentTarget.style.boxShadow = "var(--shadow-xl), var(--shadow-glow-subtle)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--color-border)";
+            e.currentTarget.style.boxShadow = "var(--shadow-lg)";
+          }}
+        >
+          <div style={{
+            position: "absolute",
+            top: "-20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "200px",
+            height: "200px",
+            background: "radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%)",
+            pointerEvents: "none",
+            filter: "blur(40px)",
+          }} />
+          
+          <div style={{
+            width: "56px",
+            height: "56px",
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 16px",
+            fontSize: "28px",
+            boxShadow: "0 0 30px rgba(59, 130, 246, 0.4)",
+            position: "relative",
+          }}>
+            📊
+          </div>
+          
+          <p style={{
+            fontSize: "16px",
+            fontWeight: "700",
+            color: "var(--color-text-primary)",
+            marginBottom: "8px",
+            letterSpacing: "-0.01em",
+            position: "relative",
+          }}>
+            No analytics yet
+          </p>
+          
+          <p style={{
+            fontSize: "14px",
+            color: "var(--color-text-muted)",
+            margin: 0,
+            lineHeight: "1.6",
+            position: "relative",
+          }}>
+            Add your first project to start tracking growth
+          </p>
+        </div>
+      ) : (
+        <div
+          style={{
+            background: "var(--color-bg-surface)",
+            borderRadius: "20px",
+            padding: "20px 24px 24px 24px",
+            boxShadow: "var(--shadow-lg), var(--shadow-glow-subtle)",
+            border: "1px solid var(--color-border)",
+            position: "relative",
+            overflow: "hidden",
+            height: "275px"
+          }}
+        >
+          <div style={{
           position: "absolute",
           top: "-50%",
           right: "-10%",
@@ -205,13 +282,13 @@ const AnalyticsSection = ({projects}) => {
 
           {/* Area under the line */}
           <path
-            d={`M 0,240 L 55,210 L 110,215 L 165,185 L 220,175 L 275,155 L 330,${240 - projects.length * 35} L 330,280 L 0,280 Z`}
+            d={`M 0,240 L 55,210 L 110,215 L 165,185 L 220,175 L 275,155 L 330,${240 - projectCount * 35} L 330,280 L 0,280 Z`}
             fill="url(#chartGradient)"
           />
 
           {/* Line */}
           <polyline
-            points={`0,240 55,210 110,215 165,185 220,175 275,155 330,${240 - projects.length * 35}`}
+            points={`0,240 55,210 110,215 165,185 220,175 275,155 330,${240 - projectCount * 35}`}
             fill="none"
             stroke="url(#lineGradient)"
             strokeWidth="2.5"
@@ -229,7 +306,7 @@ const AnalyticsSection = ({projects}) => {
 
           {/* Dots */}
           {[0, 55, 110, 165, 220, 275, 330].map((x, i) => {
-            const y = [240, 210, 215, 185, 175, 155, 240 - projects.length * 35][i];
+            const y = [240, 210, 215, 185, 175, 155, 240 - projectCount * 35][i];
             return (
               <g key={i}>
                 <circle
@@ -266,7 +343,8 @@ const AnalyticsSection = ({projects}) => {
         >
           Growth over time (preview)
         </p>
-      </div>
+        </div>
+      )}
 
       {/* shimmer keyframes */}
       <style>

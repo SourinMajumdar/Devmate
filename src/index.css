@@ -284,6 +284,37 @@ body::after {
   .timeline-line {
     display: none !important;
   }
+
+  /* About section mobile adjustments */
+  .about-section {
+    margin: 32px 20px 32px 20px !important;
+    padding: 28px 20px !important;
+  }
+
+  .about-section h3 {
+    font-size: 22px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .about-paragraph {
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+  }
+
+  /* Footer mobile adjustments */
+  .footer {
+    margin-top: 32px !important;
+    padding: 24px 0 !important;
+  }
+
+  .footer-content {
+    padding: 0 20px !important;
+    gap: 14px !important;
+  }
+
+  .footer-made-with {
+    font-size: 13px !important;
+  }
 }
 
 /* Gradient border effect on hover */

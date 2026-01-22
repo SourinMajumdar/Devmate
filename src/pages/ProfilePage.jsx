@@ -8,6 +8,7 @@ import EditModal from "../components/EditModal.jsx";
 import ProjectModal from "../components/ProjectModal.jsx";
 import DeleteProjectModal from "../components/DeleteProjectModal.jsx";
 import Footer from "../components/Footer.jsx";
+import About from "../components/About.jsx";
 
 const ProfilePage = ({
   profile,
@@ -158,10 +159,10 @@ const ProfilePage = ({
         </div>
 
         {/* Content Timeline - Full Width */}
-        <ContentTimeline />
+        <ContentTimeline projects={projects} profile={profile} />
       </div>
 
-      {/* Footer */}
+      <About/>
       <Footer />
 
       {/* Edit Modal */}

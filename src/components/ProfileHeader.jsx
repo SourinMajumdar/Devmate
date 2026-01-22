@@ -1,6 +1,117 @@
 import { Github, Linkedin, Globe, Pencil } from "lucide-react";
 
 const ProfileHeader = ({ profile, onEditClick }) => {
+  const isEmpty =
+  !profile.name &&
+  !profile.username &&
+  !profile.role &&
+  !profile.bio;
+  
+  if (isEmpty) {
+    return (
+      <div style={{
+        background: "var(--color-bg-surface)",
+        border: "2px dashed var(--color-border)",
+        borderRadius: "20px",
+        padding: "48px 32px",
+        textAlign: "center",
+        boxShadow: "var(--shadow-lg)",
+        position: "relative",
+        overflow: "hidden",
+        transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.4)";
+        e.currentTarget.style.boxShadow = "var(--shadow-xl), var(--shadow-glow-subtle)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "var(--color-border)";
+        e.currentTarget.style.boxShadow = "var(--shadow-lg)";
+      }}
+      >
+        {/* Background gradient */}
+        <div style={{
+          position: "absolute",
+          top: "-20px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "200px",
+          height: "200px",
+          background: "radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)",
+          pointerEvents: "none",
+          filter: "blur(40px)",
+        }} />
+
+        {/* Icon */}
+        <div style={{
+          width: "64px",
+          height: "64px",
+          borderRadius: "50%",
+          background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 20px",
+          fontSize: "32px",
+          boxShadow: "0 0 30px rgba(59, 130, 246, 0.4)",
+          position: "relative",
+        }}>
+          👤
+        </div>
+
+        <h3 style={{
+          fontSize: "20px",
+          fontWeight: "700",
+          color: "var(--color-text-primary)",
+          marginBottom: "8px",
+          letterSpacing: "-0.01em",
+          position: "relative",
+        }}>
+          No profile yet
+        </h3>
+
+        <p style={{
+          fontSize: "14px",
+          color: "var(--color-text-muted)",
+          marginBottom: "24px",
+          lineHeight: "1.6",
+          maxWidth: "300px",
+          margin: "0 auto 24px",
+          position: "relative",
+        }}>
+          Create your profile to showcase your skills and experience
+        </p>
+
+        <button
+          onClick={onEditClick}
+          style={{
+            padding: "12px 24px",
+            borderRadius: "10px",
+            border: "none",
+            background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
+            color: "#fff",
+            fontWeight: "600",
+            cursor: "pointer",
+            fontSize: "14px",
+            boxShadow: "var(--shadow-md)",
+            transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+            position: "relative",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.boxShadow = "var(--shadow-lg), var(--shadow-glow)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "var(--shadow-md)";
+          }}
+        >
+          + Create Profile
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div
       className="profile-card"

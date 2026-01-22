@@ -1,4 +1,4 @@
-const ContentTimeline = () => {
+const ContentTimeline = ({ projects, profile }) => {
   const DOT_COLORS = [
     {
       bg: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", // blue
@@ -27,42 +27,48 @@ const ContentTimeline = () => {
     },
   ];
 
-  const timeline = [
-    {
-      id: 1,
-      text: "Shipped Devmate MVP",
-      time: "Today",
-    },
-    {
-      id: 2,
-      text: "Updated developer portfolio",
-      time: "2 days ago",
-    },
-    {
-      id: 3,
-      text: "Published a technical blog post",
-      time: "1 week ago",
-    },
-    {
-      id: 4,
-      text: "Deployed TrackMate (Job Application Tracker",
-      time: "2 weeks ago",
-    }
-  ];
+  // Action verbs for variety
+  const actionVerbs = ["Deployed", "Finished", "Launched", "Completed", "Built", "Released"];
+  
+  // Generate timeline from projects
+  const validProjects = projects?.filter(p => p.title && p.title.trim() !== "") || [];
+  const profileExists = profile?.name && profile.name.trim() !== "";
+  
+  const timeline = validProjects.map((project, index) => ({
+    id: project.id || index,
+    text: `${actionVerbs[index % actionVerbs.length]} ${project.title}`,
+    time: index === 0 ? "Today" : 
+          index === 1 ? "2 days ago" : 
+          index === 2 ? "1 week ago" : 
+          `${index} weeks ago`,
+  }));
+
+  // Add "Published a blog post" entry if profile exists
+  if (profileExists) {
+    timeline.push({
+      id: "blog-post",
+      text: "Published a blog post",
+      time: validProjects.length > 0 ? `${validProjects.length + 1} weeks ago` : "2 weeks ago",
+    });
+  }
+
+  const isEmpty = timeline.length === 0;
 
   return (
     <section style={{ marginTop: "24px", maxWidth: "1274px", margin: "24px auto 0 auto", position: "relative" }}>
       {/* Connecting line */}
-      <div style={{
-        position: "absolute",
-        left: "calc(50% - 1px)",
-        top: "120px",
-        width: "2px",
-        height: "calc(100% - 140px)",
-        background: "linear-gradient(180deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(16, 185, 129, 0.2) 100%)",
-        pointerEvents: "none",
-        zIndex: 0,
-      }} className="timeline-line" />
+      {!isEmpty && (
+        <div style={{
+          position: "absolute",
+          left: "calc(50% - 1px)",
+          top: "120px",
+          width: "2px",
+          height: "calc(100% - 140px)",
+          background: "linear-gradient(180deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(16, 185, 129, 0.2) 100%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }} className="timeline-line" />
+      )}
       
       <h2 style={{ 
         fontSize: "26px", 
@@ -88,18 +94,92 @@ const ContentTimeline = () => {
           lineHeight: "1.5",
         }}
       >
-        Activity preview (Tracking coming soon)
+        {isEmpty ? "Your project timeline will appear here" : "Activity preview (Tracking coming soon)"}
       </p>
 
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "1fr 1fr",
-        gap: "14px",
-        position: "relative",
-        zIndex: 1,
-      }}
-      className="timeline-grid"
-      >
+      {isEmpty ? (
+        <div
+          style={{
+            background: "var(--color-bg-surface)",
+            borderRadius: "20px",
+            padding: "48px 32px",
+            boxShadow: "var(--shadow-lg)",
+            border: "2px dashed var(--color-border)",
+            textAlign: "center",
+            transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "rgba(16, 185, 129, 0.4)";
+            e.currentTarget.style.boxShadow = "var(--shadow-xl), 0 0 30px -5px rgba(16, 185, 129, 0.15)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--color-border)";
+            e.currentTarget.style.boxShadow = "var(--shadow-lg)";
+          }}
+        >
+          <div style={{
+            position: "absolute",
+            top: "-20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "250px",
+            height: "250px",
+            background: "radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%)",
+            pointerEvents: "none",
+            filter: "blur(50px)",
+          }} />
+          
+          <div style={{
+            width: "64px",
+            height: "64px",
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 20px",
+            fontSize: "32px",
+            boxShadow: "0 0 30px rgba(16, 185, 129, 0.4)",
+            position: "relative",
+          }}>
+            📅
+          </div>
+          
+          <p style={{
+            fontSize: "20px",
+            fontWeight: "700",
+            color: "var(--color-text-primary)",
+            marginBottom: "8px",
+            letterSpacing: "-0.01em",
+            position: "relative",
+          }}>
+            No activity yet
+          </p>
+          
+          <p style={{
+            fontSize: "14px",
+            color: "var(--color-text-muted)",
+            margin: 0,
+            lineHeight: "1.6",
+            maxWidth: "400px",
+            margin: "0 auto",
+            position: "relative",
+          }}>
+            Your timeline will automatically track when you add projects
+          </p>
+        </div>
+      ) : (
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: "1fr 1fr",
+          gap: "14px",
+          position: "relative",
+          zIndex: 1,
+        }}
+        className="timeline-grid"
+        >
         {timeline.map((item, index) => {
           const color = DOT_COLORS[index % DOT_COLORS.length];
 
@@ -184,7 +264,8 @@ const ContentTimeline = () => {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

@@ -1,13 +1,13 @@
 export const profile = {
-  name: "Sourin",
-  username: "@sourinuwu",
-  role: "Frontend Developer",
-  bio: "I build clean UI and thoughtful developer experiences.",
-  location: "India",
-  tech: ["React", "Vite", "Tailwind", "Framer Motion"],
+  name: "",
+  username: "",
+  role: "",
+  bio: "",
+  location: "",
+  tech: [],
   links: {
-    github: "https://github.com/",
-    linkedin: "https://linkedin.com/",
-    portfolio: "#",
+    github: "",
+    linkedin: "",
+    portfolio: "",
   },
 };

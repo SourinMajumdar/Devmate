@@ -3,13 +3,13 @@ import kombaiLogo from "../assets/kombai.png";
 
 const Footer = () => {
   return (
-    <footer style={{
+    <footer className="footer" style={{
       background: "var(--color-bg-surface)",
       borderTop: "1px solid var(--color-border)",
       padding: "32px 0",
       marginTop: "48px",
     }}>
-      <div style={{
+      <div className="footer-content" style={{
         maxWidth: "1200px",
         margin: "0 auto",
         padding: "0 32px",
@@ -19,13 +19,15 @@ const Footer = () => {
         gap: "16px",
       }}>
         {/* Made using */}
-        <div style={{
+        <div className="footer-made-with" style={{
           display: "flex",
           alignItems: "center",
           gap: "8px",
           fontSize: "14px",
           color: "var(--color-text-secondary)",
           fontWeight: "500",
+          flexWrap: "wrap",
+          justifyContent: "center",
         }}>
           <span>Made using</span>
           <div style={{
