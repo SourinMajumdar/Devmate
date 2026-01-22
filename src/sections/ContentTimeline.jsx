@@ -1,0 +1,192 @@
+const ContentTimeline = () => {
+  const DOT_COLORS = [
+    {
+      bg: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", // blue
+      glow: "0 0 15px rgba(59, 130, 246, 0.6)",
+      aura: "rgba(59, 130, 246, 0.14)",
+    },
+    {
+      bg: "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)", // violet
+      glow: "0 0 15px rgba(139, 92, 246, 0.6)",
+      aura: "rgba(139, 92, 246, 0.14)",
+    },
+    {
+      bg: "linear-gradient(135deg, #22c55e 0%, #15803d 100%)", // green
+      glow: "0 0 15px rgba(34, 197, 94, 0.6)",
+      aura: "rgba(34, 197, 94, 0.14)",
+    },
+    {
+      bg: "linear-gradient(135deg, #f59e0b 0%, #b45309 100%)", // amber
+      glow: "0 0 15px rgba(245, 158, 11, 0.6)",
+      aura: "rgba(245, 158, 11, 0.14)",
+    },
+    {
+      bg: "linear-gradient(135deg, #ec4899 0%, #9d174d 100%)", // pink
+      glow: "0 0 15px rgba(236, 72, 153, 0.6)",
+      aura: "rgba(236, 72, 153, 0.14)",
+    },
+  ];
+
+  const timeline = [
+    {
+      id: 1,
+      text: "Shipped Devmate MVP",
+      time: "Today",
+    },
+    {
+      id: 2,
+      text: "Updated developer portfolio",
+      time: "2 days ago",
+    },
+    {
+      id: 3,
+      text: "Published a technical blog post",
+      time: "1 week ago",
+    },
+    {
+      id: 4,
+      text: "Deployed TrackMate (Job Application Tracker",
+      time: "2 weeks ago",
+    }
+  ];
+
+  return (
+    <section style={{ marginTop: "24px", maxWidth: "1274px", margin: "24px auto 0 auto", position: "relative" }}>
+      {/* Connecting line */}
+      <div style={{
+        position: "absolute",
+        left: "calc(50% - 1px)",
+        top: "120px",
+        width: "2px",
+        height: "calc(100% - 140px)",
+        background: "linear-gradient(180deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(16, 185, 129, 0.2) 100%)",
+        pointerEvents: "none",
+        zIndex: 0,
+      }} className="timeline-line" />
+      
+      <h2 style={{ 
+        fontSize: "26px", 
+        fontWeight: "800", 
+        marginBottom: "10px", 
+        marginTop: "50px", 
+        letterSpacing: "-0.03em", 
+        background: "linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        filter: "drop-shadow(0 0 20px rgba(16, 185, 129, 0.3))",
+        position: "relative",
+      }}>
+        Content Timeline
+      </h2>
+
+      <p
+        style={{
+          fontSize: "14px",
+          color: "var(--color-text-muted)",
+          marginBottom: "20px",
+          lineHeight: "1.5",
+        }}
+      >
+        Activity preview (Tracking coming soon)
+      </p>
+
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "1fr 1fr",
+        gap: "14px",
+        position: "relative",
+        zIndex: 1,
+      }}
+      className="timeline-grid"
+      >
+        {timeline.map((item, index) => {
+          const color = DOT_COLORS[index % DOT_COLORS.length];
+
+          return (
+            <div
+              key={item.id}
+              style={{
+                display: "flex",
+                gap: "16px",
+                alignItems: "flex-start",
+                background: "var(--color-bg-surface)",
+                padding: "18px 20px",
+                borderRadius: "14px",
+                boxShadow: "var(--shadow-md)",
+                border: "1px solid var(--color-border)",
+                transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateX(4px)";
+                e.currentTarget.style.boxShadow = "var(--shadow-lg), var(--shadow-glow-subtle)";
+                e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.3)";
+                e.currentTarget.style.background = "var(--color-bg-hover)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateX(0)";
+                e.currentTarget.style.boxShadow = "var(--shadow-md)";
+                e.currentTarget.style.borderColor = "var(--color-border)";
+                e.currentTarget.style.background = "var(--color-bg-surface)";
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-20px",
+                  right: "-20px",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, ${color.aura} 0%, transparent 70%)`,
+                  pointerEvents: "none",
+                }}
+              />
+
+              {/* Timeline dot */}
+              <div
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  borderRadius: "50%",
+                  background: color.bg,
+                  marginTop: "4px",
+                  flexShrink: 0,
+                  boxShadow: color.glow,
+                }}
+              />
+
+              {/* Content */}
+              <div style={{ flex: 1 }}>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "var(--color-text-primary)",
+                    margin: 0,
+                    fontWeight: "600",
+                    lineHeight: "1.5",
+                  }}
+                >
+                  {item.text}
+                </p>
+                <span
+                  style={{
+                    fontSize: "12px",
+                    color: "var(--color-text-muted)",
+                    fontWeight: "500",
+                  }}
+                >
+                  {item.time}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+
+export default ContentTimeline;

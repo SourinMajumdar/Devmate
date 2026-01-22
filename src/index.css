@@ -1,0 +1,470 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Dark Theme Color Palette - Premium Developer Tool */
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-primary-light: #60a5fa;
+  --color-accent: #8b5cf6;
+  --color-accent-light: #a78bfa;
+  
+  /* Dark Backgrounds - Layered depth */
+  --color-bg-base: #0a0a0a;
+  --color-bg-elevated: #141414;
+  --color-bg-surface: #1a1a1a;
+  --color-bg-hover: #202020;
+  
+  /* Dark Text - High contrast */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-subtle: #64748b;
+  
+  /* Dark Borders */
+  --color-border-light: rgba(255, 255, 255, 0.06);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.15);
+  
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  
+  /* Dark Shadows with glow */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 6px -2px rgba(0, 0, 0, 0.5), 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 10px 20px -5px rgba(0, 0, 0, 0.6), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 30px -5px rgba(59, 130, 246, 0.3), 0 0 15px -5px rgba(59, 130, 246, 0.2);
+  --shadow-glow-accent: 0 0 30px -5px rgba(139, 92, 246, 0.3), 0 0 15px -5px rgba(139, 92, 246, 0.2);
+  --shadow-glow-subtle: 0 0 20px -5px rgba(59, 130, 246, 0.15);
+  
+  /* Effects */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Additional Colors */
+  --color-purple: #8b5cf6;
+  --color-purple-light: #a78bfa;
+  --color-green: #10b981;
+  --color-green-light: #34d399;
+  --color-amber: #f59e0b;
+  --color-pink: #ec4899;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
+
+  color-scheme: dark;
+  color: #f1f5f9;
+  background-color: #0a0a0a;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  letter-spacing: -0.011em;
+  background: var(--color-bg-base);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated gradient mesh background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.15), transparent),
+    radial-gradient(ellipse 60% 80% at 0% 50%, rgba(139, 92, 246, 0.1), transparent),
+    radial-gradient(ellipse 60% 80% at 100% 50%, rgba(16, 185, 129, 0.08), transparent);
+  pointer-events: none;
+  z-index: 0;
+  animation: meshMove 20s ease-in-out infinite;
+}
+
+/* Subtle grid pattern */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes meshMove {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+}
+
+/* Pulse animation for chart dots */
+@keyframes chartPulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Fade in from bottom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Grid */
+@media (max-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .timeline-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Add spacing for Projects section on mobile */
+  .main-grid > div:last-child {
+    margin-top: 24px;
+  }
+
+  /* Stats cards layout for mobile */
+  .stat-content-desktop {
+    display: none !important;
+  }
+
+  .stat-content-mobile {
+    display: flex !important;
+  }
+
+  /* Hide desktop edit button on mobile */
+  .edit-profile-button-desktop {
+    display: none !important;
+  }
+
+  /* Show mobile edit button */
+  .edit-profile-button-mobile {
+    display: flex !important;
+  }
+
+  /* Reduce profile name size on mobile */
+  .profile-name {
+    font-size: 22px !important;
+  }
+
+  /* Reduce Devmate page heading on mobile */
+  .page-heading {
+    font-size: 36px !important;
+    height: 44px !important;
+  }
+
+  .page-heading.hovered {
+    font-size: 40px !important;
+  }
+
+  /* Reduce subtitle on mobile */
+  .page-subtitle {
+    font-size: 14px !important;
+  }
+
+  /* Reduce page icon on mobile */
+  .page-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  /* Profile card mobile adjustments - reduce crowding */
+  .profile-card {
+    padding: 20px !important;
+  }
+
+  .profile-header-row {
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .profile-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 24px !important;
+  }
+
+  .profile-username {
+    font-size: 14px !important;
+  }
+
+  .profile-role {
+    font-size: 16px !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .profile-bio {
+    font-size: 13px !important;
+    margin-top: 8px !important;
+    line-height: 1.5 !important;
+  }
+
+  .profile-tech-stack {
+    margin-top: 12px !important;
+    gap: 6px !important;
+  }
+
+  .profile-tech-stack span {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+
+  .profile-links {
+    margin-top: 12px !important;
+    gap: 12px !important;
+  }
+
+  /* Stat cards - remove left padding on mobile */
+  .stat-card {
+    padding-left: 14px !important;
+  }
+
+  /* Reduce container padding on mobile */
+  .main-container {
+    padding: 32px 20px !important;
+  }
+
+  /* Hide timeline connecting line on mobile */
+  .timeline-line {
+    display: none !important;
+  }
+}
+
+/* Gradient border effect on hover */
+.card-base:hover .gradient-border,
+div:hover > .gradient-border {
+  opacity: 1;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Page entrance animations */
+.main-container > * {
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.main-container > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.main-container > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.main-container > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Utility Classes for Dark Theme */
+.card-base {
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-base);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-subtle);
+  border-color: rgba(59, 130, 246, 0.3);
+  background: var(--color-bg-hover);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--color-bg-subtle);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg), 0 0 20px -5px rgba(239, 68, 68, 0.2);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-hover) 50%,
+    var(--color-bg-surface) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
