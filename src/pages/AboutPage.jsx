@@ -195,11 +195,10 @@ const AboutPage = ({ onBackToHome, onGoToDashboard }) => {
                 key={index}
                 variants={fadeIn}
                 whileHover={{
-                  y: -5,
+                  y: -4,
                   boxShadow: "0 12px 24px rgba(79, 70, 229, 0.12)",
                   borderColor: "rgba(124, 58, 237, 0.6)",
-                  borderWidth: "1px",
-                  transition: { duration: 0.1, ease: "easeOut" }
+                  transition: { duration: 0.2, ease: "easeOut" }
                 }}
                 className="card"
                 style={{
@@ -207,16 +206,14 @@ const AboutPage = ({ onBackToHome, onGoToDashboard }) => {
                   transition: "all 0.3s ease",
                 }}
               >
-                <motion.div 
-                  whileHover={{ 
-                    rotate: [0, -5, 5, -5, 0],
-                    transition: { duration: 0.5 }
-                  }}
+                <div 
                   style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-start",
                     marginBottom: "var(--spacing-4)",
+                    width: "32px",
+                    height: "32px",
                   }}
                 >
                   <feature.icon style={{ 
@@ -224,7 +221,7 @@ const AboutPage = ({ onBackToHome, onGoToDashboard }) => {
                     height: "32px", 
                     color: "var(--color-primary)" 
                   }} />
-                </motion.div>
+                </div>
                 <h4 style={{
                   fontSize: "18px",
                   fontWeight: "600",
