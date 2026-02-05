@@ -1,306 +1,192 @@
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, FolderPlus, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
-const ProjectsSection = ({ projects, onAddProject, onEditProject, onDeleteProject }) => {
-  const canAddMore = projects.length < 3;
+const ProjectsSection = ({ projects, onAddProject, onEditProject, onDeleteProject, onSeeAll, isAllProjectsView = false }) => {
+  const displayProjects = isAllProjectsView ? projects : projects.slice(0, 3);
+  const hasMoreProjects = projects.length > 3;
 
   return (
-    <section style={{ marginTop: "0" }}>
-      
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-        >
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: isAllProjectsView ? 0 : 0.3 }}
+      className="projects-section-mobile"
+      style={{
+        background: "transparent",
+        padding: 0,
+      }}
+    >
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "var(--spacing-5)",
+      }}>
         <h2 style={{ 
-          fontSize: "26px", 
-          fontWeight: "800", 
+          fontSize: "18px", 
+          fontWeight: "600", 
           margin: 0, 
-          letterSpacing: "-0.03em", 
-          background: "linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          filter: "drop-shadow(0 0 20px rgba(139, 92, 246, 0.3))",
-          position: "relative",
+          color: "var(--color-text-primary)",
         }}>
-          Projects
+          Projects {!isAllProjectsView && projects.length > 0 && `(${projects.length})`}
         </h2>
 
-        {canAddMore && (
-          <button onClick={onAddProject} style={addButtonStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(59, 130, 246, 0.15)";
-              e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.4)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(59, 130, 246, 0.1)";
-              e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.2)";
-            }}
-          >
-            + Add Project
-          </button>
-        )}
-      </div>
-      {projects.length === 0 && (
-        <div
+        <button 
+          onClick={onAddProject} 
+          className="btn-primary"
           style={{
-            background: "var(--color-bg-surface)",
-            borderRadius: "20px",
-            padding: "40px 32px",
-            boxShadow: "var(--shadow-lg)",
-            border: "2px dashed var(--color-border)",
-            textAlign: "center",
-            transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.4)";
-            e.currentTarget.style.boxShadow = "var(--shadow-xl), var(--shadow-glow-subtle)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "var(--color-border)";
-            e.currentTarget.style.boxShadow = "var(--shadow-lg)";
+            fontSize: "13px",
+            padding: "7px 14px",
           }}
         >
+          + Add Project
+        </button>
+      </div>
+
+      {projects.length === 0 && (
+        <div className="card" style={{
+          padding: "var(--spacing-8) var(--spacing-6)",
+          textAlign: "center",
+          border: "1px dashed var(--color-border)",
+        }}>
           <div style={{
-            width: "56px",
-            height: "56px",
+            width: "48px",
+            height: "48px",
             borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)",
+            background: "var(--color-primary-light)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            margin: "0 auto 16px",
-            fontSize: "28px",
-            boxShadow: "0 0 30px rgba(59, 130, 246, 0.4)",
+            margin: "0 auto var(--spacing-4)",
           }}>
-            ✨
+            <FolderPlus style={{ width: "24px", height: "24px", color: "var(--color-primary)" }} />
           </div>
-          <p
-            style={{
-              fontSize: "16px",
-              fontWeight: "700",
-              color: "var(--color-text-primary)",
-              marginBottom: "8px",
-              letterSpacing: "-0.01em",
-            }}
-          >
+
+          <p style={{
+            fontSize: "14px",
+            fontWeight: "500",
+            color: "var(--color-text-primary)",
+            marginBottom: "var(--spacing-2)",
+          }}>
             No projects yet
           </p>
 
-          <p
-            style={{
-              fontSize: "14px",
-              color: "var(--color-text-muted)",
-              margin: 0,
-              lineHeight: "1.6",
-            }}
-          >
-            Add your first project to showcase your incredible work
+          <p style={{
+            fontSize: "14px",
+            color: "var(--color-text-secondary)",
+            margin: 0,
+          }}>
+            Add your first project to get started
           </p>
         </div>
       )}
 
       {projects.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-          {projects.map((project, index) => (
-            <div
-              key={project.id}
-              style={{
-                background: "var(--color-bg-surface)",
-                borderRadius: "18px",
-                padding: "24px",
-                boxShadow: "var(--shadow-md)",
-                border: "1px solid var(--color-border)",
-                position: "relative",
-                transition: "all 350ms cubic-bezier(0.4, 0, 0.2, 1)",
-                overflow: "hidden",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px) scale(1.01)";
-                e.currentTarget.style.boxShadow = "var(--shadow-xl), var(--shadow-glow)";
-                e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.5)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0) scale(1)";
-                e.currentTarget.style.boxShadow = "var(--shadow-md)";
-                e.currentTarget.style.borderColor = "var(--color-border)";
-              }}
-            >
-              {/* Gradient overlay */}
-              <div style={{
-                position: "absolute",
-                top: "-50%",
-                right: "-30%",
-                width: "100%",
-                height: "150%",
-                background: `radial-gradient(ellipse at center, ${
-                  index % 3 === 0 ? "rgba(59, 130, 246, 0.08)" :
-                  index % 3 === 1 ? "rgba(139, 92, 246, 0.08)" :
-                  "rgba(16, 185, 129, 0.08)"
-                } 0%, transparent 70%)`,
-                pointerEvents: "none",
-                zIndex: 0,
-              }} />
-              <button
-                onClick={() => onDeleteProject(index)}
-                title="Delete project"
+        <div 
+          className={isAllProjectsView ? "all-projects-grid" : ""}
+          style={{ 
+            display: isAllProjectsView ? "grid" : "flex",
+            gridTemplateColumns: isAllProjectsView ? "1fr 1fr" : undefined,
+            flexDirection: isAllProjectsView ? undefined : "column",
+            gap: "var(--spacing-3)",
+          }}
+        >
+          {displayProjects.map((project, displayIndex) => {
+            const actualIndex = isAllProjectsView 
+              ? projects.findIndex(p => p.id === project.id)
+              : displayIndex;
+            
+            return (
+              <div
+                key={project.id}
+                className="card"
                 style={{
-                  position: "absolute",
-                  top: "16px",
-                  right: "60px",
-                  background: "rgba(239, 68, 68, 0.1)",
-                  border: "1px solid rgba(239, 68, 68, 0.2)",
-                  borderRadius: "8px",
-                  padding: "8px 10px",
-                  cursor: "pointer",
-                  color: "#ef4444",
-                  fontSize: "18px",
-                  lineHeight: "1",
-                  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 10,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(239, 68, 68, 0.2)";
-                  e.currentTarget.style.borderColor = "rgba(239, 68, 68, 0.4)";
-                  e.currentTarget.style.transform = "scale(1.1)";
-                  e.currentTarget.style.boxShadow = "0 0 15px rgba(239, 68, 68, 0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)";
-                  e.currentTarget.style.borderColor = "rgba(239, 68, 68, 0.2)";
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.boxShadow = "none";
+                  padding: "var(--spacing-5)",
+                  position: "relative",
                 }}
               >
-                <Trash2 style={{ width: "16px", height: "16px" }} />
-              </button>
-              <button
-                onClick={() => onEditProject(index)}
-                style={{
-                  position: "absolute",
-                  top: "16px",
-                  right: "16px",
-                  background: "rgba(255, 255, 255, 0.05)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "8px",
-                  padding: "8px 10px",
-                  cursor: "pointer",
-                  color: "var(--color-text-muted)",
-                  fontSize: "16px",
-                  lineHeight: "1",
-                  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 10,
-                }}
-                title="Edit project"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-                  e.currentTarget.style.borderColor = "var(--color-border-strong)";
-                  e.currentTarget.style.color = "var(--color-primary-light)";
-                  e.currentTarget.style.transform = "scale(1.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
-                  e.currentTarget.style.borderColor = "var(--color-border)";
-                  e.currentTarget.style.color = "var(--color-text-muted)";
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
-              >
-                <Pencil style={{ width: "16px", height: "16px" }} />
-              </button>
+                <button
+                  onClick={() => onDeleteProject(actualIndex)}
+                  className="btn-secondary"
+                  style={{
+                    position: "absolute",
+                    top: "var(--spacing-4)",
+                    right: "calc(var(--spacing-4) + 44px)",
+                    padding: "var(--spacing-2)",
+                    color: "var(--color-danger)",
+                    zIndex: 10,
+                  }}
+                >
+                  <Trash2 style={{ width: "14px", height: "14px" }} />
+                </button>
 
-              <h3 style={{ marginTop: "0", fontSize: "19px", fontWeight: "700", letterSpacing: "-0.015em", color: "var(--color-text-primary)", position: "relative", zIndex: 1 }}>
+                <button
+                  onClick={() => onEditProject(actualIndex)}
+                  className="btn-secondary"
+                  style={{
+                    position: "absolute",
+                    top: "var(--spacing-4)",
+                    right: "var(--spacing-4)",
+                    padding: "var(--spacing-2)",
+                    zIndex: 10,
+                  }}
+                >
+                  <Pencil style={{ width: "14px", height: "14px" }} />
+                </button>
+
+              <h3 style={{ 
+                marginTop: "0", 
+                fontSize: "16px", 
+                fontWeight: "600", 
+                color: "var(--color-text-primary)",
+                marginBottom: "var(--spacing-2)",
+              }}>
                 {project.title}
               </h3>
 
-              <p
-                style={{
-                  marginTop: "10px",
-                  color: "var(--color-text-secondary)",
-                  fontSize: "14px",
-                  lineHeight: "1.6",
-                  position: "relative",
-                  zIndex: 1,
-                }}
-              >
+              <p style={{
+                color: "var(--color-text-secondary)",
+                fontSize: "14px",
+                lineHeight: "1.6",
+                marginBottom: "var(--spacing-4)",
+              }}>
                 {project.description}
               </p>
 
               {/* Tech stack */}
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "8px",
-                  position: "relative",
-                  zIndex: 1,
-                  marginTop: "16px",
-                }}
-              >
-                {project.tech.map((tech, techIndex) => (
+              <div style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "var(--spacing-2)",
+                marginBottom: "var(--spacing-4)",
+              }}>
+              {project.tech.map((tech, techIndex) => {
+                const colors = [
+                  { bg: "#eff6ff", border: "#dbeafe", text: "#3b82f6" }, // blue
+                  { bg: "#fdf4ff", border: "#fae8ff", text: "#c026d3" }, // pink
+                  { bg: "#f0fdf4", border: "#dcfce7", text: "#16a34a" }, // green
+                  { bg: "#fffbeb", border: "#fef3c7", text: "#f59e0b" }, // amber
+                  { bg: "#faf5ff", border: "#f3e8ff", text: "#9333ea" }, // purple
+                ];
+                const color = colors[techIndex % colors.length];
+                
+                return (
                   <span
                     key={tech}
                     style={{
-                      background: techIndex % 3 === 0 
-                        ? "rgba(59, 130, 246, 0.1)" 
-                        : techIndex % 3 === 1 
-                        ? "rgba(139, 92, 246, 0.1)" 
-                        : "rgba(16, 185, 129, 0.1)",
-                      padding: "6px 12px",
-                      borderRadius: "999px",
+                      background: color.bg,
+                      padding: "4px 10px",
+                      borderRadius: "var(--radius-sm)",
                       fontSize: "12px",
-                      color: techIndex % 3 === 0 
-                        ? "var(--color-primary-light)" 
-                        : techIndex % 3 === 1 
-                        ? "#a78bfa" 
-                        : "#10b981",
+                      color: color.text,
                       fontWeight: "500",
-                      border: techIndex % 3 === 0 
-                        ? "1px solid rgba(59, 130, 246, 0.2)" 
-                        : techIndex % 3 === 1 
-                        ? "1px solid rgba(139, 92, 246, 0.2)" 
-                        : "1px solid rgba(16, 185, 129, 0.2)",
-                      transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = techIndex % 3 === 0 
-                        ? "rgba(59, 130, 246, 0.15)" 
-                        : techIndex % 3 === 1 
-                        ? "rgba(139, 92, 246, 0.15)" 
-                        : "rgba(16, 185, 129, 0.15)";
-                      e.currentTarget.style.borderColor = techIndex % 3 === 0 
-                        ? "rgba(59, 130, 246, 0.4)" 
-                        : techIndex % 3 === 1 
-                        ? "rgba(139, 92, 246, 0.4)" 
-                        : "rgba(16, 185, 129, 0.4)";
-                      e.currentTarget.style.transform = "translateY(-1px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = techIndex % 3 === 0 
-                        ? "rgba(59, 130, 246, 0.1)" 
-                        : techIndex % 3 === 1 
-                        ? "rgba(139, 92, 246, 0.1)" 
-                        : "rgba(16, 185, 129, 0.1)";
-                      e.currentTarget.style.borderColor = techIndex % 3 === 0 
-                        ? "rgba(59, 130, 246, 0.2)" 
-                        : techIndex % 3 === 1 
-                        ? "rgba(139, 92, 246, 0.2)" 
-                        : "rgba(16, 185, 129, 0.2)";
-                      e.currentTarget.style.transform = "translateY(0)";
+                      border: `1px solid ${color.border}`,
                     }}
                   >
                     {tech}
                   </span>
-                ))}
+                );
+              })}
               </div>
 
               {/* Link */}
@@ -310,56 +196,64 @@ const ProjectsSection = ({ projects, onAddProject, onEditProject, onDeleteProjec
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    display: "inline-block",
-                    marginTop: "18px",
                     fontSize: "14px",
                     color: "var(--color-primary)",
-                    fontWeight: "600",
-                    textDecoration: "none",
-                    transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "var(--color-primary-light)";
-                    e.currentTarget.style.transform = "translateX(2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "var(--color-primary)";
-                    e.currentTarget.style.transform = "translateX(0)";
+                    fontWeight: "500",
                   }}
                 >
                   View Project →
                 </a>
               ) : (
-                <span
-                  style={{
-                    display: "inline-block",
-                    marginTop: "18px",
-                    fontSize: "14px",
-                    color: "var(--color-text-muted)",
-                    fontWeight: "500",
-                  }}
-                >
+                <span style={{
+                  fontSize: "14px",
+                  color: "var(--color-text-tertiary)",
+                  fontWeight: "500",
+                }}>
                   No link provided
                 </span>
               )}
+              </div>
+            );
+          })}
+          
+          {!isAllProjectsView && hasMoreProjects && (
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "var(--spacing-3)" }}>
+              <button
+                onClick={onSeeAll}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "var(--spacing-2)",
+                  padding: "var(--spacing-2) var(--spacing-4)",
+                  background: "var(--color-bg-surface)",
+                  color: "var(--color-text-secondary)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-md)",
+                  fontWeight: "500",
+                  fontSize: "13px",
+                  cursor: "pointer",
+                  transition: "all var(--transition)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "var(--color-primary)";
+                  e.currentTarget.style.borderColor = "var(--color-primary)";
+                  e.currentTarget.style.background = "var(--color-primary-light)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "var(--color-text-secondary)";
+                  e.currentTarget.style.borderColor = "var(--color-border)";
+                  e.currentTarget.style.background = "var(--color-bg-surface)";
+                }}
+              >
+                <span>See all {projects.length} projects</span>
+                <ArrowRight style={{ width: "14px", height: "14px" }} />
+              </button>
             </div>
-          ))}
+          )}
         </div>
       )}
-    </section>
+    </motion.section>
   );
-};
-
-const addButtonStyle = {
-  padding: "10px 18px",
-  background: "rgba(59, 130, 246, 0.1)",
-  color: "var(--color-primary-light)",
-  border: "1px solid rgba(59, 130, 246, 0.2)",
-  borderRadius: "10px",
-  fontSize: "14px",
-  fontWeight: "600",
-  cursor: "pointer",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
 };
 
 export default ProjectsSection;

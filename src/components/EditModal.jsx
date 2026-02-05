@@ -62,19 +62,10 @@ const EditModal = ({ profile, onClose, onSave }) => {
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div style={headerStyle}>
-          <h2 style={{ fontSize: "20px", fontWeight: "600", margin: 0 }}>
+          <h2 style={{ fontSize: "20px", fontWeight: "600", margin: 0, color: "var(--color-text-primary)" }}>
             Edit Profile
           </h2>
-          <button onClick={onClose} style={closeButtonStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-              e.currentTarget.style.transform = "scale(1.05)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
-              e.currentTarget.style.transform = "scale(1)";
-            }}
-          >
+          <button onClick={onClose} className="btn-secondary" style={closeButtonStyle}>
             <X style={{ width: "20px", height: "20px" }} />
           </button>
         </div>
@@ -169,28 +160,10 @@ const EditModal = ({ profile, onClose, onSave }) => {
           </label>
 
           <div style={buttonContainerStyle}>
-            <button type="button" onClick={onClose} style={cancelButtonStyle}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--color-bg-hover)";
-                e.currentTarget.style.borderColor = "var(--color-border-strong)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "var(--color-bg-surface)";
-                e.currentTarget.style.borderColor = "var(--color-border)";
-              }}
-            >
+            <button type="button" onClick={onClose} className="btn-secondary" style={cancelButtonStyle}>
               Cancel
             </button>
-            <button type="submit" style={saveButtonStyle}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-1px)";
-                e.currentTarget.style.boxShadow = "var(--shadow-glow)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "var(--shadow-md)";
-              }}
-            >
+            <button type="submit" className="btn-primary" style={saveButtonStyle}>
               Save
             </button>
           </div>
@@ -207,8 +180,8 @@ const overlayStyle = {
   left: 0,
   right: 0,
   bottom: 0,
-  background: "rgba(0, 0, 0, 0.7)",
-  backdropFilter: "blur(8px)",
+  background: "rgba(0, 0, 0, 0.4)",
+  backdropFilter: "blur(4px)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -218,12 +191,12 @@ const overlayStyle = {
 
 const modalStyle = {
   background: "var(--color-bg-surface)",
-  borderRadius: "20px",
+  borderRadius: "var(--radius-lg)",
   maxWidth: "600px",
   width: "100%",
   maxHeight: "90vh",
   overflow: "auto",
-  boxShadow: "var(--shadow-xl)",
+  boxShadow: "var(--shadow-lg)",
   border: "1px solid var(--color-border)",
 };
 
@@ -237,21 +210,13 @@ const headerStyle = {
   top: 0,
   background: "var(--color-bg-surface)",
   zIndex: 1,
-  borderRadius: "20px 20px 0 0",
+  borderRadius: "var(--radius-lg) var(--radius-lg) 0 0",
 };
 
 const closeButtonStyle = {
-  background: "rgba(255, 255, 255, 0.05)",
-  border: "1px solid var(--color-border)",
-  borderRadius: "8px",
-  fontSize: "24px",
-  cursor: "pointer",
-  color: "var(--color-text-muted)",
-  lineHeight: 1,
   padding: "4px",
   width: "32px",
   height: "32px",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -261,7 +226,7 @@ const formStyle = { padding: "24px" };
 
 const sectionTitleStyle = {
   fontSize: "16px",
-  fontWeight: "700",
+  fontWeight: "600",
   marginBottom: "16px",
   color: "var(--color-text-primary)",
   letterSpacing: "-0.01em",
@@ -271,21 +236,21 @@ const labelStyle = {
   display: "block",
   marginBottom: "16px",
   fontSize: "14px",
-  fontWeight: "600",
+  fontWeight: "500",
   color: "var(--color-text-secondary)",
 };
 
 const inputStyle = {
   display: "block",
   width: "100%",
-  padding: "12px 14px",
-  marginTop: "8px",
+  padding: "10px 12px",
+  marginTop: "6px",
   border: "1px solid var(--color-border)",
-  borderRadius: "10px",
+  borderRadius: "var(--radius-md)",
   fontSize: "14px",
   fontFamily: "inherit",
   boxSizing: "border-box",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+  transition: "all var(--transition)",
   background: "var(--color-bg-elevated)",
   color: "var(--color-text-primary)",
 };
@@ -300,28 +265,11 @@ const buttonContainerStyle = {
 };
 
 const cancelButtonStyle = {
-  padding: "12px 24px",
-  border: "1px solid var(--color-border)",
-  borderRadius: "10px",
-  background: "var(--color-bg-surface)",
-  color: "var(--color-text-secondary)",
-  fontSize: "14px",
-  fontWeight: "600",
-  cursor: "pointer",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+  padding: "10px 20px",
 };
 
 const saveButtonStyle = {
-  padding: "12px 24px",
-  border: "none",
-  borderRadius: "10px",
-  background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
-  color: "#ffffff",
-  fontSize: "14px",
-  fontWeight: "600",
-  cursor: "pointer",
-  boxShadow: "var(--shadow-md)",
-  transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+  padding: "10px 20px",
 };
 
 export default EditModal;

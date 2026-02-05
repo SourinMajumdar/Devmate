@@ -51,12 +51,8 @@ function App() {
         return updated;
       }
 
-      // ADD (max 2)
-      if (prev.length < 3) {
-        return [...prev, project];
-      }
-
-      return prev;
+      // ADD (unlimited)
+      return [...prev, project];
     });
 
     setIsProjectModalOpen(false);

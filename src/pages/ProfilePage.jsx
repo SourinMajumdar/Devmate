@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Code2 } from "lucide-react";
+import Hero from "../components/Hero.jsx";
+import AboutPage from "../pages/AboutPage.jsx";
+import AllProjectsPage from "../pages/AllProjectsPage.jsx";
+import DashboardHeader from "../components/DashboardHeader.jsx";
 import ProfileHeader from "../components/ProfileHeader.jsx";
 import ProjectsSection from "../sections/ProjectsSection.jsx";
 import ContentTimeline from "../sections/ContentTimeline.jsx";
@@ -8,7 +12,6 @@ import EditModal from "../components/EditModal.jsx";
 import ProjectModal from "../components/ProjectModal.jsx";
 import DeleteProjectModal from "../components/DeleteProjectModal.jsx";
 import Footer from "../components/Footer.jsx";
-import About from "../components/About.jsx";
 
 const ProfilePage = ({
   profile,
@@ -34,109 +37,128 @@ const ProfilePage = ({
   onConfirmDelete,
   onCloseDeleteModal,
 }) => {
-  const [titleHovered, setTitleHovered] = useState(false);
+  const [currentPage, setCurrentPage] = useState(() => {
+    const saved = localStorage.getItem("devmate-current-page");
+    return saved || "hero";
+  });
 
+  const navigateToPage = (page) => {
+    setCurrentPage(page);
+    localStorage.setItem("devmate-current-page", page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleGetStarted = () => {
+    navigateToPage("dashboard");
+  };
+
+  const handleLearnMore = () => {
+    navigateToPage("about");
+  };
+
+  const handleBackToHome = () => {
+    navigateToPage("hero");
+  };
+
+  const handleGoToDashboard = () => {
+    navigateToPage("dashboard");
+  };
+
+  const handleSeeAllProjects = () => {
+    navigateToPage("all-projects");
+  };
+
+  // Show hero page
+  if (currentPage === "hero") {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        background: "var(--color-bg-base)",
+        width: "100%",
+      }}>
+        <Hero 
+          onGetStarted={handleGetStarted} 
+          onLearnMore={handleLearnMore}
+        />
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show about page
+  if (currentPage === "about") {
+    return (
+      <AboutPage 
+        onBackToHome={handleBackToHome}
+        onGoToDashboard={handleGoToDashboard}
+      />
+    );
+  }
+
+  // Show all projects page
+  if (currentPage === "all-projects") {
+    return (
+      <>
+        <AllProjectsPage
+          projects={projects}
+          onAddProject={onAddProject}
+          onEditProject={onEditProject}
+          onDeleteProject={onDeleteProject}
+          onBackToDashboard={handleGoToDashboard}
+          onBackToHome={handleBackToHome}
+        />
+
+        {isProjectModalOpen && (
+          <ProjectModal
+            project={projects[editingProjectIndex]}
+            onSave={onSaveProject}
+            onClose={onCloseProjectModal}
+          />
+        )}
+
+        {isDeleteModalOpen && (
+          <DeleteProjectModal
+            onConfirm={onConfirmDelete}
+            onCancel={onCloseDeleteModal}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Show dashboard page
   return (
     <div style={{
       minHeight: "100vh",
       background: "var(--color-bg-base)",
       width: "100%",
-      position: "relative",
-      zIndex: 1,
+      display: "flex",
+      flexDirection: "column",
     }}>
-      {/* Main container - Horizontally Centered */}
+      {/* Dashboard Header */}
+      <DashboardHeader onBackToHome={handleBackToHome} />
+
+      {/* Main container */}
       <div className="main-container" style={{
         maxWidth: "1400px",
+        width: "100%",
         margin: "0 auto",
-        padding: "40px 32px",
-        position: "relative",
-        zIndex: 1,
+        padding: "var(--spacing-10) var(--spacing-8)",
+        flex: 1,
       }}>
-        {/* Page Header */}
-        <div style={{
-          textAlign: "center",
-          marginBottom: "48px",
-          position: "relative",
-        }}>
-          <div style={{
-            position: "absolute",
-            top: "-20px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "400px",
-            height: "400px",
-            background: "radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)",
-            pointerEvents: "none",
-            filter: "blur(60px)",
-          }} />
-          
-          <div 
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "12px",
-              marginBottom: "12px",
-              cursor: "pointer",
-            }}
-            onMouseEnter={() => setTitleHovered(true)}
-            onMouseLeave={() => setTitleHovered(false)}
-          >
-            <Code2 
-              className="page-icon"
-              style={{ 
-                width: "45px", 
-                height: "45px", 
-                color: "var(--color-primary)",
-                filter: "drop-shadow(0 0 10px rgba(59, 130, 246, 0.5))",
-                transition: "transform 250ms cubic-bezier(0.4, 0, 0.2, 1)",
-                transform: titleHovered ? "rotate(180deg)" : "rotate(0deg)",
-              }} 
-            />
-            <h1 
-              className={`page-heading ${titleHovered ? 'hovered' : ''}`}
-              style={{
-              fontSize: titleHovered ? "52px" : "48px",
-              fontWeight: "800",
-              margin: 0,
-              background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              letterSpacing: "-0.03em",
-              transition: "font-size 250ms cubic-bezier(0.4, 0, 0.2, 1)",
-              height: "52px",
-              display: "flex",
-              alignItems: "center",
-              filter: titleHovered ? "drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))" : "none",
-            }}>
-              Devmate
-            </h1>
-          </div>
-          
-          <p className="page-subtitle" style={{
-            fontSize: "16px",
-            color: "var(--color-text-muted)",
-            margin: 0,
-            fontWeight: "500",
-          }}>
-            Your all-in-one developer portfolio dashboard
-          </p>
-        </div>
-
-        {/* Two Column Layout - Profile + Analytics | Projects */}
+        {/* Two Column Layout */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "700px 550px",
-          gap: "24px",
+          gap: "var(--spacing-6)",
           alignItems: "start",
-          marginBottom: "24px",
           width: "fit-content",
-          margin: "0 auto 24px auto",
+          margin: "0 auto 0 auto",
         }}
         className="main-grid"
         >
           {/* Left Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-6)" }}>
             {/* Profile Header */}
             <ProfileHeader
               profile={profile}
@@ -154,15 +176,21 @@ const ProfilePage = ({
               onAddProject={onAddProject}
               onEditProject={onEditProject}
               onDeleteProject={onDeleteProject}
+              onSeeAll={handleSeeAllProjects}
             />
           </div>
         </div>
 
         {/* Content Timeline - Full Width */}
-        <ContentTimeline projects={projects} profile={profile} />
+        <div className="activity-section-wrapper" style={{ 
+          marginTop: "var(--spacing-10)",
+          width: "fit-content",
+          margin: "var(--spacing-10) auto 0 auto",
+        }}>
+          <ContentTimeline projects={projects} profile={profile} />
+        </div>
       </div>
 
-      <About/>
       <Footer />
 
       {/* Edit Modal */}

@@ -29,7 +29,7 @@ const ProjectModal = ({ project, onSave, onClose }) => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [project], [onClose]);
+  }, [project, onClose]);
 
   const handleSave = () => {
     onSave({
@@ -51,16 +51,7 @@ const ProjectModal = ({ project, onSave, onClose }) => {
           <h3 style={titleStyle}>
             {project ? "Edit Project" : "Add Project"}
           </h3>
-          <button onClick={onClose} style={closeButtonStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-              e.currentTarget.style.transform = "scale(1.05)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
-              e.currentTarget.style.transform = "scale(1)";
-            }}
-          >
+          <button onClick={onClose} className="btn-secondary" style={closeButtonStyle}>
             <X style={{ width: "20px", height: "20px" }} />
           </button>
         </div>
@@ -94,28 +85,10 @@ const ProjectModal = ({ project, onSave, onClose }) => {
         />
 
         <div style={buttonRowStyle}>
-          <button onClick={handleSave} style={primaryButton}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow = "var(--shadow-glow)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "var(--shadow-md)";
-            }}
-          >
+          <button onClick={handleSave} className="btn-primary" style={primaryButton}>
             Save
           </button>
-          <button onClick={onClose} style={secondaryButton}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "var(--color-bg-hover)";
-              e.currentTarget.style.borderColor = "var(--color-border-strong)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "var(--color-bg-surface)";
-              e.currentTarget.style.borderColor = "var(--color-border)";
-            }}
-          >
+          <button onClick={onClose} className="btn-secondary" style={secondaryButton}>
             Cancel
           </button>
         </div>
@@ -129,8 +102,8 @@ const ProjectModal = ({ project, onSave, onClose }) => {
 const overlayStyle = {
   position: "fixed",
   inset: 0,
-  background: "rgba(0, 0, 0, 0.7)",
-  backdropFilter: "blur(8px)",
+  background: "rgba(0, 0, 0, 0.4)",
+  backdropFilter: "blur(4px)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -140,31 +113,24 @@ const overlayStyle = {
 const modalStyle = {
   background: "var(--color-bg-surface)",
   padding: "28px",
-  borderRadius: "20px",
+  borderRadius: "var(--radius-lg)",
   width: "420px",
-  boxShadow: "var(--shadow-xl)",
+  boxShadow: "var(--shadow-lg)",
   border: "1px solid var(--color-border)",
 };
 
 const titleStyle = {
   fontSize: "20px",
-  fontWeight: "700",
+  fontWeight: "600",
   margin: 0,
   letterSpacing: "-0.01em",
   color: "var(--color-text-primary)",
 };
 
 const closeButtonStyle = {
-  background: "rgba(255, 255, 255, 0.05)",
-  border: "1px solid var(--color-border)",
-  borderRadius: "8px",
-  cursor: "pointer",
-  color: "var(--color-text-muted)",
-  lineHeight: 1,
   padding: "4px",
   width: "32px",
   height: "32px",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -173,11 +139,11 @@ const closeButtonStyle = {
 const inputStyle = {
   width: "100%",
   marginTop: "12px",
-  padding: "12px 14px",
-  borderRadius: "10px",
+  padding: "10px 12px",
+  borderRadius: "var(--radius-md)",
   border: "1px solid var(--color-border)",
   fontSize: "14px",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+  transition: "all var(--transition)",
   background: "var(--color-bg-elevated)",
   boxSizing: "border-box",
   color: "var(--color-text-primary)",
@@ -191,29 +157,12 @@ const buttonRowStyle = {
 
 const primaryButton = {
   flex: 1,
-  background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
-  color: "#ffffff",
-  border: "none",
-  borderRadius: "10px",
-  padding: "12px",
-  fontSize: "14px",
-  fontWeight: "600",
-  cursor: "pointer",
-  boxShadow: "var(--shadow-md)",
-  transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+  padding: "10px",
 };
 
 const secondaryButton = {
   flex: 1,
-  background: "var(--color-bg-surface)",
-  border: "1px solid var(--color-border)",
-  borderRadius: "10px",
-  padding: "12px",
-  fontSize: "14px",
-  fontWeight: "600",
-  color: "var(--color-text-secondary)",
-  cursor: "pointer",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+  padding: "10px",
 };
 
 export default ProjectModal;

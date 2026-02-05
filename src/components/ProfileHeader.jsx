@@ -1,4 +1,5 @@
-import { Github, Linkedin, Globe, Pencil } from "lucide-react";
+import { Github, Linkedin, Globe, Pencil, UserCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 const ProfileHeader = ({ profile, onEditClick }) => {
   const isEmpty =
@@ -11,202 +12,106 @@ const ProfileHeader = ({ profile, onEditClick }) => {
     return (
       <div style={{
         background: "var(--color-bg-surface)",
-        border: "2px dashed var(--color-border)",
-        borderRadius: "20px",
-        padding: "48px 32px",
+        border: "1.5px dashed var(--color-border)",
+        borderRadius: "var(--radius-lg)",
+        padding: "var(--spacing-10) var(--spacing-8)",
         textAlign: "center",
-        boxShadow: "var(--shadow-lg)",
-        position: "relative",
-        overflow: "hidden",
-        transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.4)";
-        e.currentTarget.style.boxShadow = "var(--shadow-xl), var(--shadow-glow-subtle)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "var(--color-border)";
-        e.currentTarget.style.boxShadow = "var(--shadow-lg)";
-      }}
-      >
-        {/* Background gradient */}
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.03)",
+      }}>
         <div style={{
-          position: "absolute",
-          top: "-20px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "200px",
-          height: "200px",
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)",
-          pointerEvents: "none",
-          filter: "blur(40px)",
-        }} />
-
-        {/* Icon */}
-        <div style={{
-          width: "64px",
-          height: "64px",
+          width: "48px",
+          height: "48px",
           borderRadius: "50%",
-          background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)",
+          background: "var(--color-primary-light)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          margin: "0 auto 20px",
-          fontSize: "32px",
-          boxShadow: "0 0 30px rgba(59, 130, 246, 0.4)",
-          position: "relative",
+          margin: "0 auto var(--spacing-4)",
         }}>
-          👤
+          <UserCircle style={{ width: "24px", height: "24px", color: "var(--color-primary)" }} />
         </div>
 
         <h3 style={{
-          fontSize: "20px",
-          fontWeight: "700",
+          fontSize: "16px",
+          fontWeight: "600",
           color: "var(--color-text-primary)",
-          marginBottom: "8px",
-          letterSpacing: "-0.01em",
-          position: "relative",
+          marginBottom: "var(--spacing-2)",
         }}>
           No profile yet
         </h3>
 
         <p style={{
           fontSize: "14px",
-          color: "var(--color-text-muted)",
-          marginBottom: "24px",
-          lineHeight: "1.6",
-          maxWidth: "300px",
-          margin: "0 auto 24px",
-          position: "relative",
+          color: "var(--color-text-secondary)",
+          marginBottom: "var(--spacing-5)",
+          lineHeight: "1.5",
         }}>
-          Create your profile to showcase your skills and experience
+          Create your profile to get started
         </p>
 
         <button
           onClick={onEditClick}
-          style={{
-            padding: "12px 24px",
-            borderRadius: "10px",
-            border: "none",
-            background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
-            color: "#fff",
-            fontWeight: "600",
-            cursor: "pointer",
-            fontSize: "14px",
-            boxShadow: "var(--shadow-md)",
-            transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
-            position: "relative",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow = "var(--shadow-lg), var(--shadow-glow)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "var(--shadow-md)";
-          }}
+          className="btn-primary"
         >
-          + Create Profile
+          Create Profile
         </button>
       </div>
     );
   }
 
   return (
-    <div
-      className="profile-card"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="profile-card card"
       style={{
-        background: "var(--color-bg-surface)",
-        borderRadius: "20px",
-        padding: "32px",
-        boxShadow: "var(--shadow-lg)",
-        border: "1px solid var(--color-border)",
+        padding: "var(--spacing-6)",
         position: "relative",
-        transition: "all 350ms cubic-bezier(0.4, 0, 0.2, 1)",
-        overflow: "hidden",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "var(--shadow-xl), var(--shadow-glow)";
-        e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.5)";
-        e.currentTarget.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = "var(--shadow-lg)";
-        e.currentTarget.style.borderColor = "var(--color-border)";
-        e.currentTarget.style.transform = "translateY(0)";
+        border: "2px solid var(--color-border)",
+        background: "linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%)",
       }}
     >
-      {/* Animated gradient border overlay */}
-      <div style={{
-        position: "absolute",
-        inset: "-1px",
-        borderRadius: "20px",
-        padding: "1px",
-        background: "linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3))",
-        WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-        WebkitMaskComposite: "xor",
-        maskComposite: "exclude",
-        opacity: 0,
-        transition: "opacity 350ms ease",
-        pointerEvents: "none",
-      }} className="gradient-border" />
-      {/* Edit Button with Icon + Text - Desktop */}
+      {/* Edit Button - Desktop */}
       <button
         onClick={onEditClick}
-        className="edit-profile-button-desktop"
+        className="edit-profile-button-desktop btn-secondary"
         style={{
           position: "absolute",
-          top: "24px",
-          right: "24px",
-          background: "rgba(255, 255, 255, 0.05)",
-          border: "1px solid var(--color-border)",
-          borderRadius: "10px",
-          padding: "10px 14px",
-          cursor: "pointer",
-          color: "var(--color-text-secondary)",
-          fontSize: "14px",
-          fontWeight: "600",
-          lineHeight: "1",
-          transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
+          top: "var(--spacing-4)",
+          right: "var(--spacing-4)",
           display: "flex",
           alignItems: "center",
-          gap: "6px",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-          e.currentTarget.style.borderColor = "var(--color-border-strong)";
-          e.currentTarget.style.color = "var(--color-text-primary)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
-          e.currentTarget.style.borderColor = "var(--color-border)";
-          e.currentTarget.style.color = "var(--color-text-secondary)";
+          gap: "var(--spacing-2)",
         }}
       >
-        <Pencil style={{ width: "16px", height: "16px" }} />
-        <span>Edit Profile</span>
+        <Pencil style={{ width: "14px", height: "14px" }} />
+        <span>Edit</span>
       </button>
 
-      {/* Header Row - Avatar + Name/Username */}
-      <div className="profile-header-row" style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "16px" }}>
+      {/* Header Row */}
+      <div className="profile-header-row" style={{ 
+        display: "flex", 
+        gap: "var(--spacing-4)", 
+        alignItems: "center", 
+        marginBottom: "var(--spacing-4)" 
+      }}>
         {/* Avatar */}
         <div
           className="profile-avatar"
           style={{
-            width: "80px",
-            height: "80px",
+            width: "64px",
+            height: "64px",
             borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)",
-            color: "#ffffff",
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            color: "white",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "32px",
-            fontWeight: "700",
-            boxShadow: "0 0 30px rgba(59, 130, 246, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.1)",
-            border: "3px solid rgba(59, 130, 246, 0.2)",
-            letterSpacing: "-0.02em",
+            fontSize: "24px",
+            fontWeight: "600",
             flexShrink: 0,
+            boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
           }}
         >
           {profile.name[0]}
@@ -214,23 +119,40 @@ const ProfileHeader = ({ profile, onEditClick }) => {
 
         {/* Name and Username */}
         <div>
-          <h1 className="profile-name" style={{ margin: "0", fontSize: "28px", fontWeight: "700", letterSpacing: "-0.02em", lineHeight: "1.2", color: "var(--color-text-primary)" }}>
+          <h1 className="profile-name" style={{ 
+            fontSize: "24px", 
+            fontWeight: "600", 
+            color: "var(--color-text-primary)",
+            marginBottom: "var(--spacing-1)",
+          }}>
             {profile.name}
           </h1>
-          <span className="profile-username" style={{ color: "var(--color-text-muted)", fontSize: "16px", fontWeight: "400", display: "block", marginTop: "4px" }}>
+          <span className="profile-username" style={{ 
+            color: "var(--color-text-tertiary)", 
+            fontSize: "14px",
+          }}>
             {profile.username}
           </span>
         </div>
       </div>
 
-      {/* Info Section - Below Avatar */}
+      {/* Info */}
       <div>
-          {/* role */}
-        <p className="profile-role" style={{ color: "var(--color-text-secondary)", marginTop: "0", fontSize: "18px", fontWeight: "500" }}>
+        <p className="profile-role" style={{ 
+          color: "var(--color-text-secondary)", 
+          fontSize: "15px", 
+          fontWeight: "500",
+          marginBottom: "var(--spacing-2)",
+        }}>
           {profile.role}
         </p>
-          {/* bio */}
-        <p className="profile-bio" style={{ color: "var(--color-text-muted)", marginTop: "10px", fontSize: "14px", lineHeight: "1.6" }}>
+
+        <p className="profile-bio" style={{ 
+          color: "var(--color-text-secondary)", 
+          fontSize: "14px", 
+          lineHeight: "1.6",
+          marginTop: "var(--spacing-2)",
+        }}>
           {profile.bio}
         </p>
 
@@ -240,182 +162,158 @@ const ProfileHeader = ({ profile, onEditClick }) => {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "8px",
-            marginTop: "14px",
+            gap: "var(--spacing-2)",
+            marginTop: "var(--spacing-4)",
           }}
         >
-          {profile.tech.map((tech, index) => (
-            <span
-              key={tech}
-              style={{
-                background: index % 3 === 0 
-                  ? "rgba(59, 130, 246, 0.1)" 
-                  : index % 3 === 1 
-                  ? "rgba(139, 92, 246, 0.1)" 
-                  : "rgba(16, 185, 129, 0.1)",
-                padding: "6px 12px",
-                borderRadius: "999px",
-                fontSize: "12px",
-                color: index % 3 === 0 
-                  ? "var(--color-primary-light)" 
-                  : index % 3 === 1 
-                  ? "#a78bfa" 
-                  : "#10b981",
-                fontWeight: "500",
-                border: index % 3 === 0 
-                  ? "1px solid rgba(59, 130, 246, 0.2)" 
-                  : index % 3 === 1 
-                  ? "1px solid rgba(139, 92, 246, 0.2)" 
-                  : "1px solid rgba(16, 185, 129, 0.2)",
-                transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: index % 3 === 0 
-                  ? "0 0 10px rgba(59, 130, 246, 0)" 
-                  : index % 3 === 1 
-                  ? "0 0 10px rgba(139, 92, 246, 0)" 
-                  : "0 0 10px rgba(16, 185, 129, 0)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = index % 3 === 0 
-                  ? "rgba(59, 130, 246, 0.15)" 
-                  : index % 3 === 1 
-                  ? "rgba(139, 92, 246, 0.15)" 
-                  : "rgba(16, 185, 129, 0.15)";
-                e.currentTarget.style.borderColor = index % 3 === 0 
-                  ? "rgba(59, 130, 246, 0.4)" 
-                  : index % 3 === 1 
-                  ? "rgba(139, 92, 246, 0.4)" 
-                  : "rgba(16, 185, 129, 0.4)";
-                e.currentTarget.style.transform = "translateY(-2px) scale(1.05)";
-                e.currentTarget.style.boxShadow = index % 3 === 0 
-                  ? "0 0 15px rgba(59, 130, 246, 0.6)" 
-                  : index % 3 === 1 
-                  ? "0 0 15px rgba(139, 92, 246, 0.6)" 
-                  : "0 0 15px rgba(16, 185, 129, 0.6)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = index % 3 === 0 
-                  ? "rgba(59, 130, 246, 0.1)" 
-                  : index % 3 === 1 
-                  ? "rgba(139, 92, 246, 0.1)" 
-                  : "rgba(16, 185, 129, 0.1)";
-                e.currentTarget.style.borderColor = index % 3 === 0 
-                  ? "rgba(59, 130, 246, 0.2)" 
-                  : index % 3 === 1 
-                  ? "rgba(139, 92, 246, 0.2)" 
-                  : "rgba(16, 185, 129, 0.2)";
-                e.currentTarget.style.transform = "translateY(0) scale(1)";
-                e.currentTarget.style.boxShadow = index % 3 === 0 
-                  ? "0 0 10px rgba(59, 130, 246, 0)" 
-                  : index % 3 === 1 
-                  ? "0 0 10px rgba(139, 92, 246, 0)" 
-                  : "0 0 10px rgba(16, 185, 129, 0)";
-              }}
-            >
-              {tech}
-            </span>
-          ))}
+          {profile.tech.map((tech, index) => {
+            const colors = [
+              { bg: "#eff6ff", border: "#dbeafe", text: "#3b82f6" }, // blue
+              { bg: "#fdf4ff", border: "#fae8ff", text: "#c026d3" }, // pink
+              { bg: "#f0fdf4", border: "#dcfce7", text: "#16a34a" }, // green
+              { bg: "#fffbeb", border: "#fef3c7", text: "#f59e0b" }, // amber
+              { bg: "#faf5ff", border: "#f3e8ff", text: "#9333ea" }, // purple
+            ];
+            const color = colors[index % colors.length];
+            
+            return (
+              <span
+                key={tech}
+                style={{
+                  background: color.bg,
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius-sm)",
+                  fontSize: "12px",
+                  color: color.text,
+                  fontWeight: "500",
+                  border: `1px solid ${color.border}`,
+                }}
+              >
+                {tech}
+              </span>
+            );
+          })}
         </div>
 
         {/* Links */}
-        <div className="profile-links" style={{ marginTop: "16px", display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
+        <div className="profile-links" style={{ 
+          marginTop: "var(--spacing-4)", 
+          display: "flex", 
+          gap: "var(--spacing-4)", 
+          flexWrap: "wrap", 
+          alignItems: "center" 
+        }}>
           <a 
             href={profile.links.github} 
             target="_blank"
             rel="noopener noreferrer"
-            style={linkStyle}
+            style={{
+              fontSize: "14px",
+              color: "#24292e",
+              fontWeight: "500",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "6px 12px",
+              background: "#f6f8fa",
+              borderRadius: "var(--radius-sm)",
+              border: "1px solid #d0d7de",
+              transition: "all var(--transition)",
+            }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-primary-light)";
-              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.background = "#24292e";
+              e.currentTarget.style.color = "white";
+              e.currentTarget.style.borderColor = "#24292e";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-primary)";
-              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.background = "#f6f8fa";
+              e.currentTarget.style.color = "#24292e";
+              e.currentTarget.style.borderColor = "#d0d7de";
             }}
           >
-            <Github style={{ width: "16px", height: "16px", marginRight: "6px", display: "inline-block", verticalAlign: "middle" }} />
+            <Github style={{ width: "16px", height: "16px" }} />
             GitHub
           </a>
           <a 
             href={profile.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            style={linkStyle}
+            style={{
+              fontSize: "14px",
+              color: "#0077b5",
+              fontWeight: "500",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "6px 12px",
+              background: "#e7f3f8",
+              borderRadius: "var(--radius-sm)",
+              border: "1px solid #b8dde8",
+              transition: "all var(--transition)",
+            }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-primary-light)";
-              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.background = "#0077b5";
+              e.currentTarget.style.color = "white";
+              e.currentTarget.style.borderColor = "#0077b5";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-primary)";
-              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.background = "#e7f3f8";
+              e.currentTarget.style.color = "#0077b5";
+              e.currentTarget.style.borderColor = "#b8dde8";
             }}
           >
-            <Linkedin style={{ width: "16px", height: "16px", marginRight: "6px", display: "inline-block", verticalAlign: "middle" }} />
+            <Linkedin style={{ width: "16px", height: "16px" }} />
             LinkedIn
           </a>
           <a 
             href={profile.links.portfolio}
             target="_blank"
             rel="noopener noreferrer"
-            style={linkStyle}
+            style={{
+              fontSize: "14px",
+              color: "#7c3aed",
+              fontWeight: "500",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "6px 12px",
+              background: "#f5f3ff",
+              borderRadius: "var(--radius-sm)",
+              border: "1px solid #ddd6fe",
+              transition: "all var(--transition)",
+            }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-primary-light)";
-              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.background = "#7c3aed";
+              e.currentTarget.style.color = "white";
+              e.currentTarget.style.borderColor = "#7c3aed";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-primary)";
-              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.background = "#f5f3ff";
+              e.currentTarget.style.color = "#7c3aed";
+              e.currentTarget.style.borderColor = "#ddd6fe";
             }}
           >
-            <Globe style={{ width: "16px", height: "16px", marginRight: "6px", display: "inline-block", verticalAlign: "middle" }} />
+            <Globe style={{ width: "16px", height: "16px" }} />
             Portfolio
           </a>
 
           {/* Edit Button - Mobile */}
           <button
             onClick={onEditClick}
-            className="edit-profile-button-mobile"
+            className="edit-profile-button-mobile btn-secondary"
             style={{
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "8px",
-              padding: "8px",
-              cursor: "pointer",
-              color: "var(--color-text-secondary)",
-              fontSize: "14px",
-              fontWeight: "600",
-              lineHeight: "1",
-              transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1)",
               display: "none",
               alignItems: "center",
               marginLeft: "auto",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-              e.currentTarget.style.borderColor = "var(--color-border-strong)";
-              e.currentTarget.style.color = "var(--color-text-primary)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
-              e.currentTarget.style.borderColor = "var(--color-border)";
-              e.currentTarget.style.color = "var(--color-text-secondary)";
+              padding: "var(--spacing-2)",
             }}
           >
             <Pencil style={{ width: "14px", height: "14px" }} />
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
-};
-
-const linkStyle = {
-  fontSize: "14px",
-  color: "var(--color-primary)",
-  textDecoration: "none",
-  fontWeight: "600",
-  transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-  display: "inline-flex",
-  alignItems: "center",
 };
 
 export default ProfileHeader;
