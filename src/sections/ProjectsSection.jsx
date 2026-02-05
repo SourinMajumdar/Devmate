@@ -160,33 +160,22 @@ const ProjectsSection = ({ projects, onAddProject, onEditProject, onDeleteProjec
                 gap: "var(--spacing-2)",
                 marginBottom: "var(--spacing-4)",
               }}>
-              {project.tech.map((tech, techIndex) => {
-                const colors = [
-                  { bg: "#eff6ff", border: "#dbeafe", text: "#3b82f6" }, // blue
-                  { bg: "#fdf4ff", border: "#fae8ff", text: "#c026d3" }, // pink
-                  { bg: "#f0fdf4", border: "#dcfce7", text: "#16a34a" }, // green
-                  { bg: "#fffbeb", border: "#fef3c7", text: "#f59e0b" }, // amber
-                  { bg: "#faf5ff", border: "#f3e8ff", text: "#9333ea" }, // purple
-                ];
-                const color = colors[techIndex % colors.length];
-                
-                return (
+              {project.tech.map((tech) => (
                   <span
                     key={tech}
                     style={{
-                      background: color.bg,
+                      background: "#eff6ff",
                       padding: "4px 10px",
                       borderRadius: "var(--radius-sm)",
                       fontSize: "12px",
-                      color: color.text,
+                      color: "#3b82f6",
                       fontWeight: "500",
-                      border: `1px solid ${color.border}`,
+                      border: "1px solid #dbeafe",
                     }}
                   >
                     {tech}
                   </span>
-                );
-              })}
+                ))}
               </div>
 
               {/* Link */}

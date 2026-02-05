@@ -166,33 +166,22 @@ const ProfileHeader = ({ profile, onEditClick }) => {
             marginTop: "var(--spacing-4)",
           }}
         >
-          {profile.tech.map((tech, index) => {
-            const colors = [
-              { bg: "#eff6ff", border: "#dbeafe", text: "#3b82f6" }, // blue
-              { bg: "#fdf4ff", border: "#fae8ff", text: "#c026d3" }, // pink
-              { bg: "#f0fdf4", border: "#dcfce7", text: "#16a34a" }, // green
-              { bg: "#fffbeb", border: "#fef3c7", text: "#f59e0b" }, // amber
-              { bg: "#faf5ff", border: "#f3e8ff", text: "#9333ea" }, // purple
-            ];
-            const color = colors[index % colors.length];
-            
-            return (
+          {profile.tech.map((tech) => (
               <span
                 key={tech}
                 style={{
-                  background: color.bg,
+                  background: "#eff6ff",
                   padding: "6px 12px",
                   borderRadius: "var(--radius-sm)",
                   fontSize: "12px",
-                  color: color.text,
+                  color: "#3b82f6",
                   fontWeight: "500",
-                  border: `1px solid ${color.border}`,
+                  border: "1px solid #dbeafe",
                 }}
               >
                 {tech}
               </span>
-            );
-          })}
+            ))}
         </div>
 
         {/* Links */}
