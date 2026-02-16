@@ -202,17 +202,32 @@ button {
 /* Responsive Layout */
 @media (max-width: 1024px) {
   /* Hero Section Mobile Styles */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-8) !important;
+    text-align: center !important;
+  }
+
+  .hero-grid > div:first-child {
+    text-align: center !important;
+  }
+
+  .hero-grid > div:first-child > div:first-child {
+    justify-content: center !important;
+  }
+
+  .hero-grid > div:first-child > div:nth-child(3),
+  .hero-grid > div:first-child > div:nth-child(4),
+  .hero-grid > div:first-child > div:nth-child(5) {
+    justify-content: center !important;
+  }
+
   .hero-heading {
-    font-size: 40px !important;
+    font-size: 36px !important;
   }
 
   .hero-subtitle {
-    font-size: 18px !important;
-  }
-
-  .hero-stats {
-    grid-template-columns: 1fr !important;
-    max-width: 350px !important;
+    font-size: 16px !important;
   }
 
   /* Hero Gradients - Make them circular on mobile */
@@ -225,10 +240,33 @@ button {
     width: 80vw !important;
     height: 80vw !important;
   }
+}
 
-  .hero-gradient-cyan {
-    width: 70vw !important;
-    height: 70vw !important;
+@media (max-width: 768px) {
+  /* Hero Feature Cards Mobile Optimization */
+  .hero-features-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+
+  .hero-feature-card {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    padding: 16px 18px !important;
+    min-width: 100% !important;
+    flex: none !important;
+    gap: 14px !important;
+  }
+
+  .hero-feature-card svg {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .hero-feature-card span {
+    font-size: 13px !important;
+    text-align: left !important;
   }
 
   /* Dashboard Header Mobile */

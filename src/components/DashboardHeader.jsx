@@ -67,7 +67,7 @@ const DashboardHeader = ({ onBackToHome, onBackToDashboard }) => {
               }}
             >
               <LayoutDashboard style={{ width: "16px", height: "16px" }} />
-              <span className="back-to-home-text">Dashboard</span>
+              <span className="back-to-home-text">Back to Dashboard</span>
             </motion.button>
           )}
           

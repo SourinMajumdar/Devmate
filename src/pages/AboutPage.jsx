@@ -32,8 +32,9 @@ const AboutPage = ({ onBackToHome, onGoToDashboard }) => {
     },
     {
       icon: TrendingUp,
-      title: "Real-time Analytics",
-      description: "Track your progress with live metrics, growth trends, and detailed insights into your development journey."
+      title: "Developer Momentum",
+      description:
+        "Get a clear snapshot of your progress with project counts, recent activity, and consistency streaks."
     },
     {
       icon: Zap,
