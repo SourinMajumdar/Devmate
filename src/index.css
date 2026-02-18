@@ -240,6 +240,11 @@ button {
     width: 80vw !important;
     height: 80vw !important;
   }
+
+  /* Add spacing above illustration on mobile */
+  .hero-illustration-container {
+    margin-top: var(--spacing-10) !important;
+  }
 }
 
 @media (max-width: 768px) {

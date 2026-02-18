@@ -23,7 +23,7 @@ Devmate is a modern developer dashboard to showcase projects, track activity, an
 - Projects displayed in card format with tech stack badges
 - LocalStorage persistence for project data
 
-### 📊 Analytics Dashboard
+### 📊 Overview Dashboard
 - **Project Count**: Total number of projects tracked
 - **Latest Activity**: Most recent project updates with timestamps
 - **Current Streak**: Consecutive active days with flame icon

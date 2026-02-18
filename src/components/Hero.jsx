@@ -1,5 +1,6 @@
 import { Code2, ArrowRight, FileCodeCorner, BarChart3, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import illustration from "../assets/illustration.png";
 
 const Hero = ({ onGetStarted, onLearnMore }) => {
   const containerVariants = {
@@ -327,6 +328,7 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
         {/* Right side - Illustration */}
         <motion.div 
           variants={rightVariants}
+          className="hero-illustration-container"
           style={{
             display: "flex",
             alignItems: "center",
@@ -359,8 +361,8 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
           <motion.img 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
-            src="https://pixabay.com/get/gae47a16fa8f37bb50c5a26aeca2023ae971bdc0879de9ad0a9d1bbdf39442a89dd80de04e7226217feeed39255088ee5.svg"
-            alt="development, web, design, graphic - illustration by graphicartsangla on Pixabay"
+            src={illustration}
+            alt="Developer workspace illustration"
             style={{
               width: "100%",
               maxWidth: "500px",
