@@ -1,375 +1,219 @@
 import { Code2, ArrowRight, FileCodeCorner, BarChart3, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import illustration from "../assets/illustration.png";
+import FeatureCard from "./shared/FeatureCard";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+  },
+};
+
+const leftVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
+  },
+};
+
+const rightVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1], delay: 0.1 },
+  },
+};
+
+const features = [
+  { icon: FileCodeCorner, title: "Track unlimited projects" },
+  { icon: BarChart3, title: "Real-time overview" },
+  { icon: Users, title: "Professional showcase" },
+];
 
 const Hero = ({ onGetStarted, onLearnMore }) => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      }
-    }
-  };
-
-  const leftVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.4, 0, 0.2, 1]
-      }
-    }
-  };
-
-  const rightVariants = {
-    hidden: { opacity: 0, x: 30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.4, 0, 0.2, 1]
-      }
-    }
-  };
-
-  const features = [
-    {
-      icon: FileCodeCorner ,
-      title: "Track unlimited projects",
-      color: "var(--color-primary)"
-    },
-    {
-      icon: BarChart3,
-      title: "Real-time overview",
-      color: "var(--color-primary)"
-    },
-    {
-      icon: Users,
-      title: "Professional showcase",
-      color: "var(--color-primary)"
-    }
-  ];
-
   return (
-    <section style={{
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "64px var(--spacing-8)",
-      background: "var(--color-bg-base)",
-      position: "relative",
-      overflow: "hidden",
-    }}>
-      {/* Radial gradients - Static background */}
-      {/* Purple gradient - Top left */}
+    <section
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "var(--space-2xl) var(--space-xl)",
+        background: "var(--color-bg)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Subtle static grid — very faint, no animation */}
       <div
-        className="hero-gradient-purple"
-        style={{
-          position: "absolute",
-          top: "-20%",
-          left: "-15%",
-          width: "60%",
-          height: "60%",
-          background: "radial-gradient(circle at center, rgba(102, 126, 234, 0.25) 0%, rgba(102, 126, 234, 0.1) 40%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      
-      {/* Pink gradient - Bottom right */}
-      <div
-        className="hero-gradient-pink"
-        style={{
-          position: "absolute",
-          bottom: "-20%",
-          right: "-15%",
-          width: "60%",
-          height: "60%",
-          background: "radial-gradient(circle at center, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0.08) 40%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Animated grid */}
-      <motion.div 
-        animate={{
-          backgroundPosition: ["0px 0px", "50px 50px"],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear"
-        }}
+        aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `linear-gradient(rgba(102, 126, 234, 0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(102, 126, 234, 0.1) 1px, transparent 1px)`,
-          backgroundSize: "50px 50px",
-          opacity: 0.4,
+          backgroundImage: `linear-gradient(var(--color-border) 1px, transparent 1px),
+                            linear-gradient(90deg, var(--color-border) 1px, transparent 1px)`,
+          backgroundSize: "48px 48px",
+          opacity: 0.35,
           pointerEvents: "none",
-        }} 
+        }}
       />
 
-      {/* Main content container */}
-      <motion.div 
+      {/* Main content */}
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        style={{ 
-          maxWidth: "1200px", 
+        style={{
+          maxWidth: "1200px",
           width: "100%",
           margin: "0 auto",
           position: "relative",
           zIndex: 1,
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: "var(--spacing-10)",
+          gap: "var(--space-xl)",
           alignItems: "center",
         }}
         className="hero-grid"
       >
-        {/* Left side - Text content */}
-        <motion.div 
-          variants={leftVariants}
-          style={{
-            textAlign: "left",
-          }}
-        >
-          {/* Badge */}
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
+        {/* Left — Text content */}
+        <motion.div variants={leftVariants} style={{ textAlign: "left" }}>
+          {/* Logo / brand */}
+          <div
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "10px",
-              marginBottom: "var(--spacing-6)",
+              marginBottom: "var(--space-lg)",
             }}
           >
-            <Code2 style={{ 
-              width: "24px", 
-              height: "24px",
-              color: "#667eea",
-              strokeWidth: 2.5,
-            }} />
-            <span style={{ 
-              fontFamily: "'Funnel Display', sans-serif",
-              fontSize: "28px",
-              fontWeight: "800",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              letterSpacing: "1px",
-            }}>
+            <Code2
+              style={{
+                width: "24px",
+                height: "24px",
+                color: "#667eea",
+                strokeWidth: 2.5,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "'Funnel Display', sans-serif",
+                fontSize: "28px",
+                fontWeight: "800",
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                letterSpacing: "1px",
+              }}
+            >
               Devmate
             </span>
-          </motion.div>
+          </div>
 
-          {/* Main Heading */}
-          <h1 
-            className="hero-heading" 
+          {/* Main heading */}
+          <h1
+            className="hero-heading"
             style={{
-              fontSize: "56px",
-              fontWeight: "700",
-              lineHeight: "1.15",
+              fontSize: "var(--font-size-display)",
+              fontWeight: "var(--font-weight-medium)",
+              lineHeight: "var(--line-height-tight)",
               letterSpacing: "-0.03em",
               color: "var(--color-text-primary)",
-              marginBottom: "var(--spacing-5)",
+              marginBottom: "var(--space-md)",
             }}
           >
             Your developer journey,{" "}
-            <span style={{ 
-              background: `linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>
-              all in one place
-            </span>
+            <span style={{ color: "var(--color-accent)" }}>all in one place</span>
           </h1>
 
           {/* Subtitle */}
-          <p 
-            className="hero-subtitle" 
+          <p
+            className="hero-subtitle"
             style={{
-              fontSize: "18px",
-              lineHeight: "1.7",
+              fontSize: "17px",
+              lineHeight: "var(--line-height-relaxed)",
               color: "var(--color-text-secondary)",
-              marginBottom: "var(--spacing-8)",
+              marginBottom: "var(--space-xl)",
+              maxWidth: "480px",
             }}
           >
             Manage your projects, track activity, and showcase your work with a professional dashboard built for developers.
           </p>
 
-          {/* Feature Cards - Glassmorphism */}
-          <div 
+          {/* Feature cards */}
+          <div
             className="hero-features-container"
             style={{
               display: "flex",
-              gap: "var(--spacing-4)",
+              gap: "var(--space-sm)",
               flexWrap: "nowrap",
-              marginBottom: "var(--spacing-8)",
+              marginBottom: "var(--space-xl)",
             }}
           >
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                className="hero-feature-card"
-                whileHover={{ 
-                  y: -8, 
-                  scale: 1.02,
-                  boxShadow: "0 12px 48px rgba(102, 126, 234, 0.2)",
-                  borderColor: "rgba(102, 126, 234, 0.73)",
-                  borderWidth: "1px"
-                }}
-                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "var(--spacing-3)",
-                  background: "rgba(255, 255, 255, 0.7)",
-                  backdropFilter: "blur(10px) saturate(180%)",
-                  WebkitBackdropFilter: "blur(10px) saturate(180%)",
-                  border: "0.5px solid rgba(102, 126, 234, 0.2)",
-                  borderRadius: "16px",
-                  padding: "20px",
-                  minWidth: "160px",
-                  flex: "1",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
-                }}
-              >
-                <feature.icon style={{ 
-                  width: "32px", 
-                  height: "32px", 
-                  color: feature.color,
-                  strokeWidth: 2,
-                  flexShrink: 0
-                }} />
-                <span style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: "var(--color-text-primary)",
-                  textAlign: "left",
-                  lineHeight: "1.4",
-                }}>
-                  {feature.title}
-                </span>
-              </motion.div>
+            {features.map((feature, i) => (
+              <FeatureCard key={i} icon={feature.icon} title={feature.title} />
             ))}
           </div>
 
           {/* CTA Buttons */}
-          <div 
+          <div
             style={{
               display: "flex",
-              gap: "var(--spacing-4)",
+              gap: "var(--space-sm)",
               alignItems: "center",
               flexWrap: "wrap",
             }}
           >
-            <motion.button 
+            <button
               onClick={onGetStarted}
-              whileHover={{ scale: 1.05, boxShadow: "0 8px 20px rgba(79, 70, 229, 0.3)" }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
+              className="btn-primary"
               style={{
-                padding: "16px 32px",
-                fontSize: "16px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "var(--spacing-2)",
-                background: "var(--color-primary)",
-                color: "white",
-                border: "none",
-                borderRadius: "var(--radius-md)",
-                fontWeight: "600",
-                boxShadow: "0 4px 12px rgba(79, 70, 229, 0.2)",
-                cursor: "pointer",
+                padding: "12px 24px",
+                fontSize: "var(--font-size-body)",
+                gap: "var(--space-sm)",
               }}
             >
               Get Started
-              <ArrowRight style={{ width: "18px", height: "18px" }} />
-            </motion.button>
+              <ArrowRight style={{ width: "16px", height: "16px" }} />
+            </button>
 
-            <motion.button 
+            <button
               onClick={onLearnMore}
-              whileHover={{ 
-                scale: 1.05, 
-                borderColor: "var(--color-primary)",
-                color: "var(--color-primary)",
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
+              className="btn-secondary"
               style={{
-                padding: "16px 32px",
-                fontSize: "16px",
-                background: "transparent",
-                color: "var(--color-text-secondary)",
-                border: "1px solid rgba(0, 0, 0, 0.1)",
-                borderRadius: "var(--radius-md)",
-                fontWeight: "600",
-                cursor: "pointer",
+                padding: "12px 24px",
+                fontSize: "var(--font-size-body)",
               }}
             >
               Learn More
-            </motion.button>
+            </button>
           </div>
         </motion.div>
 
-        {/* Right side - Illustration */}
-        <motion.div 
+        {/* Right — Illustration */}
+        <motion.div
           variants={rightVariants}
           className="hero-illustration-container"
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            position: "relative",
           }}
         >
-          {/* Background decoration */}
-          <motion.div
-            animate={{
-              scale: [1, 1.05, 1],
-              rotate: [0, 5, 0],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              position: "absolute",
-              width: "80%",
-              height: "80%",
-              background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)",
-              borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70%",
-              filter: "blur(40px)",
-            }}
-          />
-          
-          {/* Illustration */}
-          <motion.img 
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
+          <img
             src={illustration}
             alt="Developer workspace illustration"
             style={{
               width: "100%",
-              maxWidth: "500px",
+              maxWidth: "480px",
               height: "auto",
-              position: "relative",
-              zIndex: 1,
-              filter: "drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1))",
+              filter: "drop-shadow(0 8px 24px rgba(0, 0, 0, 0.08))",
             }}
           />
         </motion.div>

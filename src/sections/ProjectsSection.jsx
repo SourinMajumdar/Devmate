@@ -1,244 +1,251 @@
 import { Trash2, Pencil, FolderPlus, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-const ProjectsSection = ({ projects, onAddProject, onEditProject, onDeleteProject, onSeeAll, isAllProjectsView = false }) => {
+const ProjectsSection = ({
+  projects,
+  onAddProject,
+  onEditProject,
+  onDeleteProject,
+  onSeeAll,
+  isAllProjectsView = false,
+}) => {
   const displayProjects = isAllProjectsView ? projects : projects.slice(0, 3);
   const hasMoreProjects = projects.length > 3;
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: isAllProjectsView ? 0 : 0.3 }}
+      transition={{ duration: 0.4, delay: isAllProjectsView ? 0 : 0.2 }}
       className="projects-section-mobile"
-      style={{
-        background: "transparent",
-        padding: 0,
-      }}
+      style={{ background: "transparent", padding: 0 }}
     >
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "var(--spacing-5)",
-      }}>
-        <h2 style={{ 
-          fontSize: "18px", 
-          fontWeight: "600", 
-          margin: 0, 
-          color: "var(--color-text-primary)",
-        }}>
-          Projects {!isAllProjectsView && projects.length > 0 && `(${projects.length})`}
+      {/* Section header */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "var(--space-md)",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "var(--font-size-h2)",
+            fontWeight: "var(--font-weight-semibold)",
+            margin: 0,
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Projects{" "}
+          {!isAllProjectsView && projects.length > 0 && (
+            <span
+              style={{
+                fontSize: "var(--font-size-sm)",
+                color: "var(--color-text-muted)",
+                fontWeight: "var(--font-weight-normal)",
+              }}
+            >
+              ({projects.length})
+            </span>
+          )}
         </h2>
 
-        <button 
-          onClick={onAddProject} 
+        <button
+          onClick={onAddProject}
           className="btn-primary"
-          style={{
-            fontSize: "13px",
-            padding: "7px 14px",
-          }}
+          style={{ padding: "7px 14px", fontSize: "var(--font-size-meta)" }}
         >
           + Add Project
         </button>
       </div>
 
+      {/* Empty state */}
       {projects.length === 0 && (
-        <div className="card" style={{
-          padding: "var(--spacing-8) var(--spacing-6)",
-          textAlign: "center",
-          border: "1px dashed var(--color-border)",
-        }}>
-          <div style={{
-            width: "48px",
-            height: "48px",
-            borderRadius: "50%",
-            background: "var(--color-primary-light)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto var(--spacing-4)",
-          }}>
-            <FolderPlus style={{ width: "24px", height: "24px", color: "var(--color-primary)" }} />
+        <div
+          className="card"
+          style={{
+            padding: "var(--space-xl) var(--space-lg)",
+            textAlign: "center",
+            border: "1px dashed var(--color-border)",
+          }}
+        >
+          <div
+            style={{
+              width: "44px",
+              height: "44px",
+              borderRadius: "50%",
+              background: "var(--color-accent-subtle)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto var(--space-md)",
+            }}
+          >
+            <FolderPlus style={{ width: "20px", height: "20px", color: "var(--color-accent)" }} />
           </div>
-
-          <p style={{
-            fontSize: "14px",
-            fontWeight: "500",
-            color: "var(--color-text-primary)",
-            marginBottom: "var(--spacing-2)",
-          }}>
+          <p
+            style={{
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--font-weight-medium)",
+              color: "var(--color-text-primary)",
+              marginBottom: "var(--space-xs)",
+            }}
+          >
             No projects yet
           </p>
-
-          <p style={{
-            fontSize: "14px",
-            color: "var(--color-text-secondary)",
-            margin: 0,
-          }}>
+          <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", margin: 0 }}>
             Add your first project to get started
           </p>
         </div>
       )}
 
+      {/* Project list */}
       {projects.length > 0 && (
-        <div 
+        <div
           className={isAllProjectsView ? "all-projects-grid" : ""}
-          style={{ 
+          style={{
             display: isAllProjectsView ? "grid" : "flex",
             gridTemplateColumns: isAllProjectsView ? "1fr 1fr" : undefined,
             flexDirection: isAllProjectsView ? undefined : "column",
-            gap: "var(--spacing-3)",
+            gap: "var(--space-sm)",
           }}
         >
           {displayProjects.map((project, displayIndex) => {
-            const actualIndex = isAllProjectsView 
-              ? projects.findIndex(p => p.id === project.id)
+            const actualIndex = isAllProjectsView
+              ? projects.findIndex((p) => p.id === project.id)
               : displayIndex;
-            
+
             return (
               <div
                 key={project.id}
                 className="card"
-                style={{
-                  padding: "var(--spacing-5)",
-                  position: "relative",
-                }}
+                style={{ padding: "var(--space-md)", position: "relative" }}
               >
-                <button
-                  onClick={() => onDeleteProject(actualIndex)}
-                  className="btn-secondary"
+                {/* Action buttons */}
+                <div
                   style={{
                     position: "absolute",
-                    top: "var(--spacing-4)",
-                    right: "calc(var(--spacing-4) + 44px)",
-                    padding: "var(--spacing-2)",
-                    color: "var(--color-danger)",
-                    zIndex: 10,
+                    top: "var(--space-md)",
+                    right: "var(--space-md)",
+                    display: "flex",
+                    gap: "var(--space-xs)",
                   }}
                 >
-                  <Trash2 style={{ width: "14px", height: "14px" }} />
-                </button>
-
-                <button
-                  onClick={() => onEditProject(actualIndex)}
-                  className="btn-secondary"
-                  style={{
-                    position: "absolute",
-                    top: "var(--spacing-4)",
-                    right: "var(--spacing-4)",
-                    padding: "var(--spacing-2)",
-                    zIndex: 10,
-                  }}
-                >
-                  <Pencil style={{ width: "14px", height: "14px" }} />
-                </button>
-
-              <h3 style={{ 
-                marginTop: "0", 
-                fontSize: "16px", 
-                fontWeight: "600", 
-                color: "var(--color-text-primary)",
-                marginBottom: "var(--spacing-2)",
-              }}>
-                {project.title}
-              </h3>
-
-              <p style={{
-                color: "var(--color-text-secondary)",
-                fontSize: "14px",
-                lineHeight: "1.6",
-                marginBottom: "var(--spacing-4)",
-              }}>
-                {project.description}
-              </p>
-
-              {/* Tech stack */}
-              <div style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "var(--spacing-2)",
-                marginBottom: "var(--spacing-4)",
-              }}>
-              {project.tech.map((tech) => (
-                  <span
-                    key={tech}
+                  <button
+                    onClick={() => onDeleteProject(actualIndex)}
+                    className="btn-secondary"
                     style={{
-                      background: "#eff6ff",
-                      padding: "4px 10px",
-                      borderRadius: "var(--radius-sm)",
-                      fontSize: "12px",
-                      color: "#3b82f6",
-                      fontWeight: "500",
-                      border: "1px solid #dbeafe",
+                      padding: "5px",
+                      color: "var(--color-danger)",
+                      width: "30px",
+                      height: "30px",
+                    }}
+                    title="Delete project"
+                  >
+                    <Trash2 style={{ width: "13px", height: "13px" }} />
+                  </button>
+
+                  <button
+                    onClick={() => onEditProject(actualIndex)}
+                    className="btn-secondary"
+                    style={{ padding: "5px", width: "30px", height: "30px" }}
+                    title="Edit project"
+                  >
+                    <Pencil style={{ width: "13px", height: "13px" }} />
+                  </button>
+                </div>
+
+                {/* Content */}
+                <h3
+                  style={{
+                    fontSize: "var(--font-size-sm)",
+                    fontWeight: "var(--font-weight-semibold)",
+                    color: "var(--color-text-primary)",
+                    marginBottom: "var(--space-xs)",
+                    paddingRight: "72px",
+                  }}
+                >
+                  {project.title}
+                </h3>
+
+                <p
+                  style={{
+                    color: "var(--color-text-secondary)",
+                    fontSize: "var(--font-size-sm)",
+                    lineHeight: "var(--line-height-base)",
+                    marginBottom: "var(--space-md)",
+                  }}
+                >
+                  {project.description}
+                </p>
+
+                {/* Tech tags */}
+                {project.tech?.length > 0 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "var(--space-xs)",
+                      marginBottom: "var(--space-md)",
                     }}
                   >
-                    {tech}
-                  </span>
-                ))}
-              </div>
+                    {project.tech.map((tech) => (
+                      <span
+                        key={tech}
+                        style={{
+                          background: "var(--color-bg-elevated)",
+                          padding: "3px 8px",
+                          borderRadius: "var(--radius-sm)",
+                          fontSize: "var(--font-size-meta)",
+                          color: "var(--color-text-secondary)",
+                          fontWeight: "var(--font-weight-medium)",
+                          border: "1px solid var(--color-border)",
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
-              {/* Link */}
-              {project.link && project.link !== "#" ? (
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontSize: "14px",
-                    color: "var(--color-primary)",
-                    fontWeight: "500",
-                  }}
-                >
-                  View Project →
-                </a>
-              ) : (
-                <span style={{
-                  fontSize: "14px",
-                  color: "var(--color-text-tertiary)",
-                  fontWeight: "500",
-                }}>
-                  No link provided
-                </span>
-              )}
+                {/* Link */}
+                {project.link && project.link !== "#" ? (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontSize: "var(--font-size-sm)",
+                      color: "var(--color-accent)",
+                      fontWeight: "var(--font-weight-medium)",
+                    }}
+                  >
+                    View Project →
+                  </a>
+                ) : (
+                  <span
+                    style={{
+                      fontSize: "var(--font-size-sm)",
+                      color: "var(--color-text-muted)",
+                    }}
+                  >
+                    No link provided
+                  </span>
+                )}
               </div>
             );
           })}
-          
-          {!isAllProjectsView && hasMoreProjects && (
-            <div style={{ display: "flex", justifyContent: "center", marginTop: "var(--spacing-3)" }}>
-              <button
-                onClick={onSeeAll}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "var(--spacing-2)",
-                  padding: "var(--spacing-2) var(--spacing-4)",
-                  background: "var(--color-bg-surface)",
-                  color: "var(--color-text-secondary)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "var(--radius-md)",
-                  fontWeight: "500",
-                  fontSize: "13px",
-                  cursor: "pointer",
-                  transition: "all var(--transition)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--color-primary)";
-                  e.currentTarget.style.borderColor = "var(--color-primary)";
-                  e.currentTarget.style.background = "var(--color-primary-light)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--color-text-secondary)";
-                  e.currentTarget.style.borderColor = "var(--color-border)";
-                  e.currentTarget.style.background = "var(--color-bg-surface)";
-                }}
-              >
-                <span>See all {projects.length} projects</span>
-                <ArrowRight style={{ width: "14px", height: "14px" }} />
-              </button>
-            </div>
-          )}
+        </div>
+      )}
+
+      {/* See all */}
+      {!isAllProjectsView && hasMoreProjects && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "var(--space-md)" }}>
+          <button onClick={onSeeAll} className="btn-secondary">
+            <span>See all {projects.length} projects</span>
+            <ArrowRight style={{ width: "14px", height: "14px" }} />
+          </button>
         </div>
       )}
     </motion.section>

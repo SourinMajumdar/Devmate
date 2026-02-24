@@ -1,58 +1,85 @@
 import { Github, Linkedin, Globe, Pencil, UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
+/* Shared link badge style — neutral, consistent */
+const linkBadgeBase = {
+  fontSize: "var(--font-size-sm)",
+  fontWeight: "var(--font-weight-medium)",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "6px",
+  padding: "6px 12px",
+  background: "var(--color-bg-elevated)",
+  borderRadius: "var(--radius-sm)",
+  border: "1px solid var(--color-border)",
+  color: "var(--color-text-secondary)",
+  transition: "border-color var(--transition), background var(--transition), color var(--transition)",
+  textDecoration: "none",
+};
+
+const LinkBadge = ({ href, icon: Icon, label }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    style={linkBadgeBase}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.borderColor = "var(--color-border-hover)";
+      e.currentTarget.style.color = "var(--color-text-primary)";
+      e.currentTarget.style.background = "var(--color-surface-hover)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.borderColor = "var(--color-border)";
+      e.currentTarget.style.color = "var(--color-text-secondary)";
+      e.currentTarget.style.background = "var(--color-bg-elevated)";
+    }}
+  >
+    <Icon style={{ width: "15px", height: "15px" }} />
+    {label}
+  </a>
+);
+
 const ProfileHeader = ({ profile, onEditClick }) => {
   const isEmpty =
-  !profile.name &&
-  !profile.username &&
-  !profile.role &&
-  !profile.bio;
-  
+    !profile.name &&
+    !profile.username &&
+    !profile.role &&
+    !profile.bio;
+
   if (isEmpty) {
     return (
-      <div style={{
-        background: "var(--color-bg-surface)",
-        border: "1.5px dashed var(--color-border)",
-        borderRadius: "var(--radius-lg)",
-        padding: "var(--spacing-10) var(--spacing-8)",
-        textAlign: "center",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.03)",
-      }}>
-        <div style={{
-          width: "48px",
-          height: "48px",
-          borderRadius: "50%",
-          background: "var(--color-primary-light)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          margin: "0 auto var(--spacing-4)",
-        }}>
-          <UserCircle style={{ width: "24px", height: "24px", color: "var(--color-primary)" }} />
+      <div
+        style={{
+          background: "var(--color-surface)",
+          border: "1px dashed var(--color-border)",
+          borderRadius: "var(--radius)",
+          padding: "var(--space-xl) var(--space-lg)",
+          textAlign: "center",
+          boxShadow: "var(--shadow-base)",
+        }}
+      >
+        <div
+          style={{
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            background: "var(--color-accent-subtle)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto var(--space-md)",
+          }}
+        >
+          <UserCircle style={{ width: "22px", height: "22px", color: "var(--color-accent)" }} />
         </div>
 
-        <h3 style={{
-          fontSize: "16px",
-          fontWeight: "600",
-          color: "var(--color-text-primary)",
-          marginBottom: "var(--spacing-2)",
-        }}>
+        <h3 style={{ fontSize: "15px", fontWeight: "var(--font-weight-semibold)", marginBottom: "var(--space-sm)" }}>
           No profile yet
         </h3>
-
-        <p style={{
-          fontSize: "14px",
-          color: "var(--color-text-secondary)",
-          marginBottom: "var(--spacing-5)",
-          lineHeight: "1.5",
-        }}>
+        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: "var(--space-lg)" }}>
           Create your profile to get started
         </p>
-
-        <button
-          onClick={onEditClick}
-          className="btn-primary"
-        >
+        <button onClick={onEditClick} className="btn-primary">
           Create Profile
         </button>
       </div>
@@ -61,245 +88,170 @@ const ProfileHeader = ({ profile, onEditClick }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4 }}
       className="profile-card card"
-      style={{
-        padding: "var(--spacing-6)",
-        position: "relative",
-        border: "2px solid var(--color-border)",
-        background: "linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%)",
-      }}
+      style={{ padding: "var(--space-lg)" }}
     >
-      {/* Edit Button - Desktop */}
+      {/* Edit button — desktop */}
       <button
         onClick={onEditClick}
         className="edit-profile-button-desktop btn-secondary"
         style={{
           position: "absolute",
-          top: "var(--spacing-4)",
-          right: "var(--spacing-4)",
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--spacing-2)",
+          top: "var(--space-md)",
+          right: "var(--space-md)",
+          padding: "6px 12px",
         }}
       >
-        <Pencil style={{ width: "14px", height: "14px" }} />
+        <Pencil style={{ width: "13px", height: "13px" }} />
         <span>Edit</span>
       </button>
 
-      {/* Header Row */}
-      <div className="profile-header-row" style={{ 
-        display: "flex", 
-        gap: "var(--spacing-4)", 
-        alignItems: "center", 
-        marginBottom: "var(--spacing-4)" 
-      }}>
+      {/* Header row */}
+      <div
+        className="profile-header-row"
+        style={{
+          display: "flex",
+          gap: "var(--space-md)",
+          alignItems: "center",
+          marginBottom: "var(--space-md)",
+        }}
+      >
         {/* Avatar */}
         <div
           className="profile-avatar"
           style={{
-            width: "64px",
-            height: "64px",
+            width: "56px",
+            height: "56px",
             borderRadius: "50%",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            color: "white",
+            background: "var(--color-accent)",
+            color: "#ffffff",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "24px",
-            fontWeight: "600",
+            fontSize: "20px",
+            fontWeight: "var(--font-weight-semibold)",
             flexShrink: 0,
-            boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
           }}
         >
           {profile.name[0]}
         </div>
 
-        {/* Name and Username */}
         <div>
-          <h1 className="profile-name" style={{ 
-            fontSize: "24px", 
-            fontWeight: "600", 
-            color: "var(--color-text-primary)",
-            marginBottom: "var(--spacing-1)",
-          }}>
+          <h1
+            className="profile-name"
+            style={{
+              fontSize: "20px",
+              fontWeight: "var(--font-weight-semibold)",
+              color: "var(--color-text-primary)",
+              marginBottom: "3px",
+            }}
+          >
             {profile.name}
           </h1>
-          <span className="profile-username" style={{ 
-            color: "var(--color-text-tertiary)", 
-            fontSize: "14px",
-          }}>
+          <span
+            className="profile-username"
+            style={{
+              color: "var(--color-text-muted)",
+              fontSize: "var(--font-size-sm)",
+            }}
+          >
             {profile.username}
           </span>
         </div>
       </div>
 
-      {/* Info */}
-      <div>
-        <p className="profile-role" style={{ 
-          color: "var(--color-text-secondary)", 
-          fontSize: "15px", 
-          fontWeight: "500",
-          marginBottom: "var(--spacing-2)",
-        }}>
-          {profile.role}
-        </p>
+      {/* Role + Bio */}
+      <p
+        className="profile-role"
+        style={{
+          color: "var(--color-text-secondary)",
+          fontSize: "var(--font-size-sm)",
+          fontWeight: "var(--font-weight-medium)",
+          marginBottom: "var(--space-xs)",
+        }}
+      >
+        {profile.role}
+      </p>
 
-        <p className="profile-bio" style={{ 
-          color: "var(--color-text-secondary)", 
-          fontSize: "14px", 
-          lineHeight: "1.6",
-          marginTop: "var(--spacing-2)",
-        }}>
-          {profile.bio}
-        </p>
+      <p
+        className="profile-bio"
+        style={{
+          color: "var(--color-text-secondary)",
+          fontSize: "var(--font-size-sm)",
+          lineHeight: "var(--line-height-base)",
+          marginTop: "var(--space-xs)",
+        }}
+      >
+        {profile.bio}
+      </p>
 
-        {/* Tech stack */}
+      {/* Tech stack */}
+      {profile.tech?.length > 0 && (
         <div
           className="profile-tech-stack"
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "var(--spacing-2)",
-            marginTop: "var(--spacing-4)",
+            gap: "var(--space-xs)",
+            marginTop: "var(--space-md)",
           }}
         >
           {profile.tech.map((tech) => (
-              <span
-                key={tech}
-                style={{
-                  background: "#eff6ff",
-                  padding: "6px 12px",
-                  borderRadius: "var(--radius-sm)",
-                  fontSize: "12px",
-                  color: "#3b82f6",
-                  fontWeight: "500",
-                  border: "1px solid #dbeafe",
-                }}
-              >
-                {tech}
-              </span>
-            ))}
+            <span
+              key={tech}
+              style={{
+                background: "var(--color-bg-elevated)",
+                padding: "4px 10px",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "var(--font-size-meta)",
+                color: "var(--color-text-secondary)",
+                fontWeight: "var(--font-weight-medium)",
+                border: "1px solid var(--color-border)",
+              }}
+            >
+              {tech}
+            </span>
+          ))}
         </div>
+      )}
 
-        {/* Links */}
-        <div className="profile-links" style={{ 
-          marginTop: "var(--spacing-4)", 
-          display: "flex", 
-          gap: "var(--spacing-4)", 
-          flexWrap: "wrap", 
-          alignItems: "center" 
-        }}>
-          <a 
-            href={profile.links.github} 
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: "14px",
-              color: "#24292e",
-              fontWeight: "500",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "6px 12px",
-              background: "#f6f8fa",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid #d0d7de",
-              transition: "all var(--transition)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#24292e";
-              e.currentTarget.style.color = "white";
-              e.currentTarget.style.borderColor = "#24292e";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#f6f8fa";
-              e.currentTarget.style.color = "#24292e";
-              e.currentTarget.style.borderColor = "#d0d7de";
-            }}
-          >
-            <Github style={{ width: "16px", height: "16px" }} />
-            GitHub
-          </a>
-          <a 
-            href={profile.links.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: "14px",
-              color: "#0077b5",
-              fontWeight: "500",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "6px 12px",
-              background: "#e7f3f8",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid #b8dde8",
-              transition: "all var(--transition)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#0077b5";
-              e.currentTarget.style.color = "white";
-              e.currentTarget.style.borderColor = "#0077b5";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#e7f3f8";
-              e.currentTarget.style.color = "#0077b5";
-              e.currentTarget.style.borderColor = "#b8dde8";
-            }}
-          >
-            <Linkedin style={{ width: "16px", height: "16px" }} />
-            LinkedIn
-          </a>
-          <a 
-            href={profile.links.portfolio}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: "14px",
-              color: "#7c3aed",
-              fontWeight: "500",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "6px 12px",
-              background: "#f5f3ff",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid #ddd6fe",
-              transition: "all var(--transition)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#7c3aed";
-              e.currentTarget.style.color = "white";
-              e.currentTarget.style.borderColor = "#7c3aed";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#f5f3ff";
-              e.currentTarget.style.color = "#7c3aed";
-              e.currentTarget.style.borderColor = "#ddd6fe";
-            }}
-          >
-            <Globe style={{ width: "16px", height: "16px" }} />
-            Portfolio
-          </a>
+      {/* Links */}
+      <div
+        className="profile-links"
+        style={{
+          marginTop: "var(--space-md)",
+          display: "flex",
+          gap: "var(--space-sm)",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        {profile.links?.github && (
+          <LinkBadge href={profile.links.github} icon={Github} label="GitHub" />
+        )}
+        {profile.links?.linkedin && (
+          <LinkBadge href={profile.links.linkedin} icon={Linkedin} label="LinkedIn" />
+        )}
+        {profile.links?.portfolio && (
+          <LinkBadge href={profile.links.portfolio} icon={Globe} label="Portfolio" />
+        )}
 
-          {/* Edit Button - Mobile */}
-          <button
-            onClick={onEditClick}
-            className="edit-profile-button-mobile btn-secondary"
-            style={{
-              display: "none",
-              alignItems: "center",
-              marginLeft: "auto",
-              padding: "var(--spacing-2)",
-            }}
-          >
-            <Pencil style={{ width: "14px", height: "14px" }} />
-          </button>
-        </div>
+        {/* Edit button — mobile */}
+        <button
+          onClick={onEditClick}
+          className="edit-profile-button-mobile btn-secondary"
+          style={{
+            display: "none",
+            alignItems: "center",
+            marginLeft: "auto",
+            padding: "6px",
+          }}
+        >
+          <Pencil style={{ width: "13px", height: "13px" }} />
+        </button>
       </div>
     </motion.div>
   );

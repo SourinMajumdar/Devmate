@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Code2 } from "lucide-react";
 import Hero from "../components/Hero.jsx";
 import AboutPage from "../pages/AboutPage.jsx";
 import AllProjectsPage from "../pages/AllProjectsPage.jsx";
@@ -16,22 +15,16 @@ import Footer from "../components/Footer.jsx";
 const ProfilePage = ({
   profile,
   projects,
-
-  // Profile
   onEditProfile,
   isEditModalOpen,
   onSaveProfile,
   onCloseProfileModal,
-
-  // Projects
   onAddProject,
   onEditProject,
   isProjectModalOpen,
   editingProjectIndex,
   onSaveProject,
   onCloseProjectModal,
-
-  // delete
   onDeleteProject,
   isDeleteModalOpen,
   onConfirmDelete,
@@ -45,57 +38,30 @@ const ProfilePage = ({
   const navigateToPage = (page) => {
     setCurrentPage(page);
     localStorage.setItem("devmate-current-page", page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleGetStarted = () => {
-    navigateToPage("dashboard");
-  };
-
-  const handleLearnMore = () => {
-    navigateToPage("about");
-  };
-
-  const handleBackToHome = () => {
-    navigateToPage("hero");
-  };
-
-  const handleGoToDashboard = () => {
-    navigateToPage("dashboard");
-  };
-
-  const handleSeeAllProjects = () => {
-    navigateToPage("all-projects");
-  };
-
-  // Show hero page
   if (currentPage === "hero") {
     return (
-      <div style={{
-        minHeight: "100vh",
-        background: "var(--color-bg-base)",
-        width: "100%",
-      }}>
-        <Hero 
-          onGetStarted={handleGetStarted} 
-          onLearnMore={handleLearnMore}
+      <div style={{ minHeight: "100vh", background: "var(--color-bg)", width: "100%" }}>
+        <Hero
+          onGetStarted={() => navigateToPage("dashboard")}
+          onLearnMore={() => navigateToPage("about")}
         />
         <Footer />
       </div>
     );
   }
 
-  // Show about page
   if (currentPage === "about") {
     return (
-      <AboutPage 
-        onBackToHome={handleBackToHome}
-        onGoToDashboard={handleGoToDashboard}
+      <AboutPage
+        onBackToHome={() => navigateToPage("hero")}
+        onGoToDashboard={() => navigateToPage("dashboard")}
       />
     );
   }
 
-  // Show all projects page
   if (currentPage === "all-projects") {
     return (
       <>
@@ -104,10 +70,9 @@ const ProfilePage = ({
           onAddProject={onAddProject}
           onEditProject={onEditProject}
           onDeleteProject={onDeleteProject}
-          onBackToDashboard={handleGoToDashboard}
-          onBackToHome={handleBackToHome}
+          onBackToDashboard={() => navigateToPage("dashboard")}
+          onBackToHome={() => navigateToPage("hero")}
         />
-
         {isProjectModalOpen && (
           <ProjectModal
             project={projects[editingProjectIndex]}
@@ -115,93 +80,78 @@ const ProfilePage = ({
             onClose={onCloseProjectModal}
           />
         )}
-
         {isDeleteModalOpen && (
-          <DeleteProjectModal
-            onConfirm={onConfirmDelete}
-            onCancel={onCloseDeleteModal}
-          />
+          <DeleteProjectModal onConfirm={onConfirmDelete} onCancel={onCloseDeleteModal} />
         )}
       </>
     );
   }
 
-  // Show dashboard page
+  /* ── Dashboard ─────────────────────────────────────────── */
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "var(--color-bg-base)",
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-    }}>
-      {/* Dashboard Header */}
-      <DashboardHeader onBackToHome={handleBackToHome} />
-
-      {/* Main container */}
-      <div className="main-container" style={{
-        maxWidth: "1400px",
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--color-bg)",
         width: "100%",
-        margin: "0 auto",
-        padding: "var(--spacing-10) var(--spacing-8)",
-        flex: 1,
-      }}>
-        {/* Two Column Layout */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "700px 550px",
-          gap: "var(--spacing-6)",
-          alignItems: "start",
-          width: "fit-content",
-          margin: "0 auto 0 auto",
-        }}
-        className="main-grid"
-        >
-          {/* Left Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-6)" }}>
-            {/* Profile Header */}
-            <ProfileHeader
-              profile={profile}
-              onEditClick={onEditProfile}
-            />
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <DashboardHeader onBackToHome={() => navigateToPage("hero")} />
 
-            {/* Analytics Snapshot */}
-            <AnalyticsSection projects={projects}/>
+      <div
+        className="main-container"
+        style={{
+          maxWidth: "1280px",
+          width: "100%",
+          margin: "0 auto",
+          padding: "var(--space-xl) var(--space-xl)",
+          flex: 1,
+        }}
+      >
+        {/* Two-column layout */}
+        <div
+          className="main-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1fr)",
+            gap: "var(--space-lg)",
+            alignItems: "start",
+          }}
+        >
+          {/* Left column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
+            <ProfileHeader profile={profile} onEditClick={onEditProfile} />
+            <AnalyticsSection projects={projects} />
           </div>
 
-          {/* Right Column - Projects */}
+          {/* Right column */}
           <div>
             <ProjectsSection
               projects={projects}
               onAddProject={onAddProject}
               onEditProject={onEditProject}
               onDeleteProject={onDeleteProject}
-              onSeeAll={handleSeeAllProjects}
+              onSeeAll={() => navigateToPage("all-projects")}
             />
           </div>
         </div>
 
-        {/* Content Timeline - Full Width */}
-        <div className="activity-section-wrapper" style={{ 
-          marginTop: "var(--spacing-10)",
-          width: "fit-content",
-          margin: "var(--spacing-10) auto 0 auto",
-        }}>
+        {/* Activity timeline — full width below */}
+        <div
+          className="activity-section-wrapper"
+          style={{ marginTop: "var(--space-xl)" }}
+        >
           <ContentTimeline projects={projects} profile={profile} />
         </div>
       </div>
 
       <Footer />
 
-      {/* Edit Modal */}
       {isEditModalOpen && (
-        <EditModal
-          profile={profile}
-          onClose={onCloseProfileModal}
-          onSave={onSaveProfile}
-        />
+        <EditModal profile={profile} onClose={onCloseProfileModal} onSave={onSaveProfile} />
       )}
-
       {isProjectModalOpen && (
         <ProjectModal
           project={projects[editingProjectIndex]}
@@ -209,14 +159,9 @@ const ProfilePage = ({
           onClose={onCloseProjectModal}
         />
       )}
-
       {isDeleteModalOpen && (
-        <DeleteProjectModal
-          onConfirm={onConfirmDelete}
-          onCancel={onCloseDeleteModal}
-        />
+        <DeleteProjectModal onConfirm={onConfirmDelete} onCancel={onCloseDeleteModal} />
       )}
-
     </div>
   );
 };
