@@ -135,7 +135,7 @@ const AnalyticsSection = ({ projects }) => {
           sub="Consecutive active days"
           icon={
             <Flame
-              style={{ width: "22px", height: "22px", color: "var(--color-text-muted)" }}
+              style={{ width: "22px", height: "22px", color: "#fca919" }}
             />
           }
         />
@@ -147,7 +147,7 @@ const AnalyticsSection = ({ projects }) => {
           sub="Best consistency so far"
           icon={
             <Trophy
-              style={{ width: "20px", height: "20px", color: "var(--color-text-muted)" }}
+              style={{ width: "20px", height: "20px", color: "#fca919" }}
             />
           }
         />

@@ -49,6 +49,34 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
         overflow: "hidden",
       }}
     >
+      {/* Purple radial gradient — top left */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "-20%",
+          left: "-15%",
+          width: "60%",
+          height: "60%",
+          background: "radial-gradient(circle at center, rgba(102, 126, 234, 0.25) 0%, rgba(102, 126, 234, 0.1) 40%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Pink radial gradient — bottom right */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: "-20%",
+          right: "-15%",
+          width: "60%",
+          height: "60%",
+          background: "radial-gradient(circle at center, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0.08) 40%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
       {/* Subtle static grid — very faint, no animation */}
       <div
         aria-hidden="true"
@@ -129,7 +157,7 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
             }}
           >
             Your developer journey,{" "}
-            <span style={{ color: "var(--color-accent)" }}>all in one place</span>
+            <span style={{ color: "var(--color-accent)", fontWeight: "700" }}>all in one place</span>
           </h1>
 
           {/* Subtitle */}
