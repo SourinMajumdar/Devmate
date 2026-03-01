@@ -1,5 +1,6 @@
 import { Github, Linkedin, Globe, Pencil, UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import TechBadge from "./TechBadge";
 
 /* Shared link badge style — neutral, consistent */
 const linkBadgeBase = {
@@ -120,24 +121,41 @@ const ProfileHeader = ({ profile, onEditClick }) => {
         }}
       >
         {/* Avatar */}
-        <div
-          className="profile-avatar"
-          style={{
-            width: "56px",
-            height: "56px",
-            borderRadius: "50%",
-            background: "var(--color-accent)",
-            color: "#ffffff",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "20px",
-            fontWeight: "var(--font-weight-semibold)",
-            flexShrink: 0,
-          }}
-        >
-          {profile.name[0]}
-        </div>
+        {profile.avatar ? (
+          <img
+            src={profile.avatar}
+            alt={profile.name}
+            className="profile-avatar"
+            style={{
+              width: "56px",
+              height: "56px",
+              borderRadius: "50%",
+              objectFit: "cover",
+              flexShrink: 0,
+              border: "2px solid var(--color-border)",
+            }}
+          />
+        ) : (
+          <div
+            className="profile-avatar"
+            style={{
+              width: "56px",
+              height: "56px",
+              borderRadius: "50%",
+              background: "var(--color-accent)",
+              color: "#ffffff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "20px",
+              fontWeight: "var(--font-weight-semibold)",
+              fontFamily: "var(--font-heading)",
+              flexShrink: 0,
+            }}
+          >
+            {profile.name[0]}
+          </div>
+        )}
 
         <div>
           <h1
@@ -200,20 +218,7 @@ const ProfileHeader = ({ profile, onEditClick }) => {
           }}
         >
           {profile.tech.map((tech) => (
-            <span
-              key={tech}
-              style={{
-                background: "var(--color-bg-elevated)",
-                padding: "4px 10px",
-                borderRadius: "var(--radius-sm)",
-                fontSize: "var(--font-size-meta)",
-                color: "var(--color-text-secondary)",
-                fontWeight: "var(--font-weight-medium)",
-                border: "1px solid var(--color-border)",
-              }}
-            >
-              {tech}
-            </span>
+            <TechBadge key={tech} tech={tech} />
           ))}
         </div>
       )}

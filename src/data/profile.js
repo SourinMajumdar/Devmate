@@ -4,6 +4,7 @@ export const profile = {
   role: "",
   bio: "",
   location: "",
+  avatar: "",
   tech: [],
   links: {
     github: "",

@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { X, Camera, Trash2 } from "lucide-react";
+
+const MAX_SIZE_MB = 2;
 
 const EditModal = ({ profile, onClose, onSave }) => {
+  const fileInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -11,11 +15,14 @@ const EditModal = ({ profile, onClose, onSave }) => {
     github: "",
     linkedin: "",
     portfolio: "",
+    avatar: "",
   });
+
+  const [avatarError, setAvatarError] = useState("");
+  const [isAvatarHovered, setIsAvatarHovered] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
-
     setFormData({
       name: profile.name || "",
       username: profile.username || "",
@@ -25,26 +32,60 @@ const EditModal = ({ profile, onClose, onSave }) => {
       github: profile.links?.github || "",
       linkedin: profile.links?.linkedin || "",
       portfolio: profile.links?.portfolio || "",
+      avatar: profile.avatar || "",
     });
   }, [profile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAvatarError("");
+
+    if (!file.type.startsWith("image/")) {
+      setAvatarError("Please select an image file (JPG, PNG, GIF, WebP).");
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      setAvatarError(`Image must be under ${MAX_SIZE_MB}MB.`);
+      e.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setFormData((prev) => ({ ...prev, avatar: ev.target.result }));
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const handleRemoveAvatar = (e) => {
+    e.stopPropagation();
+    setFormData((prev) => ({ ...prev, avatar: "" }));
+    setAvatarError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     onSave({
       ...profile,
       name: formData.name,
       username: formData.username,
       role: formData.role,
       bio: formData.bio,
+      avatar: formData.avatar,
       tech: formData.tech
         .split(",")
         .map((t) => t.trim())
@@ -56,6 +97,8 @@ const EditModal = ({ profile, onClose, onSave }) => {
       },
     });
   };
+
+  const initials = formData.name ? formData.name[0].toUpperCase() : "?";
 
   return (
     <div style={overlayStyle} onClick={onClose}>
@@ -72,98 +115,128 @@ const EditModal = ({ profile, onClose, onSave }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} style={formStyle}>
+
+          {/* ── Avatar upload ── */}
+          <div style={avatarSectionStyle}>
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              aria-label="Upload profile photo"
+            />
+
+            {/* Clickable avatar */}
+            <div
+              onClick={handleAvatarClick}
+              onMouseEnter={() => setIsAvatarHovered(true)}
+              onMouseLeave={() => setIsAvatarHovered(false)}
+              style={avatarWrapStyle}
+              title="Click to upload photo"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && handleAvatarClick()}
+              aria-label="Upload profile photo"
+            >
+              {formData.avatar ? (
+                <img
+                  src={formData.avatar}
+                  alt="Avatar preview"
+                  style={avatarImgStyle}
+                />
+              ) : (
+                <span style={avatarInitialStyle}>{initials}</span>
+              )}
+
+              {/* Hover overlay */}
+              <div style={{
+                ...avatarOverlayStyle,
+                opacity: isAvatarHovered ? 1 : 0,
+              }}>
+                <Camera style={{ width: "18px", height: "18px", color: "#fff" }} />
+                <span style={{ fontSize: "11px", color: "#fff", fontWeight: "500", marginTop: "2px" }}>
+                  {formData.avatar ? "Change" : "Upload"}
+                </span>
+              </div>
+            </div>
+
+            {/* Label + remove */}
+            <div style={avatarMetaStyle}>
+              <span style={{ fontSize: "13px", fontWeight: "500", color: "var(--color-text-primary)" }}>
+                Profile Photo
+              </span>
+              <span style={{ fontSize: "12px", color: "var(--color-text-muted)" }}>
+                JPG, PNG, GIF or WebP · max {MAX_SIZE_MB}MB
+              </span>
+              {formData.avatar && (
+                <button
+                  type="button"
+                  onClick={handleRemoveAvatar}
+                  style={removeAvatarBtnStyle}
+                >
+                  <Trash2 style={{ width: "12px", height: "12px" }} />
+                  Remove photo
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Error */}
+          {avatarError && (
+            <p style={errorStyle} role="alert">{avatarError}</p>
+          )}
+
+          <div style={dividerStyle} />
+
           <h3 style={sectionTitleStyle}>Profile</h3>
 
           <label style={labelStyle}>
             Name
-            <input
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              style={inputStyle}
-              required
-            />
+            <input name="name" value={formData.name} onChange={handleChange} style={inputStyle} required />
           </label>
 
           <label style={labelStyle}>
             Username
-            <input
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              style={inputStyle}
-              required
-            />
+            <input name="username" value={formData.username} onChange={handleChange} style={inputStyle} required />
           </label>
 
           <label style={labelStyle}>
             Role
-            <input
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              style={inputStyle}
-              required
-            />
+            <input name="role" value={formData.role} onChange={handleChange} style={inputStyle} required />
           </label>
 
           <label style={labelStyle}>
             Bio
-            <textarea
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-              style={{ ...inputStyle, minHeight: "80px" }}
-              required
-            />
+            <textarea name="bio" value={formData.bio} onChange={handleChange} style={{ ...inputStyle, minHeight: "80px" }} required />
           </label>
 
           <label style={labelStyle}>
             Tech Stack (comma-separated)
-            <input
-              name="tech"
-              value={formData.tech}
-              onChange={handleChange}
-              placeholder="React, Vite, Tailwind"
-              style={inputStyle}
-            />
+            <input name="tech" value={formData.tech} onChange={handleChange} placeholder="React, Vite, Tailwind" style={inputStyle} />
           </label>
 
           <label style={labelStyle}>
             GitHub Link
-            <input
-              name="github"
-              value={formData.github}
-              onChange={handleChange}
-              style={inputStyle}
-            />
+            <input name="github" value={formData.github} onChange={handleChange} style={inputStyle} />
           </label>
 
           <label style={labelStyle}>
             LinkedIn Link
-            <input
-              name="linkedin"
-              value={formData.linkedin}
-              onChange={handleChange}
-              style={inputStyle}
-            />
+            <input name="linkedin" value={formData.linkedin} onChange={handleChange} style={inputStyle} />
           </label>
 
           <label style={labelStyle}>
             Portfolio Link
-            <input
-              name="portfolio"
-              value={formData.portfolio}
-              onChange={handleChange}
-              style={inputStyle}
-            />
+            <input name="portfolio" value={formData.portfolio} onChange={handleChange} style={inputStyle} />
           </label>
 
           <div style={buttonContainerStyle}>
-            <button type="button" onClick={onClose} className="btn-secondary" style={cancelButtonStyle}>
+            <button type="button" onClick={onClose} className="btn-secondary" style={{ padding: "10px 20px" }}>
               Cancel
             </button>
-            <button type="submit" className="btn-primary" style={saveButtonStyle}>
+            <button type="submit" className="btn-primary" style={{ padding: "10px 20px" }}>
               Save
             </button>
           </div>
@@ -173,13 +246,11 @@ const EditModal = ({ profile, onClose, onSave }) => {
   );
 };
 
+/* ── Styles ── */
 
 const overlayStyle = {
   position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
+  inset: 0,
   background: "rgba(0, 0, 0, 0.4)",
   backdropFilter: "blur(4px)",
   display: "flex",
@@ -224,6 +295,96 @@ const closeButtonStyle = {
 
 const formStyle = { padding: "24px" };
 
+const avatarSectionStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "20px",
+  marginBottom: "4px",
+};
+
+const avatarWrapStyle = {
+  position: "relative",
+  width: "72px",
+  height: "72px",
+  borderRadius: "50%",
+  background: "var(--color-accent)",
+  flexShrink: 0,
+  cursor: "pointer",
+  overflow: "hidden",
+  outline: "none",
+  border: "2px solid var(--color-border)",
+  transition: "border-color var(--transition)",
+};
+
+const avatarImgStyle = {
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  display: "block",
+};
+
+const avatarInitialStyle = {
+  position: "absolute",
+  inset: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "26px",
+  fontWeight: "600",
+  color: "#ffffff",
+  fontFamily: "var(--font-heading)",
+};
+
+const avatarOverlayStyle = {
+  position: "absolute",
+  inset: 0,
+  background: "rgba(0,0,0,0.55)",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  transition: "opacity 0.15s ease",
+  borderRadius: "50%",
+};
+
+const avatarMetaStyle = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "4px",
+};
+
+const removeAvatarBtnStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "5px",
+  marginTop: "4px",
+  background: "none",
+  border: "none",
+  color: "var(--color-danger)",
+  fontSize: "12px",
+  fontWeight: "500",
+  cursor: "pointer",
+  padding: "0",
+  fontFamily: "inherit",
+};
+
+const errorStyle = {
+  fontSize: "12px",
+  color: "var(--color-danger)",
+  background: "#fef2f2",
+  border: "1px solid #fecaca",
+  borderRadius: "var(--radius-sm)",
+  padding: "8px 12px",
+  marginTop: "8px",
+  marginBottom: "0",
+};
+
+const dividerStyle = {
+  height: "1px",
+  background: "var(--color-border)",
+  margin: "20px 0",
+};
+
 const sectionTitleStyle = {
   fontSize: "16px",
   fontWeight: "600",
@@ -262,14 +423,6 @@ const buttonContainerStyle = {
   marginTop: "24px",
   paddingTop: "24px",
   borderTop: "1px solid var(--color-border)",
-};
-
-const cancelButtonStyle = {
-  padding: "10px 20px",
-};
-
-const saveButtonStyle = {
-  padding: "10px 20px",
 };
 
 export default EditModal;
