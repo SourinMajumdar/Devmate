@@ -1,5 +1,6 @@
 import { Trash2, Pencil, FolderPlus, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import TechBadge from "../components/TechBadge";
 
 const ProjectsSection = ({
   projects,
@@ -191,20 +192,7 @@ const ProjectsSection = ({
                     }}
                   >
                     {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        style={{
-                          background: "var(--color-bg-elevated)",
-                          padding: "3px 8px",
-                          borderRadius: "var(--radius-sm)",
-                          fontSize: "var(--font-size-meta)",
-                          color: "var(--color-text-secondary)",
-                          fontWeight: "var(--font-weight-medium)",
-                          border: "1px solid var(--color-border)",
-                        }}
-                      >
-                        {tech}
-                      </span>
+                      <TechBadge key={tech} tech={tech} />
                     ))}
                   </div>
                 )}

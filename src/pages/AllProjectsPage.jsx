@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import DashboardHeader from "../components/DashboardHeader.jsx";
 import ProjectsSection from "../sections/ProjectsSection.jsx";
 import Footer from "../components/Footer.jsx";
@@ -7,8 +8,6 @@ const AllProjectsPage = ({
   onAddProject,
   onEditProject,
   onDeleteProject,
-  onBackToDashboard,
-  onBackToHome,
 }) => {
   return (
     <div style={{
@@ -19,10 +18,7 @@ const AllProjectsPage = ({
       flexDirection: "column",
     }}>
       {/* Dashboard Header */}
-      <DashboardHeader 
-        onBackToHome={onBackToHome}
-        onBackToDashboard={onBackToDashboard}
-      />
+      <DashboardHeader />
 
       {/* Main container */}
       <div className="main-container" style={{

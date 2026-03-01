@@ -66,7 +66,7 @@ const AnalyticsSection = ({ projects }) => {
               letterSpacing: "0.06em",
             }}
           >
-            Last Commit
+            Latest Activity
           </p>
 
           {latestActivity ? (

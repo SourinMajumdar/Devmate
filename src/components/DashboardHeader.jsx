@@ -1,12 +1,22 @@
+import { useNavigate, useLocation } from "react-router-dom";
 import { Code2, Home, LayoutDashboard } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
-const DashboardHeader = ({ onBackToHome, onBackToDashboard }) => {
+const DashboardHeader = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const isDashboard = pathname === "/dashboard";
+
   return (
     <header
       style={{
-        background: "var(--color-surface)",
-        borderBottom: "1px solid var(--color-border)",
-        padding: "var(--space-md) 0",
+        background: "var(--color-header-bg)",
+        backdropFilter: "blur(16px) saturate(180%)",
+        WebkitBackdropFilter: "blur(16px) saturate(180%)",
+        borderBottom: "1px solid var(--color-header-border)",
+        boxShadow: "0 1px 0 rgba(37, 99, 235, 0.04)",
+        padding: "var(--space-sm) 0",
         position: "sticky",
         top: 0,
         zIndex: 100,
@@ -23,39 +33,42 @@ const DashboardHeader = ({ onBackToHome, onBackToDashboard }) => {
           justifyContent: "space-between",
         }}
       >
-        {/* Brand */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        {/* Brand — click goes home */}
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+          }}
+        >
           <Code2
-            style={{
-              width: "24px",
-              height: "24px",
-              color: "#667eea",
-              strokeWidth: 2.5,
-            }}
+            style={{ width: "22px", height: "22px", color: "var(--color-accent)", strokeWidth: 2.5 }}
           />
           <span
             style={{
-              fontFamily: "'Funnel Display', sans-serif",
-              fontSize: "28px",
+              fontFamily: "var(--font-heading)",
+              fontSize: "22px",
               fontWeight: "800",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              letterSpacing: "1px",
+              color: "var(--color-accent)",
+              letterSpacing: "0.5px",
             }}
           >
             Devmate
           </span>
-        </div>
+        </button>
 
         {/* Nav buttons */}
         <div style={{ display: "flex", gap: "var(--space-sm)", alignItems: "center" }}>
-          {onBackToDashboard && (
+          {!isDashboard && (
             <button
-              onClick={onBackToDashboard}
+              onClick={() => navigate("/dashboard")}
               className="btn-secondary"
-              style={{ padding: "8px 14px" }}
+              style={{ padding: "7px 14px" }}
             >
               <LayoutDashboard style={{ width: "15px", height: "15px" }} />
               <span className="back-to-home-text">Dashboard</span>
@@ -63,13 +76,14 @@ const DashboardHeader = ({ onBackToHome, onBackToDashboard }) => {
           )}
 
           <button
-            onClick={onBackToHome}
+            onClick={() => navigate("/")}
             className="btn-secondary"
-            style={{ padding: "8px 14px" }}
+            style={{ padding: "7px 14px" }}
           >
             <Home style={{ width: "15px", height: "15px" }} />
             <span className="back-to-home-text">Home</span>
           </button>
+          <ThemeToggle />
         </div>
       </div>
     </header>
