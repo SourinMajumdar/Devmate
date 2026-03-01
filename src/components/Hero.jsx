@@ -43,7 +43,7 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "var(--space-2xl) var(--space-xl)",
+        padding: "var(--space-xs) var(--space-xl) var(--space-2xl)",
         background: "var(--color-bg)",
         position: "relative",
         overflow: "hidden",

@@ -595,4 +595,9 @@ html {
   .preview-activity-grid {
     grid-template-columns: 1fr 1fr !important;
   }
+
+  /* ── About stats strip ── */
+  .about-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
 }

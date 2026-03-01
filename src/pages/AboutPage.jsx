@@ -93,9 +93,7 @@ const StatPill = ({ value, label }) => (
   <div
     style={{
       textAlign: "center",
-      padding: "var(--space-lg) var(--space-xl)",
-      flex: 1,
-      minWidth: 0,
+      padding: "var(--space-lg) var(--space-md)",
     }}
   >
     <div
@@ -106,7 +104,7 @@ const StatPill = ({ value, label }) => (
         color: "var(--color-accent)",
         letterSpacing: "-0.04em",
         lineHeight: 1,
-        marginBottom: "8px",
+        marginBottom: "6px",
       }}
     >
       {value}
@@ -116,6 +114,7 @@ const StatPill = ({ value, label }) => (
         fontSize: "var(--font-size-sm)",
         color: "var(--color-text-secondary)",
         fontWeight: "var(--font-weight-medium)",
+        whiteSpace: "nowrap",
       }}
     >
       {label}
@@ -230,21 +229,18 @@ const AboutPage = () => {
           whileInView="visible"
           viewport={viewport}
           variants={fadeIn}
-          className="card"
+          className="card about-stats-grid"
           style={{
-            display: "flex",
-            flexWrap: "wrap",
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
             borderRadius: "var(--radius)",
             overflow: "hidden",
             padding: 0,
           }}
         >
           <StatPill value="100%" label="Local — no backend" />
-          <div style={{ width: "1px", background: "var(--color-border)", margin: "var(--space-md) 0" }} />
           <StatPill value="0" label="Servers or accounts" />
-          <div style={{ width: "1px", background: "var(--color-border)", margin: "var(--space-md) 0" }} />
           <StatPill value="∞" label="Projects you can log" />
-          <div style={{ width: "1px", background: "var(--color-border)", margin: "var(--space-md) 0" }} />
           <StatPill value="4" label="Core features" />
         </motion.div>
 
@@ -296,22 +292,9 @@ const AboutPage = () => {
                 className="card"
                 style={{ padding: "var(--space-lg)", display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}
               >
-                <div
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    borderRadius: "var(--radius-sm)",
-                    background: "var(--color-accent-subtle)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <p.icon
-                    style={{ width: "17px", height: "17px", color: "var(--color-accent)" }}
-                  />
-                </div>
+                <p.icon
+                  style={{ width: "20px", height: "20px", color: "var(--color-accent)", flexShrink: 0 }}
+                />
                 <h3
                   style={{
                     fontSize: "var(--font-size-sm)",
@@ -459,19 +442,7 @@ const AboutPage = () => {
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div
-                    style={{
-                      width: "34px",
-                      height: "34px",
-                      borderRadius: "var(--radius-sm)",
-                      background: "var(--color-accent-subtle)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <f.icon style={{ width: "16px", height: "16px", color: "var(--color-accent)" }} />
-                  </div>
+                  <f.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)" }} />
                   <span
                     style={{
                       fontSize: "11px",
@@ -565,19 +536,7 @@ const AboutPage = () => {
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div
-                    style={{
-                      width: "34px",
-                      height: "34px",
-                      borderRadius: "var(--radius-sm)",
-                      background: "var(--color-accent-subtle)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <item.icon style={{ width: "16px", height: "16px", color: "var(--color-accent)" }} />
-                  </div>
+                  <item.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)" }} />
                   <span
                     style={{
                       fontSize: "11px",
