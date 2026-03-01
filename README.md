@@ -88,7 +88,3 @@ src/
 - Multi-user support with accounts and a backend
 - More themes
 - GitHub sync — real commit activity pulled into the dashboard
-
----
-
-Built with [Kombai](https://kombai.com)
