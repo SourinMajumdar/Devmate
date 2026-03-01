@@ -30,27 +30,30 @@ const ProjectsSection = ({
           marginBottom: "var(--space-md)",
         }}
       >
-        <h2
-          style={{
-            fontSize: "var(--font-size-h2)",
-            fontWeight: "var(--font-weight-semibold)",
-            margin: 0,
-            color: "var(--color-text-primary)",
-          }}
-        >
-          Projects{" "}
-          {!isAllProjectsView && projects.length > 0 && (
-            <span
-              style={{
-                fontSize: "var(--font-size-sm)",
-                color: "var(--color-text-muted)",
-                fontWeight: "var(--font-weight-normal)",
-              }}
-            >
-              ({projects.length})
-            </span>
-          )}
-        </h2>
+        <div className="section-header-row" style={{ margin: 0 }}>
+          <div className="section-pip" />
+          <h2
+            style={{
+              fontSize: "var(--font-size-h2)",
+              fontWeight: "var(--font-weight-semibold)",
+              margin: 0,
+              color: "var(--color-text-primary)",
+            }}
+          >
+            Projects{" "}
+            {!isAllProjectsView && projects.length > 0 && (
+              <span
+                style={{
+                  fontSize: "var(--font-size-sm)",
+                  color: "var(--color-text-muted)",
+                  fontWeight: "var(--font-weight-normal)",
+                }}
+              >
+                ({projects.length})
+              </span>
+            )}
+          </h2>
+        </div>
 
         <button
           onClick={onAddProject}
@@ -120,7 +123,7 @@ const ProjectsSection = ({
             return (
               <div
                 key={project.id}
-                className="card"
+                className="card project-card-accent"
                 style={{ padding: "var(--space-md)", position: "relative" }}
               >
                 {/* Action buttons */}

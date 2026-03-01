@@ -320,6 +320,65 @@ html {
   margin: 0;
 }
 
+/* ── Dashboard section header pip ── */
+.section-header-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: var(--space-md);
+}
+
+.section-pip {
+  width: 3px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* ── Profile card top accent strip ── */
+.profile-card-strip {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent) 0%, #60a5fa 100%);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* ── Project card left accent ── */
+.project-card-accent {
+  border-left: 3px solid var(--color-accent) !important;
+  padding-left: calc(var(--space-md) - 3px) !important;
+}
+
+/* ── Metric card subtle left accent ── */
+.metric-accent {
+  border-left: 3px solid var(--color-accent) !important;
+}
+
+/* ── Activity timeline dot ── */
+.timeline-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid var(--color-accent-subtle);
+  margin-top: 5px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+[data-theme="dark"] .timeline-dot {
+  border-color: var(--color-accent-subtle);
+  box-shadow: 0 0 0 2px rgba(79, 142, 247, 0.2);
+}
+
+/* ── Avatar ring ── */
+.avatar-ring {
+  border: 2.5px solid var(--color-accent) !important;
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
 /* ============================================================
    RESPONSIVE BREAKPOINTS
    ============================================================ */

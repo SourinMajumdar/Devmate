@@ -95,6 +95,9 @@ const ProfileHeader = ({ profile, onEditClick }) => {
       className="profile-card card"
       style={{ padding: "var(--space-lg)" }}
     >
+      {/* Top accent strip */}
+      <div className="profile-card-strip" />
+
       {/* Edit button — desktop */}
       <button
         onClick={onEditClick}
@@ -125,22 +128,21 @@ const ProfileHeader = ({ profile, onEditClick }) => {
           <img
             src={profile.avatar}
             alt={profile.name}
-            className="profile-avatar"
+            className="profile-avatar avatar-ring"
             style={{
-              width: "56px",
-              height: "56px",
+              width: "60px",
+              height: "60px",
               borderRadius: "50%",
               objectFit: "cover",
               flexShrink: 0,
-              border: "2px solid var(--color-border)",
             }}
           />
         ) : (
           <div
-            className="profile-avatar"
+            className="profile-avatar avatar-ring"
             style={{
-              width: "56px",
-              height: "56px",
+              width: "60px",
+              height: "60px",
               borderRadius: "50%",
               background: "var(--color-accent)",
               color: "#ffffff",

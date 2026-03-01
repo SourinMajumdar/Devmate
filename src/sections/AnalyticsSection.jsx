@@ -25,16 +25,19 @@ const AnalyticsSection = ({ projects }) => {
       className="analytics-section-mobile"
       style={{ background: "transparent", padding: 0 }}
     >
-      <h2
-        style={{
-          fontSize: "var(--font-size-h2)",
-          fontWeight: "var(--font-weight-semibold)",
-          margin: "0 0 var(--space-md) 0",
-          color: "var(--color-text-primary)",
-        }}
-      >
-        Momentum
-      </h2>
+      <div className="section-header-row">
+        <div className="section-pip" />
+        <h2
+          style={{
+            fontSize: "var(--font-size-h2)",
+            fontWeight: "var(--font-weight-semibold)",
+            margin: 0,
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Momentum
+        </h2>
+      </div>
 
       {/* 2×2 grid */}
       <div
@@ -49,6 +52,7 @@ const AnalyticsSection = ({ projects }) => {
         <MetricCard
           label="Projects"
           value={projectCount}
+          style={{ borderLeft: "3px solid var(--color-accent)" }}
         />
 
         {/* Latest Activity */}
@@ -133,6 +137,7 @@ const AnalyticsSection = ({ projects }) => {
           label="Current Streak"
           value={currentStreak}
           sub="Consecutive active days"
+          style={{ borderLeft: "3px solid #f59e0b" }}
           icon={
             <Flame
               style={{ width: "22px", height: "22px", color: "#fca919" }}
@@ -145,6 +150,7 @@ const AnalyticsSection = ({ projects }) => {
           label="Longest Streak"
           value={longestStreak}
           sub="Best consistency so far"
+          style={{ borderLeft: "3px solid #f59e0b" }}
           icon={
             <Trophy
               style={{ width: "20px", height: "20px", color: "#fca919" }}

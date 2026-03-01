@@ -35,16 +35,19 @@ const ContentTimeline = ({ projects, profile }) => {
       className="activity-section-mobile"
       style={{ width: "100%", background: "transparent", padding: 0 }}
     >
-      <h2
-        style={{
-          fontSize: "var(--font-size-h2)",
-          fontWeight: "var(--font-weight-semibold)",
-          marginBottom: "var(--space-xs)",
-          color: "var(--color-text-primary)",
-        }}
-      >
-        Activity
-      </h2>
+      <div className="section-header-row">
+        <div className="section-pip" />
+        <h2
+          style={{
+            fontSize: "var(--font-size-h2)",
+            fontWeight: "var(--font-weight-semibold)",
+            margin: 0,
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Activity
+        </h2>
+      </div>
 
       <p
         style={{
@@ -113,18 +116,7 @@ const ContentTimeline = ({ projects, profile }) => {
                 padding: "var(--space-md)",
               }}
             >
-              {/* Single accent dot — no multi-color bullets */}
-              <div
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  background: "var(--color-accent)",
-                  marginTop: "6px",
-                  flexShrink: 0,
-                  opacity: 0.7,
-                }}
-              />
+              <div className="timeline-dot" />
 
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p
