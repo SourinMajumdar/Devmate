@@ -54,11 +54,11 @@ const DashboardHeader = () => {
               fontFamily: "var(--font-heading)",
               fontSize: "22px",
               fontWeight: "800",
+              color: "var(--color-accent)",
               letterSpacing: "0.5px",
             }}
           >
-            <span style={{ color: "var(--color-text-primary)" }}>Dev</span>
-            <span style={{ color: "var(--color-accent)" }}>mate</span>
+            Devmate
           </span>
         </button>
 
