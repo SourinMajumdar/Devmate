@@ -1,7 +1,7 @@
 import { Code2, ArrowRight, FileCodeCorner, BarChart3, Users } from "lucide-react";
 import { motion } from "framer-motion";
-import illustration from "../assets/illustration.png";
 import FeatureCard from "./shared/FeatureCard";
+import DashboardMockup from "./DashboardMockup";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -49,34 +49,6 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
         overflow: "hidden",
       }}
     >
-      {/* Purple radial gradient — top left */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: "-20%",
-          left: "-15%",
-          width: "60%",
-          height: "60%",
-          background: "radial-gradient(circle at center, rgba(102, 126, 234, 0.25) 0%, rgba(102, 126, 234, 0.1) 40%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Pink radial gradient — bottom right */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          bottom: "-20%",
-          right: "-15%",
-          width: "60%",
-          height: "60%",
-          background: "radial-gradient(circle at center, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0.08) 40%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
       {/* Subtle static grid — very faint, no animation */}
       <div
         aria-hidden="true"
@@ -124,20 +96,17 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
               style={{
                 width: "24px",
                 height: "24px",
-                color: "#667eea",
+                color: "var(--color-accent)",
                 strokeWidth: 2.5,
               }}
             />
             <span
               style={{
-                fontFamily: "'Funnel Display', sans-serif",
-                fontSize: "28px",
+                fontFamily: "var(--font-heading)",
+                fontSize: "26px",
                 fontWeight: "800",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                letterSpacing: "1px",
+                color: "var(--color-accent)",
+                letterSpacing: "0.5px",
               }}
             >
               Devmate
@@ -224,7 +193,7 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
           </div>
         </motion.div>
 
-        {/* Right — Illustration */}
+        {/* Right — Animated Dashboard Mockup */}
         <motion.div
           variants={rightVariants}
           className="hero-illustration-container"
@@ -232,18 +201,10 @@ const Hero = ({ onGetStarted, onLearnMore }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            position: "relative",
           }}
         >
-          <img
-            src={illustration}
-            alt="Developer workspace illustration"
-            style={{
-              width: "100%",
-              maxWidth: "480px",
-              height: "auto",
-              filter: "drop-shadow(0 8px 24px rgba(0, 0, 0, 0.08))",
-            }}
-          />
+          <DashboardMockup />
         </motion.div>
       </motion.div>
     </section>
