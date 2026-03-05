@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import DashboardHeader from "../components/DashboardHeader.jsx";
+import Navbar from "../components/Navbar.jsx";
 import ProfileHeader from "../components/ProfileHeader.jsx";
 import ProjectsSection from "../sections/ProjectsSection.jsx";
 import ContentTimeline from "../sections/ContentTimeline.jsx";
@@ -26,7 +26,7 @@ const ProfilePage = ({
         flexDirection: "column",
       }}
     >
-      <DashboardHeader />
+      <Navbar />
 
       <div
         className="main-container"

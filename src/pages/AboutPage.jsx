@@ -4,8 +4,9 @@ import {
   ArrowRight, Shield, Database, Zap, CheckCircle2,
   GitBranch, Users, Palette,
   UserCircle, FolderOpen, Flame, Activity,
+  BarChart3, Clock, Link2, LayoutDashboard,
 } from "lucide-react";
-import DashboardHeader from "../components/DashboardHeader.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import TechBadge from "../components/TechBadge.jsx";
 import ScrollToTopButton from "../components/ScrollToTopButton.jsx";
@@ -63,6 +64,42 @@ const plannedItems = [
   },
 ];
 
+/* ── Dashboard sections detail ───────────────── */
+const dashboardSections = [
+  {
+    icon: UserCircle,
+    label: "Profile",
+    color: "#2563eb",
+    bgColor: "rgba(37,99,235,0.08)",
+    desc: "Your developer identity card. Set your name, role, bio, and avatar. Add tech stack tags to show your expertise and link out to GitHub, LinkedIn, and your portfolio.",
+    details: ["Name, username & role", "Bio & avatar", "Tech stack tags", "GitHub, LinkedIn & Portfolio links"],
+  },
+  {
+    icon: BarChart3,
+    label: "Momentum",
+    color: "#f59e0b",
+    bgColor: "rgba(245,158,11,0.08)",
+    desc: "Auto-calculated stats that reflect your actual activity. The more projects you log, the richer your momentum panel becomes — including a language breakdown chart.",
+    details: ["Total projects logged", "Latest activity summary", "Current daily streak", "Longest streak & language chart"],
+  },
+  {
+    icon: FolderOpen,
+    label: "Projects",
+    color: "#059669",
+    bgColor: "rgba(5,150,105,0.08)",
+    desc: "Your personal project log. Add projects with a title, description, tech stack, and optional link. Edit or delete anytime. Your latest three appear on the dashboard; all projects have their own dedicated page.",
+    details: ["Add / edit / delete projects", "Tech stack per project", "Optional project URL", "View all projects page"],
+  },
+  {
+    icon: Activity,
+    label: "Activity Timeline",
+    color: "#8b5cf6",
+    bgColor: "rgba(139,92,246,0.08)",
+    desc: "A reverse-chronological feed of everything you've done — projects added, updates made, and profile changes. Keeps a living record of your developer journey.",
+    details: ["Auto-generated from your data", "Reverse-chronological order", "Project & profile events", "Always up to date"],
+  },
+];
+
 /* ── Data ────────────────────────────────────── */
 const stackItems = [
   "React", "Vite", "JavaScript", "Framer Motion",
@@ -86,16 +123,9 @@ const localFirstPoints = [
   },
 ];
 
-
-
 /* ── Stat pill ───────────────────────────────── */
 const StatPill = ({ value, label }) => (
-  <div
-    style={{
-      textAlign: "center",
-      padding: "var(--space-lg) var(--space-md)",
-    }}
-  >
+  <div style={{ textAlign: "center", padding: "var(--space-lg) var(--space-md)" }}>
     <div
       style={{
         fontSize: "36px",
@@ -136,7 +166,7 @@ const AboutPage = () => {
         flexDirection: "column",
       }}
     >
-      <DashboardHeader />
+      <Navbar />
 
       <main
         style={{
@@ -151,12 +181,7 @@ const AboutPage = () => {
         }}
       >
         {/* ── Hero header ── */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeIn}
-          style={{ textAlign: "center" }}
-        >
+        <motion.div initial="hidden" animate="visible" variants={fadeIn} style={{ textAlign: "center" }}>
           <h1
             style={{
               fontSize: "var(--font-size-h1)",
@@ -184,9 +209,7 @@ const AboutPage = () => {
 
         {/* ── Living Developer Hub ── */}
         <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeIn}
+          initial="hidden" animate="visible" variants={fadeIn}
           className="card"
           style={{ padding: "var(--space-lg)" }}
         >
@@ -205,7 +228,6 @@ const AboutPage = () => {
               fontSize: "var(--font-size-body)",
               lineHeight: "var(--line-height-relaxed)",
               color: "var(--color-text-secondary)",
-              marginBottom: "var(--space-md)",
               margin: "0 0 var(--space-md) 0",
             }}
           >
@@ -223,12 +245,113 @@ const AboutPage = () => {
           </p>
         </motion.div>
 
+        {/* ── Dashboard sections overview ── */}
+        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
+          <motion.div variants={fadeIn} style={{ marginBottom: "var(--space-lg)" }}>
+            <p
+              style={{
+                fontSize: "12px",
+                fontWeight: "600",
+                color: "var(--color-accent)",
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                marginBottom: "8px",
+              }}
+            >
+              Dashboard
+            </p>
+            <h2
+              style={{
+                fontSize: "22px",
+                fontWeight: "700",
+                fontFamily: "var(--font-heading)",
+                color: "var(--color-text-primary)",
+                letterSpacing: "-0.02em",
+                marginBottom: "6px",
+              }}
+            >
+              What's on your dashboard
+            </h2>
+            <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", margin: 0 }}>
+              Four focused sections, each serving a distinct purpose.
+            </p>
+          </motion.div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
+            {dashboardSections.map((s, i) => (
+              <motion.div
+                key={i}
+                variants={fadeIn}
+                className="card"
+                style={{ padding: "var(--space-lg)", display: "flex", gap: "var(--space-lg)", alignItems: "flex-start" }}
+              >
+                {/* Icon */}
+                <div
+                  style={{
+                    width: "42px",
+                    height: "42px",
+                    borderRadius: "var(--radius-sm)",
+                    background: s.bgColor,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <s.icon style={{ width: "20px", height: "20px", color: s.color }} />
+                </div>
+
+                {/* Body */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3
+                    style={{
+                      fontSize: "var(--font-size-body)",
+                      fontWeight: "var(--font-weight-semibold)",
+                      color: "var(--color-text-primary)",
+                      margin: "0 0 var(--space-xs) 0",
+                    }}
+                  >
+                    {s.label}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "var(--font-size-sm)",
+                      color: "var(--color-text-secondary)",
+                      lineHeight: "var(--line-height-base)",
+                      margin: "0 0 var(--space-md) 0",
+                    }}
+                  >
+                    {s.desc}
+                  </p>
+
+                  {/* Detail pills */}
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-xs)" }}>
+                    {s.details.map((d, j) => (
+                      <span
+                        key={j}
+                        style={{
+                          fontSize: "var(--font-size-meta)",
+                          fontWeight: "var(--font-weight-medium)",
+                          padding: "3px 10px",
+                          borderRadius: "999px",
+                          background: s.bgColor,
+                          color: s.color,
+                          border: `1px solid ${s.color}22`,
+                        }}
+                      >
+                        {d}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
         {/* ── Numbers strip ── */}
         <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          variants={fadeIn}
+          initial="hidden" whileInView="visible" viewport={viewport} variants={fadeIn}
           className="card about-stats-grid"
           style={{
             display: "grid",
@@ -245,12 +368,7 @@ const AboutPage = () => {
         </motion.div>
 
         {/* ── Why local-first ── */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          variants={stagger}
-        >
+        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
             style={{
@@ -277,7 +395,6 @@ const AboutPage = () => {
           >
             Why local-first?
           </motion.h2>
-
           <div
             style={{
               display: "grid",
@@ -287,32 +404,14 @@ const AboutPage = () => {
           >
             {localFirstPoints.map((p, i) => (
               <motion.div
-                key={i}
-                variants={fadeIn}
-                className="card"
+                key={i} variants={fadeIn} className="card"
                 style={{ padding: "var(--space-lg)", display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}
               >
-                <p.icon
-                  style={{ width: "20px", height: "20px", color: "var(--color-accent)", flexShrink: 0 }}
-                />
-                <h3
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    fontWeight: "var(--font-weight-semibold)",
-                    color: "var(--color-text-primary)",
-                    margin: 0,
-                  }}
-                >
+                <p.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)", flexShrink: 0 }} />
+                <h3 style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--font-weight-semibold)", color: "var(--color-text-primary)", margin: 0 }}>
                   {p.title}
                 </h3>
-                <p
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--color-text-secondary)",
-                    lineHeight: "var(--line-height-base)",
-                    margin: 0,
-                  }}
-                >
+                <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", lineHeight: "var(--line-height-base)", margin: 0 }}>
                   {p.body}
                 </p>
               </motion.div>
@@ -321,44 +420,20 @@ const AboutPage = () => {
         </motion.div>
 
         {/* ── Built with ── */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          variants={stagger}
-        >
+        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
-            style={{
-              fontSize: "12px",
-              fontWeight: "600",
-              color: "var(--color-accent)",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              marginBottom: "8px",
-            }}
+            style={{ fontSize: "12px", fontWeight: "600", color: "var(--color-accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}
           >
             Stack
           </motion.p>
           <motion.h2
             variants={fadeIn}
-            style={{
-              fontSize: "22px",
-              fontWeight: "700",
-              fontFamily: "var(--font-heading)",
-              color: "var(--color-text-primary)",
-              marginBottom: "var(--space-md)",
-              letterSpacing: "-0.02em",
-            }}
+            style={{ fontSize: "22px", fontWeight: "700", fontFamily: "var(--font-heading)", color: "var(--color-text-primary)", marginBottom: "var(--space-md)", letterSpacing: "-0.02em" }}
           >
             Built with
           </motion.h2>
-
-          <motion.div
-            variants={fadeIn}
-            className="card"
-            style={{ padding: "var(--space-lg)" }}
-          >
+          <motion.div variants={fadeIn} className="card" style={{ padding: "var(--space-lg)" }}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-sm)" }}>
               {stackItems.map((tech) => (
                 <TechBadge key={tech} tech={tech} />
@@ -374,7 +449,8 @@ const AboutPage = () => {
               }}
             >
               Entirely front-end. No Node server, no database, no cloud functions — just
-              React running in your browser with data persisted via <code
+              React running in your browser with data persisted via{" "}
+              <code
                 style={{
                   background: "var(--color-bg-elevated)",
                   border: "1px solid var(--color-border)",
@@ -383,98 +459,49 @@ const AboutPage = () => {
                   fontSize: "13px",
                   fontFamily: "monospace",
                 }}
-              >localStorage</code>.
+              >
+                localStorage
+              </code>.
             </p>
           </motion.div>
         </motion.div>
 
         {/* ── Current Features ── */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          variants={stagger}
-        >
+        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
-            style={{
-              fontSize: "12px",
-              fontWeight: "600",
-              color: "var(--color-accent)",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              marginBottom: "8px",
-            }}
+            style={{ fontSize: "12px", fontWeight: "600", color: "var(--color-accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}
           >
             Today
           </motion.p>
           <motion.h2
             variants={fadeIn}
-            style={{
-              fontSize: "22px",
-              fontWeight: "700",
-              fontFamily: "var(--font-heading)",
-              color: "var(--color-text-primary)",
-              marginBottom: "var(--space-lg)",
-              letterSpacing: "-0.02em",
-            }}
+            style={{ fontSize: "22px", fontWeight: "700", fontFamily: "var(--font-heading)", color: "var(--color-text-primary)", marginBottom: "var(--space-lg)", letterSpacing: "-0.02em" }}
           >
             What's in the app
           </motion.h2>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "var(--space-sm)",
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--space-sm)" }}>
             {currentFeatures.map((f, i) => (
               <motion.div
-                key={i}
-                variants={fadeIn}
-                className="card"
-                style={{
-                  padding: "var(--space-lg)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--space-sm)",
-                }}
+                key={i} variants={fadeIn} className="card"
+                style={{ padding: "var(--space-lg)", display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <f.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)" }} />
                   <span
                     style={{
-                      fontSize: "11px",
-                      fontWeight: "600",
-                      padding: "2px 8px",
-                      borderRadius: "999px",
-                      background: "rgba(59,130,246,0.12)",
-                      color: "var(--color-accent)",
-                      border: "1px solid var(--color-accent-border)",
+                      fontSize: "11px", fontWeight: "600", padding: "2px 8px",
+                      borderRadius: "999px", background: "rgba(59,130,246,0.12)",
+                      color: "var(--color-accent)", border: "1px solid var(--color-accent-border)",
                     }}
                   >
                     Live
                   </span>
                 </div>
-                <h3
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    fontWeight: "var(--font-weight-semibold)",
-                    color: "var(--color-text-primary)",
-                    margin: 0,
-                  }}
-                >
+                <h3 style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--font-weight-semibold)", color: "var(--color-text-primary)", margin: 0 }}>
                   {f.label}
                 </h3>
-                <p
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--color-text-secondary)",
-                    lineHeight: "var(--line-height-base)",
-                    margin: 0,
-                  }}
-                >
+                <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", lineHeight: "var(--line-height-base)", margin: 0 }}>
                   {f.desc}
                 </p>
               </motion.div>
@@ -483,92 +510,41 @@ const AboutPage = () => {
         </motion.div>
 
         {/* ── Planned ── */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          variants={stagger}
-        >
+        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
-            style={{
-              fontSize: "12px",
-              fontWeight: "600",
-              color: "var(--color-accent)",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              marginBottom: "8px",
-            }}
+            style={{ fontSize: "12px", fontWeight: "600", color: "var(--color-accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}
           >
             What's next
           </motion.p>
           <motion.h2
             variants={fadeIn}
-            style={{
-              fontSize: "22px",
-              fontWeight: "700",
-              fontFamily: "var(--font-heading)",
-              color: "var(--color-text-primary)",
-              marginBottom: "var(--space-lg)",
-              letterSpacing: "-0.02em",
-            }}
+            style={{ fontSize: "22px", fontWeight: "700", fontFamily: "var(--font-heading)", color: "var(--color-text-primary)", marginBottom: "var(--space-lg)", letterSpacing: "-0.02em" }}
           >
             Planned features
           </motion.h2>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: "var(--space-sm)",
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-sm)" }}>
             {plannedItems.map((item, i) => (
               <motion.div
-                key={i}
-                variants={fadeIn}
-                className="card"
-                style={{
-                  padding: "var(--space-lg)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--space-sm)",
-                }}
+                key={i} variants={fadeIn} className="card"
+                style={{ padding: "var(--space-lg)", display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <item.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)" }} />
                   <span
                     style={{
-                      fontSize: "11px",
-                      fontWeight: "600",
-                      padding: "2px 8px",
-                      borderRadius: "999px",
-                      background: "var(--color-bg-elevated)",
-                      color: "var(--color-text-muted)",
-                      border: "1px solid var(--color-border)",
+                      fontSize: "11px", fontWeight: "600", padding: "2px 8px",
+                      borderRadius: "999px", background: "var(--color-bg-elevated)",
+                      color: "var(--color-text-muted)", border: "1px solid var(--color-border)",
                     }}
                   >
                     Planned
                   </span>
                 </div>
-                <h3
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    fontWeight: "var(--font-weight-semibold)",
-                    color: "var(--color-text-primary)",
-                    margin: 0,
-                  }}
-                >
+                <h3 style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--font-weight-semibold)", color: "var(--color-text-primary)", margin: 0 }}>
                   {item.label}
                 </h3>
-                <p
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--color-text-secondary)",
-                    lineHeight: "var(--line-height-base)",
-                    margin: 0,
-                  }}
-                >
+                <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", lineHeight: "var(--line-height-base)", margin: 0 }}>
                   {item.desc}
                 </p>
               </motion.div>
@@ -578,10 +554,7 @@ const AboutPage = () => {
 
         {/* ── CTA ── */}
         <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          variants={fadeIn}
+          initial="hidden" whileInView="visible" viewport={viewport} variants={fadeIn}
           style={{
             textAlign: "center",
             padding: "var(--space-xl)",
@@ -591,31 +564,14 @@ const AboutPage = () => {
           }}
         >
           <CheckCircle2
-            style={{
-              width: "32px",
-              height: "32px",
-              color: "var(--color-accent)",
-              margin: "0 auto var(--space-md)",
-              display: "block",
-            }}
+            style={{ width: "32px", height: "32px", color: "var(--color-accent)", margin: "0 auto var(--space-md)", display: "block" }}
           />
           <h2
-            style={{
-              fontSize: "var(--font-size-h2)",
-              fontWeight: "var(--font-weight-semibold)",
-              marginBottom: "var(--space-sm)",
-              color: "var(--color-text-primary)",
-            }}
+            style={{ fontSize: "var(--font-size-h2)", fontWeight: "var(--font-weight-semibold)", marginBottom: "var(--space-sm)", color: "var(--color-text-primary)" }}
           >
             Ready to get started?
           </h2>
-          <p
-            style={{
-              fontSize: "var(--font-size-body)",
-              color: "var(--color-text-secondary)",
-              marginBottom: "var(--space-lg)",
-            }}
-          >
+          <p style={{ fontSize: "var(--font-size-body)", color: "var(--color-text-secondary)", marginBottom: "var(--space-lg)" }}>
             Set up your profile and start logging projects in under a minute.
           </p>
           <button

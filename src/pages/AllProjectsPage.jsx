@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import DashboardHeader from "../components/DashboardHeader.jsx";
+import Navbar from "../components/Navbar.jsx";
 import ProjectsSection from "../sections/ProjectsSection.jsx";
 import Footer from "../components/Footer.jsx";
 
@@ -18,7 +17,7 @@ const AllProjectsPage = ({
       flexDirection: "column",
     }}>
       {/* Dashboard Header */}
-      <DashboardHeader />
+      <Navbar />
 
       {/* Main container */}
       <div className="main-container" style={{

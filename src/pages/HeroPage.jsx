@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Hero from "../components/Hero";
-import LandingNav from "../components/LandingNav";
+import Navbar from "../components/Navbar";
 import LandingSections from "../components/LandingSections";
 import Footer from "../components/Footer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
@@ -10,7 +10,7 @@ const HeroPage = () => {
 
   return (
     <div style={{ background: "var(--color-bg)", width: "100%" }}>
-      <LandingNav />
+      <Navbar />
       <Hero
         onGetStarted={() => navigate("/dashboard")}
         onLearnMore={() => navigate("/about")}
