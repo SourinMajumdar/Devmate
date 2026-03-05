@@ -1,6 +1,7 @@
 import { Clock, Flame, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import MetricCard from "../components/shared/MetricCard";
+import LanguageChart from "../components/LanguageChart";
 
 const AnalyticsSection = ({ projects }) => {
   const validProjects = projects?.filter((p) => p.title && p.title.trim() !== "") || [];
@@ -157,6 +158,11 @@ const AnalyticsSection = ({ projects }) => {
             />
           }
         />
+      </div>
+
+      {/* Language chart — full width below the 2×2 grid */}
+      <div style={{ marginTop: "var(--space-sm)" }}>
+        <LanguageChart projects={validProjects} />
       </div>
     </motion.section>
   );
