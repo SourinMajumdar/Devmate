@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { profile as initialProfile } from "./data/profile";
 import { projects as initialProjects } from "./data/projects";
@@ -22,24 +22,24 @@ function App() {
     return saved ? JSON.parse(saved) : initialProjects;
   });
 
-  // ── Profile modal ──
+  // â”€â”€ Profile modal â”€â”€
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // ── Project modal ──
+  // â”€â”€ Project modal â”€â”€
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [editingProjectIndex, setEditingProjectIndex] = useState(null);
 
-  // ── Delete modal ──
+  // â”€â”€ Delete modal â”€â”€
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [projectToDeleteIndex, setProjectToDeleteIndex] = useState(null);
 
-  // ── Handlers: profile ──
+  // â”€â”€ Handlers: profile â”€â”€
   const handleSaveProfile = (updatedProfile) => {
-    setProfile(updatedProfile);
+    setProfile({ ...updatedProfile, updatedAt: new Date().toISOString() });
     setIsEditModalOpen(false);
   };
 
-  // ── Handlers: projects ──
+  // â”€â”€ Handlers: projects â”€â”€
   const openAddProject = () => {
     setEditingProjectIndex(null);
     setIsProjectModalOpen(true);
@@ -51,13 +51,14 @@ function App() {
   };
 
   const saveProject = (project) => {
+    const now = new Date().toISOString();
     setProjects((prev) => {
       if (editingProjectIndex !== null) {
         const updated = [...prev];
-        updated[editingProjectIndex] = project;
+        updated[editingProjectIndex] = { ...project, updatedAt: now, createdAt: prev[editingProjectIndex]?.createdAt || now };
         return updated;
       }
-      return [...prev, project];
+      return [...prev, { ...project, createdAt: now, updatedAt: now }];
     });
     setIsProjectModalOpen(false);
     setEditingProjectIndex(null);
@@ -74,7 +75,7 @@ function App() {
     setProjectToDeleteIndex(null);
   };
 
-  // ── Persist ──
+  // â”€â”€ Persist â”€â”€
   useEffect(() => {
     localStorage.setItem("devmate-projects", JSON.stringify(projects));
   }, [projects]);
@@ -120,12 +121,13 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* ── Global modals ── */}
+      {/* â”€â”€ Global modals â”€â”€ */}
       {isEditModalOpen && (
         <EditModal
           profile={profile}
           onClose={() => setIsEditModalOpen(false)}
           onSave={handleSaveProfile}
+          isSetup={!profile.name}
         />
       )}
       {isProjectModalOpen && (
@@ -149,3 +151,5 @@ function App() {
 }
 
 export default App;
+
+

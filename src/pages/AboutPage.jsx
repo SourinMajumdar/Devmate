@@ -1,9 +1,9 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight, Shield, Database, Zap, CheckCircle2,
-  GitBranch, Users, Palette,
-  UserCircle, FolderOpen, Flame, Activity,
+  Users, Palette, Share2,
+  UserCircle, FolderOpen, Github, Activity,
   BarChart3, Clock, Link2, LayoutDashboard,
 } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
@@ -11,7 +11,7 @@ import Footer from "../components/Footer.jsx";
 import TechBadge from "../components/TechBadge.jsx";
 import ScrollToTopButton from "../components/ScrollToTopButton.jsx";
 
-/* ── Animations ──────────────────────────────── */
+/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const fadeIn = {
   hidden: { opacity: 0, y: 14 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } },
@@ -35,14 +35,14 @@ const currentFeatures = [
     desc: "Add, edit, and delete projects with a title, description, tech stack, and an optional URL. Your latest three show on the dashboard; a dedicated page lists all of them.",
   },
   {
-    icon: Flame,
-    label: "Momentum Stats",
-    desc: "Auto-calculated from your data — total projects logged, the last time you updated one, your current daily streak, and your longest streak.",
+    icon: Github,
+    label: "Overview & GitHub Activity",
+    desc: "At-a-glance stats showing your project count, the latest activity from DevMate or GitHub, and your most recent commit — powered by the public GitHub API, no login required.",
   },
   {
     icon: Activity,
-    label: "Activity Timeline",
-    desc: "A chronological log of every project you've added or updated, shown in reverse order.",
+    label: "Unified Activity Feed",
+    desc: "A merged, reverse-chronological timeline combining DevMate events (projects added, profile edits) with live GitHub activity (commits, PRs, issues). Up to 8 items shown.",
   },
 ];
 
@@ -58,13 +58,13 @@ const plannedItems = [
     desc: "Additional colour schemes — more dark variants, a high-contrast option, and custom accent colours.",
   },
   {
-    icon: GitBranch,
-    label: "GitHub sync",
-    desc: "Pull real commit activity and repository stats from GitHub directly into the dashboard.",
+    icon: Share2,
+    label: "Portfolio export",
+    desc: "Generate a shareable public URL or static HTML export of your DevMate profile to send to recruiters or collaborators.",
   },
 ];
 
-/* ── Dashboard sections detail ───────────────── */
+/* â”€â”€ Dashboard sections detail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const dashboardSections = [
   {
     icon: UserCircle,
@@ -76,11 +76,11 @@ const dashboardSections = [
   },
   {
     icon: BarChart3,
-    label: "Momentum",
+    label: "Overview",
     color: "#f59e0b",
     bgColor: "rgba(245,158,11,0.08)",
-    desc: "Auto-calculated stats that reflect your actual activity. The more projects you log, the richer your momentum panel becomes — including a language breakdown chart.",
-    details: ["Total projects logged", "Latest activity summary", "Current daily streak", "Longest streak & language chart"],
+    desc: "At-a-glance stats combining local project data with live GitHub activity. See your project count, the most recent event from any source, and your latest commit — plus a language breakdown chart.",
+    details: ["Total projects logged", "Latest activity summary", "Latest GitHub commit", "Language breakdown chart"],
   },
   {
     icon: FolderOpen,
@@ -95,12 +95,12 @@ const dashboardSections = [
     label: "Activity Timeline",
     color: "#8b5cf6",
     bgColor: "rgba(139,92,246,0.08)",
-    desc: "A reverse-chronological feed of everything you've done — projects added, updates made, and profile changes. Keeps a living record of your developer journey.",
-    details: ["Auto-generated from your data", "Reverse-chronological order", "Project & profile events", "Always up to date"],
+    desc: "A unified reverse-chronological feed merging DevMate events (projects added, profile edits) with live GitHub activity (commits, PRs, issues and more).",
+    details: ["DevMate & GitHub events merged", "Reverse-chronological order", "Up to 8 items shown", "GitHub source indicator"],
   },
 ];
 
-/* ── Data ────────────────────────────────────── */
+/* â”€â”€ Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const stackItems = [
   "React", "Vite", "JavaScript", "Framer Motion",
 ];
@@ -123,7 +123,7 @@ const localFirstPoints = [
   },
 ];
 
-/* ── Stat pill ───────────────────────────────── */
+/* â”€â”€ Stat pill â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const StatPill = ({ value, label }) => (
   <div style={{ textAlign: "center", padding: "var(--space-lg) var(--space-md)" }}>
     <div
@@ -152,7 +152,7 @@ const StatPill = ({ value, label }) => (
   </div>
 );
 
-/* ── Page ────────────────────────────────────── */
+/* â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const AboutPage = () => {
   const navigate = useNavigate();
 
@@ -169,6 +169,7 @@ const AboutPage = () => {
       <Navbar />
 
       <main
+        className="about-main"
         style={{
           maxWidth: "900px",
           margin: "0 auto",
@@ -180,7 +181,7 @@ const AboutPage = () => {
           gap: "var(--space-xl)",
         }}
       >
-        {/* ── Hero header ── */}
+        {/* â”€â”€ Hero header â”€â”€ */}
         <motion.div initial="hidden" animate="visible" variants={fadeIn} style={{ textAlign: "center" }}>
           <h1
             style={{
@@ -207,7 +208,7 @@ const AboutPage = () => {
           </p>
         </motion.div>
 
-        {/* ── Living Developer Hub ── */}
+        {/* â”€â”€ Living Developer Hub â”€â”€ */}
         <motion.div
           initial="hidden" animate="visible" variants={fadeIn}
           className="card"
@@ -245,7 +246,7 @@ const AboutPage = () => {
           </p>
         </motion.div>
 
-        {/* ── Dashboard sections overview ── */}
+        {/* â”€â”€ Dashboard sections overview â”€â”€ */}
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.div variants={fadeIn} style={{ marginBottom: "var(--space-lg)" }}>
             <p
@@ -282,11 +283,12 @@ const AboutPage = () => {
               <motion.div
                 key={i}
                 variants={fadeIn}
-                className="card"
+                className="card about-dashboard-card"
                 style={{ padding: "var(--space-lg)", display: "flex", gap: "var(--space-lg)", alignItems: "flex-start" }}
               >
-                {/* Icon */}
+                {/* Icon container — desktop only */}
                 <div
+                  className="about-icon-box"
                   style={{
                     width: "42px",
                     height: "42px",
@@ -303,16 +305,23 @@ const AboutPage = () => {
 
                 {/* Body */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <h3
-                    style={{
-                      fontSize: "var(--font-size-body)",
-                      fontWeight: "var(--font-weight-semibold)",
-                      color: "var(--color-text-primary)",
-                      margin: "0 0 var(--space-xs) 0",
-                    }}
-                  >
-                    {s.label}
-                  </h3>
+                  {/* Title row: raw icon (mobile only) + heading */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "var(--space-xs)" }}>
+                    <s.icon
+                      className="about-card-icon-inline"
+                      style={{ width: "18px", height: "18px", color: s.color, flexShrink: 0 }}
+                    />
+                    <h3
+                      style={{
+                        fontSize: "var(--font-size-body)",
+                        fontWeight: "var(--font-weight-semibold)",
+                        color: "var(--color-text-primary)",
+                        margin: 0,
+                      }}
+                    >
+                      {s.label}
+                    </h3>
+                  </div>
                   <p
                     style={{
                       fontSize: "var(--font-size-sm)",
@@ -349,7 +358,7 @@ const AboutPage = () => {
           </div>
         </motion.div>
 
-        {/* ── Numbers strip ── */}
+        {/* â”€â”€ Numbers strip â”€â”€ */}
         <motion.div
           initial="hidden" whileInView="visible" viewport={viewport} variants={fadeIn}
           className="card about-stats-grid"
@@ -363,11 +372,11 @@ const AboutPage = () => {
         >
           <StatPill value="100%" label="Local — no backend" />
           <StatPill value="0" label="Servers or accounts" />
-          <StatPill value="∞" label="Projects you can log" />
+          <StatPill value="âˆž" label="Projects you can log" />
           <StatPill value="4" label="Core features" />
         </motion.div>
 
-        {/* ── Why local-first ── */}
+        {/* â”€â”€ Why local-first â”€â”€ */}
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
@@ -419,7 +428,7 @@ const AboutPage = () => {
           </div>
         </motion.div>
 
-        {/* ── Built with ── */}
+        {/* â”€â”€ Built with â”€â”€ */}
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
@@ -466,7 +475,7 @@ const AboutPage = () => {
           </motion.div>
         </motion.div>
 
-        {/* ── Current Features ── */}
+        {/* â”€â”€ Current Features â”€â”€ */}
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
@@ -480,7 +489,7 @@ const AboutPage = () => {
           >
             What's in the app
           </motion.h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--space-sm)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-sm)" }}>
             {currentFeatures.map((f, i) => (
               <motion.div
                 key={i} variants={fadeIn} className="card"
@@ -509,7 +518,7 @@ const AboutPage = () => {
           </div>
         </motion.div>
 
-        {/* ── Planned ── */}
+        {/* â”€â”€ Planned â”€â”€ */}
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
@@ -552,7 +561,7 @@ const AboutPage = () => {
           </div>
         </motion.div>
 
-        {/* ── CTA ── */}
+        {/* â”€â”€ CTA â”€â”€ */}
         <motion.div
           initial="hidden" whileInView="visible" viewport={viewport} variants={fadeIn}
           style={{
@@ -592,3 +601,4 @@ const AboutPage = () => {
 };
 
 export default AboutPage;
+

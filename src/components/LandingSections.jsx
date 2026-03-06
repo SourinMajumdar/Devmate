@@ -57,8 +57,7 @@ const FeaturesSection = () => (
     className="landing-section"
     style={{
       padding: "88px var(--space-xl)",
-      background: "var(--color-surface)",
-      borderTop: "1px solid var(--color-border)",
+      background: "var(--color-bg)",
     }}
   >
     <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
@@ -126,7 +125,9 @@ const FeaturesSection = () => (
             className="card"
             style={{ padding: "28px 24px", display: "flex", flexDirection: "column", gap: "16px" }}
           >
+            {/* Icon container — desktop only */}
             <div
+              className="feature-icon-box"
               style={{
                 width: "44px",
                 height: "44px",
@@ -138,26 +139,26 @@ const FeaturesSection = () => (
                 flexShrink: 0,
               }}
             >
-              <f.icon
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  color: "var(--color-accent)",
-                  strokeWidth: 1.75,
-                }}
-              />
+              <f.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)", strokeWidth: 1.75 }} />
             </div>
-            <h3
-              style={{
-                fontSize: "17px",
-                fontWeight: "600",
-                color: "var(--color-text-primary)",
-                fontFamily: "var(--font-heading)",
-                margin: 0,
-              }}
-            >
-              {f.title}
-            </h3>
+            {/* Title row: raw icon (mobile only) + heading */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <f.icon
+                className="feature-icon-inline"
+                style={{ width: "18px", height: "18px", color: "var(--color-accent)", strokeWidth: 1.75, flexShrink: 0 }}
+              />
+              <h3
+                style={{
+                  fontSize: "17px",
+                  fontWeight: "600",
+                  color: "var(--color-text-primary)",
+                  fontFamily: "var(--font-heading)",
+                  margin: 0,
+                }}
+              >
+                {f.title}
+              </h3>
+            </div>
             <p
               style={{
                 fontSize: "14px",
@@ -308,8 +309,7 @@ const CTASection = ({ onGetStarted }) => (
     className="landing-section"
     style={{
       padding: "88px var(--space-xl)",
-      background: "var(--color-surface)",
-      borderTop: "1px solid var(--color-border)",
+      background: "var(--color-bg)",
     }}
   >
     <motion.div

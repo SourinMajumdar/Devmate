@@ -1,22 +1,220 @@
-import { Clock, Flame, Trophy } from "lucide-react";
+﻿import { Clock, GitCommit, Github } from "lucide-react";
 import { motion } from "framer-motion";
 import MetricCard from "../components/shared/MetricCard";
 import LanguageChart from "../components/LanguageChart";
+import { timeAgo } from "../utils/github";
 
-const AnalyticsSection = ({ projects }) => {
-  const validProjects = projects?.filter((p) => p.title && p.title.trim() !== "") || [];
+/* ── Latest Activity Card ── */
+const LatestActivityCard = ({ activity }) => (
+  <div
+    className="card"
+    style={{
+      padding: "var(--space-md)",
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--space-xs)",
+    }}
+  >
+    <p
+      style={{
+        margin: 0,
+        fontSize: "var(--font-size-meta)",
+        fontWeight: "var(--font-weight-medium)",
+        color: "var(--color-text-muted)",
+        textTransform: "uppercase",
+        letterSpacing: "0.06em",
+      }}
+    >
+      Latest Activity
+    </p>
+
+    {activity ? (
+      <div style={{ marginTop: "var(--space-xs)" }}>
+        <p
+          style={{
+            fontSize: "var(--font-size-sm)",
+            color: "var(--color-text-primary)",
+            fontWeight: "var(--font-weight-medium)",
+            margin: "0 0 var(--space-xs) 0",
+            lineHeight: "var(--line-height-snug)",
+            wordBreak: "break-word",
+          }}
+        >
+          {activity.message}
+        </p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-xs)",
+            marginTop: "var(--space-xs)",
+          }}
+        >
+          <Clock
+            style={{ width: "12px", height: "12px", color: "var(--color-text-muted)" }}
+          />
+          <span
+            style={{
+              fontSize: "var(--font-size-meta)",
+              color: "var(--color-text-muted)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {activity.source}
+          </span>
+        </div>
+        <p
+          style={{
+            fontSize: "11px",
+            color: "var(--color-text-muted)",
+            margin: "var(--space-xs) 0 0 0",
+          }}
+        >
+          {activity.time}
+        </p>
+      </div>
+    ) : (
+      <p
+        style={{
+          fontSize: "var(--font-size-sm)",
+          color: "var(--color-text-muted)",
+          margin: "var(--space-xs) 0 0 0",
+        }}
+      >
+        No recent activity
+      </p>
+    )}
+  </div>
+);
+
+/* ── Latest Commit Card ── */
+const LatestCommitCard = ({ commit, loading, error, username }) => (
+  <div
+    className="card"
+    style={{
+      padding: "var(--space-md)",
+      display: "flex",
+      flexDirection: "column",
+      gap: "var(--space-xs)",
+      borderLeft: "3px solid #238636",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <p
+        style={{
+          margin: 0,
+          fontSize: "var(--font-size-meta)",
+          fontWeight: "var(--font-weight-medium)",
+          color: "var(--color-text-muted)",
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
+        }}
+      >
+        Latest Commit
+      </p>
+      <Github
+        style={{ width: "13px", height: "13px", color: "var(--color-text-muted)" }}
+      />
+    </div>
+
+    {!username ? (
+      <p
+        style={{
+          fontSize: "var(--font-size-sm)",
+          color: "var(--color-text-muted)",
+          margin: "var(--space-xs) 0 0 0",
+        }}
+      >
+        Add your GitHub link in profile
+      </p>
+    ) : loading ? (
+      <p
+        style={{
+          fontSize: "var(--font-size-sm)",
+          color: "var(--color-text-muted)",
+          margin: "var(--space-xs) 0 0 0",
+        }}
+      >
+        Loading…
+      </p>
+    ) : error ? (
+      <p
+        style={{
+          fontSize: "var(--font-size-sm)",
+          color: "var(--color-danger)",
+          margin: "var(--space-xs) 0 0 0",
+        }}
+      >
+        {error}
+      </p>
+    ) : commit ? (
+      <div style={{ marginTop: "var(--space-xs)" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-xs)",
+            marginBottom: "var(--space-xs)",
+          }}
+        >
+          <GitCommit style={{ width: "14px", height: "14px", color: "#238636", flexShrink: 0 }} />
+          <span
+            style={{
+              fontSize: "var(--font-size-sm)",
+              color: "#238636",
+              fontWeight: "var(--font-weight-semibold)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {commit.repo}
+          </span>
+        </div>
+        <p
+          style={{
+            fontSize: "11px",
+            color: "var(--color-text-muted)",
+            margin: 0,
+          }}
+        >
+          {timeAgo(commit.timestamp)}
+        </p>
+      </div>
+    ) : (
+      <p
+        style={{
+          fontSize: "var(--font-size-sm)",
+          color: "var(--color-text-muted)",
+          margin: "var(--space-xs) 0 0 0",
+        }}
+      >
+        No commits found
+      </p>
+    )}
+  </div>
+);
+
+/* ── AnalyticsSection ── */
+const AnalyticsSection = ({
+  projects,
+  latestCommit,
+  ghLoading,
+  ghError,
+  githubUsername,
+  latestActivity,
+}) => {
+  const validProjects =
+    projects?.filter((p) => p.title && p.title.trim() !== "") || [];
   const projectCount = validProjects.length;
-
-  const latestActivity = validProjects.length > 0
-    ? {
-        message: "Updated project dashboard",
-        project: validProjects[0].title,
-        time: "2 hours ago",
-      }
-    : null;
-
-  const currentStreak = projectCount > 0 ? Math.min(12 + projectCount * 2, 45) : 0;
-  const longestStreak = currentStreak > 0 ? Math.max(currentStreak, 28) : 0;
 
   return (
     <motion.section
@@ -36,131 +234,37 @@ const AnalyticsSection = ({ projects }) => {
             color: "var(--color-text-primary)",
           }}
         >
-          Momentum
+          Overview
         </h2>
       </div>
 
-      {/* 2×2 grid */}
+      {/* 3-column overview grid */}
       <div
         className="analytics-grid"
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "1fr 1fr 1fr",
           gap: "var(--space-sm)",
         }}
       >
-        {/* Projects count */}
         <MetricCard
           label="Projects"
           value={projectCount}
+          sub="Total in DevMate"
           style={{ borderLeft: "3px solid var(--color-accent)" }}
         />
 
-        {/* Latest Activity */}
-        <div
-          className="card"
-          style={{ padding: "var(--space-md)", display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}
-        >
-          <p
-            style={{
-              margin: 0,
-              fontSize: "var(--font-size-meta)",
-              fontWeight: "var(--font-weight-medium)",
-              color: "var(--color-text-muted)",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-            }}
-          >
-            Latest Activity
-          </p>
+        <LatestActivityCard activity={latestActivity} />
 
-          {latestActivity ? (
-            <div style={{ marginTop: "var(--space-xs)" }}>
-              <p
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--color-text-primary)",
-                  fontWeight: "var(--font-weight-medium)",
-                  margin: 0,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {latestActivity.message}
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "var(--space-xs)",
-                  marginTop: "var(--space-xs)",
-                }}
-              >
-                <Clock style={{ width: "12px", height: "12px", color: "var(--color-text-muted)" }} />
-                <span
-                  style={{
-                    fontSize: "var(--font-size-meta)",
-                    color: "var(--color-text-muted)",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {latestActivity.project}
-                </span>
-              </div>
-              <p
-                style={{
-                  fontSize: "11px",
-                  color: "var(--color-text-muted)",
-                  margin: "var(--space-xs) 0 0 0",
-                }}
-              >
-                {latestActivity.time}
-              </p>
-            </div>
-          ) : (
-            <p
-              style={{
-                fontSize: "var(--font-size-sm)",
-                color: "var(--color-text-muted)",
-                margin: "var(--space-xs) 0 0 0",
-              }}
-            >
-              No recent activity
-            </p>
-          )}
-        </div>
-
-        {/* Current Streak */}
-        <MetricCard
-          label="Current Streak"
-          value={currentStreak}
-          sub="Consecutive active days"
-          style={{ borderLeft: "3px solid #f59e0b" }}
-          icon={
-            <Flame
-              style={{ width: "22px", height: "22px", color: "#fca919" }}
-            />
-          }
-        />
-
-        {/* Longest Streak */}
-        <MetricCard
-          label="Longest Streak"
-          value={longestStreak}
-          sub="Best consistency so far"
-          style={{ borderLeft: "3px solid #f59e0b" }}
-          icon={
-            <Trophy
-              style={{ width: "20px", height: "20px", color: "#fca919" }}
-            />
-          }
+        <LatestCommitCard
+          commit={latestCommit}
+          loading={ghLoading}
+          error={ghError}
+          username={githubUsername}
         />
       </div>
 
-      {/* Language chart — full width below the 2×2 grid */}
+      {/* Language chart — full width below the grid */}
       <div style={{ marginTop: "var(--space-sm)" }}>
         <LanguageChart projects={validProjects} />
       </div>

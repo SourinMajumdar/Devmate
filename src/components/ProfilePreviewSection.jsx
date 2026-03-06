@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, Flame, Trophy, Globe, Github, Linkedin, Code2, Activity } from "lucide-react";
+import { Clock, GitCommit, Github, Linkedin, Globe, Code2, Activity } from "lucide-react";
 import TechBadge from "./TechBadge";
 import { sampleProfiles } from "../data/sampleProfiles";
 
@@ -80,6 +80,48 @@ const StatCard = ({ label, value, icon }) => (
   </div>
 );
 
+/* ── Mini language chart ──────────────────────── */
+const LANG_COLORS_MINI = {
+  javascript: "#f7df1e", typescript: "#3178c6", python: "#3572a5",
+  rust: "#dea584", go: "#00acd7", react: "#61dafb", vue: "#42b883",
+  docker: "#2496ed", kubernetes: "#326ce5", fastapi: "#009688",
+  pytorch: "#ee4c2c", postgresql: "#336791", nodejs: "#339933",
+};
+const FALLBACK_MINI = ["#6366f1","#8b5cf6","#ec4899","#f97316","#10b981","#06b6d4"];
+function getLangColor(tech, idx) {
+  return LANG_COLORS_MINI[tech.toLowerCase().replace(/[\s.]/g,"")] ?? FALLBACK_MINI[idx % FALLBACK_MINI.length];
+}
+
+const MiniLanguageChart = ({ projects }) => {
+  const counts = {};
+  projects.forEach(p => p.tech.forEach(t => { counts[t] = (counts[t] ?? 0) + 1; }));
+  const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,6);
+  const total = entries.reduce((s,[,n]) => s+n, 0);
+  if (!entries.length) return null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-text-muted)", marginBottom: 2 }}>
+        Languages
+      </div>
+      {/* Segmented bar */}
+      <div style={{ display: "flex", height: 6, borderRadius: 999, overflow: "hidden", gap: 1 }}>
+        {entries.map(([tech, count], i) => (
+          <div key={tech} style={{ height: "100%", width: `${(count/total)*100}%`, background: getLangColor(tech, i), borderRadius: 999, minWidth: 3 }} />
+        ))}
+      </div>
+      {/* Legend */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 10px" }}>
+        {entries.map(([tech], i) => (
+          <div key={tech} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <div style={{ width: 7, height: 7, borderRadius: "50%", background: getLangColor(tech, i), flexShrink: 0 }} />
+            <span style={{ fontSize: 10, color: "var(--color-text-secondary)", fontWeight: 500 }}>{tech}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 /* ── Main section ─────────────────────────────── */
 const ProfilePreviewSection = () => {
   const [activeId, setActiveId] = useState("priya");
@@ -91,7 +133,6 @@ const ProfilePreviewSection = () => {
       style={{
         padding: "88px var(--space-xl)",
         background: "var(--color-bg)",
-        borderTop: "1px solid var(--color-border)",
       }}
     >
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
@@ -231,326 +272,152 @@ const ProfilePreviewSection = () => {
               </div>
             </div>
 
-            {/* Dashboard body */}
-            <div
-              style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}
-            >
-              {/* 3-column grid: profile | momentum | projects */}
-              <div
-                className="preview-grid"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1.6fr",
-                  gap: "16px",
-                  alignItems: "start",
-                }}
-              >
-                {/* ── Profile column ── */}
-                <div
-                  className="card"
-                  style={{ padding: "16px", display: "flex", flexDirection: "column", gap: 10 }}
-                >
-                  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                    <Avatar name={active.profile.name} size={44} />
-                    <div>
-                      <div
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "var(--color-text-primary)",
-                          fontFamily: "var(--font-heading)",
-                          lineHeight: 1.2,
-                        }}
-                      >
-                        {active.profile.name}
+            {/* Dashboard body — mirrors actual ProfilePage layout */}
+            <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
+
+              {/* ── 2-col main grid: left (profile + overview + chart) | right (projects) ── */}
+              <div className="preview-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "14px", alignItems: "start" }}>
+
+                {/* LEFT column */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+
+                  {/* Profile card */}
+                  <div className="card" style={{ padding: "14px", display: "flex", flexDirection: "column", gap: 8 }}>
+                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                      <Avatar name={active.profile.name} size={40} />
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)", lineHeight: 1.2 }}>
+                          {active.profile.name}
+                        </div>
+                        <div style={{ fontSize: 11, color: "var(--color-text-muted)", marginTop: 2 }}>
+                          {active.profile.role}
+                        </div>
                       </div>
-                      <div
-                        style={{ fontSize: 11, color: "var(--color-text-muted)", marginTop: 2 }}
-                      >
-                        {active.profile.username}
+                    </div>
+                    <p style={{ fontSize: 11, color: "var(--color-text-secondary)", lineHeight: 1.5, margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                      {active.profile.bio}
+                    </p>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+                      {active.profile.tech.slice(0, 4).map((t) => <TechBadge key={t} tech={t} size="sm" />)}
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      {[{ icon: Github, label: "GitHub" }, { icon: Linkedin, label: "LinkedIn" }, { icon: Globe, label: "Portfolio" }].map(({ icon: Icon, label }) => (
+                        <span key={label} style={{ fontSize: 10, color: "var(--color-accent)", display: "flex", alignItems: "center", gap: 3 }}>
+                          <Icon style={{ width: 10, height: 10 }} />{label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Overview section (pip header + 3-col grid) */}
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--color-accent)", flexShrink: 0 }} />
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)" }}>Overview</span>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+                      {/* Projects */}
+                      <div className="card" style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 3, borderLeft: "2px solid var(--color-accent)" }}>
+                        <div style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Projects</div>
+                        <div style={{ fontSize: 24, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)", lineHeight: 1 }}>{active.stats.projects}</div>
+                        <div style={{ fontSize: 9, color: "var(--color-text-muted)" }}>Total in DevMate</div>
+                      </div>
+                      {/* Latest Activity */}
+                      <div className="card" style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 3 }}>
+                        <div style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Latest Activity</div>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-primary)", lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                          {active.stats.latestActivity}
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 2 }}>
+                          <Clock style={{ width: 9, height: 9, color: "var(--color-text-muted)" }} />
+                          <span style={{ fontSize: 9, color: "var(--color-text-muted)" }}>2h ago</span>
+                        </div>
+                      </div>
+                      {/* Latest Commit */}
+                      <div className="card" style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 3, borderLeft: "2px solid #238636" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                          <div style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Latest Commit</div>
+                          <Github style={{ width: 9, height: 9, color: "var(--color-text-muted)" }} />
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                          <GitCommit style={{ width: 10, height: 10, color: "#238636", flexShrink: 0 }} />
+                          <span style={{ fontSize: 11, fontWeight: 600, color: "#238636", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{active.stats.commitRepo}</span>
+                        </div>
+                        <div style={{ fontSize: 9, color: "var(--color-text-muted)" }}>just now</div>
                       </div>
                     </div>
                   </div>
 
-                  <div
-                    style={{ fontSize: 12, fontWeight: 600, color: "var(--color-text-secondary)" }}
-                  >
-                    {active.profile.role}
-                  </div>
-
-                  <p
-                    style={{
-                      fontSize: 12,
-                      color: "var(--color-text-secondary)",
-                      lineHeight: 1.55,
-                      margin: 0,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {active.profile.bio}
-                  </p>
-
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                    {active.profile.tech.map((t) => (
-                      <TechBadge key={t} tech={t} size="sm" />
-                    ))}
-                  </div>
-
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 2 }}>
-                    {[
-                      { icon: Github, label: "GitHub" },
-                      { icon: Linkedin, label: "LinkedIn" },
-                      { icon: Globe, label: "Portfolio" },
-                    ].map(({ icon: Icon, label }) => (
-                      <span
-                        key={label}
-                        style={{
-                          fontSize: 11,
-                          color: "var(--color-accent)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 3,
-                        }}
-                      >
-                        <Icon style={{ width: 11, height: 11 }} />
-                        {label}
-                      </span>
-                    ))}
+                  {/* Language chart */}
+                  <div className="card" style={{ padding: "10px 12px" }}>
+                    <MiniLanguageChart projects={active.projects} />
                   </div>
                 </div>
 
-                {/* ── Momentum column ── */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      color: "var(--color-text-muted)",
-                    }}
-                  >
-                    Momentum
+                {/* RIGHT column — Projects */}
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--color-accent)", flexShrink: 0 }} />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)" }}>Projects</span>
                   </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-                    <StatCard label="Projects" value={active.stats.projects} />
-
-                    {/* Last commit — custom layout */}
-                    <div
-                      className="card"
-                      style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 2 }}
-                    >
-                      <div
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 600,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.07em",
-                          color: "var(--color-text-muted)",
-                          marginBottom: 4,
-                        }}
-                      >
-                        Latest Activity
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {active.projects.map((p) => (
+                      <div key={p.id} className="card" style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 5 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)" }}>{p.title}</div>
+                        <p style={{ fontSize: 11, color: "var(--color-text-secondary)", lineHeight: 1.45, margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{p.description}</p>
+                        <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+                          {p.tech.slice(0, 3).map((t) => <TechBadge key={t} tech={t} size="sm" />)}
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                          <Globe style={{ width: 10, height: 10, color: "var(--color-accent)" }} />
+                          <span style={{ fontSize: 10, color: "var(--color-accent)", fontWeight: 600 }}>View Project →</span>
+                        </div>
                       </div>
-                      <div
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: "var(--color-text-primary)",
-                          lineHeight: 1.35,
-                          overflow: "hidden",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                        }}
-                      >
-                        {active.stats.latestActivity}
-                      </div>
-                      <div
-                        style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 4 }}
-                      >
-                        <Clock
-                          style={{ width: 10, height: 10, color: "var(--color-text-muted)" }}
-                        />
-                        <span style={{ fontSize: 10, color: "var(--color-text-muted)" }}>
-                          2 hrs ago
-                        </span>
-                      </div>
-                    </div>
-
-                    <StatCard
-                      label="Streak"
-                      value={active.stats.streak}
-                      icon={
-                        <Flame style={{ width: 11, height: 11, color: "#fca919" }} />
-                      }
-                    />
-                    <StatCard
-                      label="Best"
-                      value={active.stats.longest}
-                      icon={
-                        <Trophy style={{ width: 11, height: 11, color: "#fca919" }} />
-                      }
-                    />
+                    ))}
                   </div>
-                </div>
-
-                {/* ── Projects column ── */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                        color: "var(--color-text-muted)",
-                      }}
-                    >
-                      Projects{" "}
-                      <span style={{ fontWeight: 400 }}>({active.stats.projects})</span>
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 10,
-                        background: "var(--color-accent)",
-                        color: "#fff",
-                        padding: "2px 8px",
-                        borderRadius: 4,
-                        fontWeight: 600,
-                      }}
-                    >
-                      + Add
-                    </span>
-                  </div>
-
-                  {active.projects.map((p) => (
-                    <div
-                      key={p.id}
-                      className="card"
-                      style={{
-                        padding: "12px 14px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 6,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: "var(--color-text-primary)",
-                          fontFamily: "var(--font-heading)",
-                        }}
-                      >
-                        {p.title}
-                      </div>
-                      <p
-                        style={{
-                          fontSize: 11,
-                          color: "var(--color-text-secondary)",
-                          lineHeight: 1.5,
-                          margin: 0,
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                        }}
-                      >
-                        {p.description}
-                      </p>
-                      <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                        {p.tech.map((t) => (
-                          <TechBadge key={t} tech={t} size="sm" />
-                        ))}
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                        <Globe
-                          style={{ width: 10, height: 10, color: "var(--color-accent)" }}
-                        />
-                        <span
-                          style={{
-                            fontSize: 11,
-                            color: "var(--color-accent)",
-                            fontWeight: 600,
-                          }}
-                        >
-                          View Project →
-                        </span>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
 
-              {/* ── Activity strip ── */}
+              {/* ── Activity — full width, 2-col grid (mirrors ContentTimeline) ── */}
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 5,
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    color: "var(--color-text-muted)",
-                    marginBottom: 8,
-                  }}
-                >
-                  <Activity style={{ width: 12, height: 12 }} />
-                  Activity
+                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 5 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--color-accent)", flexShrink: 0 }} />
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)" }}>Activity</span>
                 </div>
-                <div
-                  className="preview-activity-grid"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
-                    gap: 6,
-                  }}
-                >
-                  {active.activity.map((a, i) => (
-                    <div
-                      key={i}
-                      className="card"
-                      style={{
-                        padding: "10px 12px",
-                        display: "flex",
-                        gap: 8,
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <PulseDot />
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 600,
-                            color: "var(--color-text-primary)",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            marginBottom: 2,
-                          }}
-                        >
-                          {a.text}
+                <p style={{ fontSize: 10, color: "var(--color-text-secondary)", margin: "0 0 8px 0" }}>
+                  Recent updates from DevMate and GitHub
+                </p>
+                <div className="preview-activity-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                  {active.activity.map((a, i) => {
+                    const isGH = a.source === "github";
+                    return (
+                      <div key={i} className="card" style={{ padding: "10px 12px", display: "flex", gap: 8, alignItems: "flex-start" }}>
+                        {/* Source indicator — matches ContentTimeline */}
+                        <div style={{ paddingTop: 1, flexShrink: 0 }}>
+                          {isGH ? (
+                            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "var(--color-bg-elevated)", border: "1.5px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <Github style={{ width: 11, height: 11, color: "var(--color-text-primary)" }} />
+                            </div>
+                          ) : (
+                            <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--color-accent)", marginTop: 4 }} />
+                          )}
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--color-text-muted)" }}>
-                          {a.time}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-secondary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 2 }}>
+                            {a.text}
+                          </div>
+                          {/* Commit message block for GitHub items */}
+                          {isGH && a.isPush && a.commitMessage && (
+                            <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderLeft: "2px solid #238636", borderRadius: 3, padding: "3px 6px", marginBottom: 3 }}>
+                              <GitCommit style={{ width: 9, height: 9, color: "#238636", flexShrink: 0 }} />
+                              <span style={{ fontSize: 10, color: "var(--color-text-primary)", fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.commitMessage}</span>
+                            </div>
+                          )}
+                          <span style={{ fontSize: 10, color: "var(--color-text-muted)" }}>{a.time}</span>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>

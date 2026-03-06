@@ -388,6 +388,12 @@ html {
   color: var(--color-text-primary) !important;
 }
 
+/* Inline icons hidden by default (desktop) */
+.about-card-icon-inline,
+.feature-icon-inline {
+  display: none;
+}
+
 /* ============================================================
    RESPONSIVE BREAKPOINTS
    ============================================================ */
@@ -480,7 +486,7 @@ html {
 
   .analytics-grid {
     grid-template-columns: 1fr !important;
-    grid-template-rows: auto auto auto auto !important;
+    grid-template-rows: auto auto auto !important;
   }
 
   .all-projects-grid {
@@ -605,13 +611,43 @@ html {
     margin-bottom: var(--space-md) !important;
   }
 
+  .about-main {
+    padding: var(--space-lg) var(--space-md) !important;
+  }
+
   .about-paragraph {
     font-size: var(--font-size-sm) !important;
   }
 
+  /* Homepage feature cards — mobile */
+  .feature-icon-box {
+    display: none !important;
+  }
+
+  .feature-icon-inline {
+    display: block !important;
+  }
+
+  /* About page dashboard cards — mobile */
+  .about-dashboard-card {
+    flex-direction: column !important;
+    gap: var(--space-sm) !important;
+  }
+
+  .about-icon-box {
+    display: none !important;
+  }
+
+  .about-card-icon-inline {
+    display: block !important;
+  }
+
   .footer-grid {
+    display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 32px !important;
+    gap: 28px var(--space-lg) !important;
+    padding: 28px var(--space-lg) 20px !important;
+    align-items: start !important;
   }
 
   .footer-grid > div:first-child {

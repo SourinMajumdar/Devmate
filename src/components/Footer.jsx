@@ -3,10 +3,9 @@ import { Code2, Github } from "lucide-react";
 import kombaiLogo from "../assets/kombai.png";
 
 const navLinks = [
-  { label: "Home",         to: "/" },
-  { label: "Dashboard",    to: "/dashboard" },
-  { label: "About",        to: "/about" },
-  { label: "All Projects", to: "/projects" },
+  { label: "Home",      to: "/" },
+  { label: "Dashboard", to: "/dashboard" },
+  { label: "About",     to: "/about" },
 ];
 
 const colHeadingStyle = {
@@ -15,7 +14,7 @@ const colHeadingStyle = {
   textTransform: "uppercase",
   letterSpacing: "0.08em",
   color: "var(--color-text-muted)",
-  marginBottom: "16px",
+  marginBottom: "14px",
 };
 
 const Footer = () => {
@@ -33,25 +32,25 @@ const Footer = () => {
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "52px var(--space-xl) 40px",
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr 1fr",
-          gap: "48px",
-          alignItems: "start",
+          padding: "28px 200px 20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: "32px",
         }}
         className="footer-grid"
       >
         {/* Col 1 — Brand */}
         <div>
           {/* Logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "9px", marginBottom: "10px" }}>
             <Code2
-              style={{ width: "20px", height: "20px", color: "var(--color-accent)", strokeWidth: 2.5 }}
+              style={{ width: "26px", height: "26px", color: "var(--color-accent)", strokeWidth: 2.5 }}
             />
             <span
               style={{
                 fontFamily: "var(--font-heading)",
-                fontSize: "20px",
+                fontSize: "26px",
                 fontWeight: "800",
                 color: "var(--color-accent)",
                 letterSpacing: "0.5px",
@@ -61,17 +60,18 @@ const Footer = () => {
             </span>
           </div>
 
-          {/* Tagline */}
           <p
             style={{
               fontSize: "14px",
               color: "var(--color-text-secondary)",
               lineHeight: "1.65",
-              maxWidth: "280px",
-              marginBottom: "24px",
+              margin: "0 0 8px 0",
             }}
           >
-            Your developer journey, all in one place. Track projects, monitor activity, and showcase your work.
+            Your developer journey, all in one place.
+          </p>
+          <p style={{ fontSize: "12px", color: "var(--color-text-muted)", margin: 0 }}>
+            © 2026 Devmate. All rights reserved.
           </p>
 
 
@@ -80,7 +80,7 @@ const Footer = () => {
         {/* Col 2 — Navigation */}
         <div>
           <p style={colHeadingStyle}>Navigation</p>
-          <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
+          <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
@@ -105,40 +105,32 @@ const Footer = () => {
         {/* Col 3 — Built with + GitHub */}
         <div>
           <p style={colHeadingStyle}>Built with</p>
-
-          {/* Badges */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "20px" }}>
-            {[
-              { href: "https://react.dev", src: "/react.svg", label: "React" },
-              { href: "https://kombai.com", src: kombaiLogo,   label: "Kombai" },
-            ].map(({ href, src, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "7px",
-                  padding: "6px 12px",
-                  background: "var(--color-bg)",
-                  borderRadius: "var(--radius-sm)",
-                  border: "1px solid var(--color-border)",
-                  textDecoration: "none",
-                  width: "fit-content",
-                  transition: "border-color var(--transition)",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--color-border-hover)")}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--color-border)")}
-              >
-                <img src={src} alt={label} style={{ width: "14px", height: "14px" }} />
-                <span style={{ fontSize: "13px", fontWeight: "500", color: "var(--color-text-primary)" }}>
-                  {label}
-                </span>
-              </a>
-            ))}
-          </div>
+          {/* React & Kombai inline */}
+          <p style={{ fontSize: "14px", margin: "0 0 14px 0", display: "flex", alignItems: "center", gap: "6px" }}>
+            <a
+              href="https://react.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "var(--color-text-primary)", fontWeight: "600", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", transition: "color var(--transition)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-accent)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-text-primary)")}
+            >
+              <img src="/react.svg" alt="React" style={{ width: "14px", height: "14px" }} />
+              React
+            </a>
+            <span style={{ color: "var(--color-text-muted)" }}>&amp;</span>
+            <a
+              href="https://kombai.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "var(--color-text-primary)", fontWeight: "600", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", transition: "color var(--transition)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-accent)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-text-primary)")}
+            >
+              <img src={kombaiLogo} alt="Kombai" style={{ width: "14px", height: "14px" }} />
+              Kombai
+            </a>
+          </p>
 
           {/* GitHub */}
           <a
@@ -164,31 +156,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ── Bottom bar ── */}
-      <div
-        style={{
-          borderTop: "1px solid var(--color-border)",
-          padding: "16px var(--space-xl)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-          className="footer-bottom"
-        >
-          <span style={{ fontSize: "12px", color: "var(--color-text-muted)", fontWeight: "500" }}>
-            © 2026 Devmate. All rights reserved.
-          </span>
-          <span style={{ fontSize: "12px", color: "var(--color-text-muted)" }}>
-            Made for developers, by developers.
-          </span>
-        </div>
-      </div>
+
     </footer>
   );
 };

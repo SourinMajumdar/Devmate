@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { X, Camera, Trash2 } from "lucide-react";
 
 const MAX_SIZE_MB = 2;
 
-const EditModal = ({ profile, onClose, onSave }) => {
+const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -101,22 +101,31 @@ const EditModal = ({ profile, onClose, onSave }) => {
   const initials = formData.name ? formData.name[0].toUpperCase() : "?";
 
   return (
-    <div style={overlayStyle} onClick={onClose}>
+    <div style={overlayStyle} onClick={isSetup ? undefined : onClose}>
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div style={headerStyle}>
-          <h2 style={{ fontSize: "20px", fontWeight: "600", margin: 0, color: "var(--color-text-primary)" }}>
-            Edit Profile
-          </h2>
-          <button onClick={onClose} className="btn-secondary" style={closeButtonStyle}>
-            <X style={{ width: "20px", height: "20px" }} />
-          </button>
+          <div>
+            <h2 style={{ fontSize: "20px", fontWeight: "600", margin: 0, color: "var(--color-text-primary)" }}>
+              {isSetup ? "Welcome to DevMate 👋" : "Edit Profile"}
+            </h2>
+            {isSetup && (
+              <p style={{ fontSize: "13px", color: "var(--color-text-secondary)", margin: "4px 0 0 0" }}>
+                Let's set up your profile to get started
+              </p>
+            )}
+          </div>
+          {!isSetup && (
+            <button onClick={onClose} className="btn-secondary" style={closeButtonStyle}>
+              <X style={{ width: "20px", height: "20px" }} />
+            </button>
+          )}
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} style={formStyle}>
 
-          {/* ── Avatar upload ── */}
+          {/* â”€â”€ Avatar upload â”€â”€ */}
           <div style={avatarSectionStyle}>
             {/* Hidden file input */}
             <input
@@ -168,7 +177,7 @@ const EditModal = ({ profile, onClose, onSave }) => {
                 Profile Photo
               </span>
               <span style={{ fontSize: "12px", color: "var(--color-text-muted)" }}>
-                JPG, PNG, GIF or WebP · max {MAX_SIZE_MB}MB
+                JPG, PNG, GIF or WebP Â· max {MAX_SIZE_MB}MB
               </span>
               {formData.avatar && (
                 <button
@@ -233,11 +242,13 @@ const EditModal = ({ profile, onClose, onSave }) => {
           </label>
 
           <div style={buttonContainerStyle}>
-            <button type="button" onClick={onClose} className="btn-secondary" style={{ padding: "10px 20px" }}>
-              Cancel
-            </button>
+            {!isSetup && (
+              <button type="button" onClick={onClose} className="btn-secondary" style={{ padding: "10px 20px" }}>
+                Cancel
+              </button>
+            )}
             <button type="submit" className="btn-primary" style={{ padding: "10px 20px" }}>
-              Save
+              {isSetup ? "Get Started" : "Save"}
             </button>
           </div>
         </form>
@@ -246,7 +257,7 @@ const EditModal = ({ profile, onClose, onSave }) => {
   );
 };
 
-/* ── Styles ── */
+/* â”€â”€ Styles â”€â”€ */
 
 const overlayStyle = {
   position: "fixed",
@@ -426,3 +437,4 @@ const buttonContainerStyle = {
 };
 
 export default EditModal;
+
