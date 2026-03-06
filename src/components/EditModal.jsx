@@ -10,10 +10,12 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
     name: "",
     username: "",
     role: "",
+    location: "",
     bio: "",
     tech: "",
     github: "",
     linkedin: "",
+    medium: "",
     portfolio: "",
     avatar: "",
   });
@@ -27,10 +29,12 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
       name: profile.name || "",
       username: profile.username || "",
       role: profile.role || "",
+      location: profile.location || "",
       bio: profile.bio || "",
       tech: profile.tech?.join(", ") || "",
       github: profile.links?.github || "",
       linkedin: profile.links?.linkedin || "",
+      medium: profile.links?.medium || "",
       portfolio: profile.links?.portfolio || "",
       avatar: profile.avatar || "",
     });
@@ -84,6 +88,7 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
       name: formData.name,
       username: formData.username,
       role: formData.role,
+      location: formData.location,
       bio: formData.bio,
       avatar: formData.avatar,
       tech: formData.tech
@@ -93,6 +98,7 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
       links: {
         github: formData.github,
         linkedin: formData.linkedin,
+        medium: formData.medium,
         portfolio: formData.portfolio,
       },
     });
@@ -217,6 +223,11 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
           </label>
 
           <label style={labelStyle}>
+            Location
+            <input name="location" value={formData.location} onChange={handleChange} placeholder="San Francisco, CA" style={inputStyle} />
+          </label>
+
+          <label style={labelStyle}>
             Bio
             <textarea name="bio" value={formData.bio} onChange={handleChange} style={{ ...inputStyle, minHeight: "80px" }} required />
           </label>
@@ -234,6 +245,11 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
           <label style={labelStyle}>
             LinkedIn Link
             <input name="linkedin" value={formData.linkedin} onChange={handleChange} style={inputStyle} />
+          </label>
+
+          <label style={labelStyle}>
+            Medium Link
+            <input name="medium" value={formData.medium} onChange={handleChange} placeholder="https://medium.com/@username" style={inputStyle} />
           </label>
 
           <label style={labelStyle}>

@@ -12,6 +12,7 @@ import { formatGitHubEvent } from "../utils/github";
 export function useGitHubActivity(githubUsername) {
   const [events, setEvents] = useState([]);
   const [latestCommit, setLatestCommit] = useState(null);
+  const [ghStats, setGhStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -19,6 +20,7 @@ export function useGitHubActivity(githubUsername) {
     if (!githubUsername) {
       setEvents([]);
       setLatestCommit(null);
+      setGhStats(null);
       setLoading(false);
       setError(null);
       return;
@@ -47,6 +49,18 @@ export function useGitHubActivity(githubUsername) {
       })
       .then(function(data) {
         if (!Array.isArray(data)) throw new Error("Invalid GitHub API response");
+
+        // Compute ghStats from raw events
+        const pushEvs = data.filter(function(e) { return e.type === "PushEvent"; });
+        const prEvs = data.filter(function(e) {
+          return e.type === "PullRequestEvent" &&
+            e.payload?.action === "closed" &&
+            e.payload?.pull_request?.merged;
+        });
+        const totalCommits = pushEvs.reduce(function(sum, e) {
+          return sum + (e.payload?.commits?.length || 1);
+        }, 0);
+        setGhStats({ pushCount: pushEvs.length, prCount: prEvs.length, totalCommits });
 
         // Latest PushEvent -> Latest Commit card
         const pushEvent = data.find(function(e) { return e.type === "PushEvent"; });
@@ -96,5 +110,5 @@ export function useGitHubActivity(githubUsername) {
     return function() { controller.abort(); };
   }, [githubUsername]);
 
-  return { events, latestCommit, loading, error };
+  return { events, latestCommit, ghStats, loading, error };
 }

@@ -80,7 +80,7 @@ const Footer = () => {
         {/* Col 2 — Navigation */}
         <div>
           <p style={colHeadingStyle}>Navigation</p>
-          <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
+          <ul className="footer-nav-list" style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link

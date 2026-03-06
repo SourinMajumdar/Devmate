@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, GitCommit, Github, Linkedin, Globe, Code2, Activity } from "lucide-react";
+import { Clock, GitCommit, Github, Linkedin, Globe, Code2, Cpu, FolderOpen, Zap, MapPin } from "lucide-react";
 import TechBadge from "./TechBadge";
 import { sampleProfiles } from "../data/sampleProfiles";
+import { getLangColor } from "../utils/techColors";
 
 /* ── Micro avatar ─────────────────────────────── */
 const Avatar = ({ name, size = 44 }) => (
@@ -44,54 +45,26 @@ const PulseDot = () => (
   />
 );
 
-/* ── Stat mini-card ───────────────────────────── */
-const StatCard = ({ label, value, icon }) => (
-  <div
-    className="card"
-    style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 3 }}
-  >
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 4,
-        fontSize: 10,
-        fontWeight: 600,
-        textTransform: "uppercase",
-        letterSpacing: "0.07em",
-        color: "var(--color-text-muted)",
-        marginBottom: 2,
-      }}
-    >
-      {icon}
-      {label}
+/* ── Mini tech chip ───────────────────────────── */
+const TechChip = ({ tech, count }) => {
+  const color = getLangColor(tech, 0);
+  return (
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 7px", borderRadius: 999, background: color + "18", border: `1px solid ${color}40` }}>
+      <span style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0 }} />
+      <span style={{ fontSize: 9, fontWeight: 600, color: "var(--color-text-primary)" }}>{tech}</span>
+      <span style={{ fontSize: 9, color: "var(--color-text-muted)" }}>×{count}</span>
     </div>
-    <div
-      style={{
-        fontSize: 28,
-        fontWeight: 700,
-        color: "var(--color-text-primary)",
-        fontFamily: "var(--font-heading)",
-        lineHeight: 1,
-      }}
-    >
-      {value}
-    </div>
-  </div>
-);
-
-/* ── Mini language chart ──────────────────────── */
-const LANG_COLORS_MINI = {
-  javascript: "#f7df1e", typescript: "#3178c6", python: "#3572a5",
-  rust: "#dea584", go: "#00acd7", react: "#61dafb", vue: "#42b883",
-  docker: "#2496ed", kubernetes: "#326ce5", fastapi: "#009688",
-  pytorch: "#ee4c2c", postgresql: "#336791", nodejs: "#339933",
+  );
 };
-const FALLBACK_MINI = ["#6366f1","#8b5cf6","#ec4899","#f97316","#10b981","#06b6d4"];
-function getLangColor(tech, idx) {
-  return LANG_COLORS_MINI[tech.toLowerCase().replace(/[\s.]/g,"")] ?? FALLBACK_MINI[idx % FALLBACK_MINI.length];
+
+/* ── Compute top 3 techs from projects ─────────── */
+function getTopTechs(projects, n = 3) {
+  const counts = {};
+  projects.forEach(p => (p.tech || []).forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
+  return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, n);
 }
 
+/* ── Mini language chart ──────────────────────── */
 const MiniLanguageChart = ({ projects }) => {
   const counts = {};
   projects.forEach(p => p.tech.forEach(t => { counts[t] = (counts[t] ?? 0) + 1; }));
@@ -292,14 +265,17 @@ const ProfilePreviewSection = () => {
                         <div style={{ fontSize: 11, color: "var(--color-text-muted)", marginTop: 2 }}>
                           {active.profile.role}
                         </div>
+                        {active.profile.location && (
+                          <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 3 }}>
+                            <MapPin style={{ width: 9, height: 9, color: "var(--color-text-muted)", flexShrink: 0 }} />
+                            <span style={{ fontSize: 10, color: "var(--color-text-muted)" }}>{active.profile.location}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <p style={{ fontSize: 11, color: "var(--color-text-secondary)", lineHeight: 1.5, margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                       {active.profile.bio}
                     </p>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
-                      {active.profile.tech.slice(0, 4).map((t) => <TechBadge key={t} tech={t} size="sm" />)}
-                    </div>
                     <div style={{ display: "flex", gap: 8 }}>
                       {[{ icon: Github, label: "GitHub" }, { icon: Linkedin, label: "LinkedIn" }, { icon: Globe, label: "Portfolio" }].map(({ icon: Icon, label }) => (
                         <span key={label} style={{ fontSize: 10, color: "var(--color-accent)", display: "flex", alignItems: "center", gap: 3 }}>
@@ -309,41 +285,43 @@ const ProfilePreviewSection = () => {
                     </div>
                   </div>
 
-                  {/* Overview section (pip header + 3-col grid) */}
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
-                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--color-accent)", flexShrink: 0 }} />
+                  {/* Overview section */}
+                  <div className="card" style={{ padding: "12px 14px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 10 }}>
+                      <div style={{ width: 2, height: 12, borderRadius: 999, background: "var(--color-accent)", flexShrink: 0 }} />
                       <span style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)" }}>Overview</span>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                       {/* Projects */}
-                      <div className="card" style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 3, borderLeft: "2px solid var(--color-accent)" }}>
-                        <div style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Projects</div>
-                        <div style={{ fontSize: 24, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)", lineHeight: 1 }}>{active.stats.projects}</div>
-                        <div style={{ fontSize: 9, color: "var(--color-text-muted)" }}>Total in DevMate</div>
+                      <div style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderRadius: 6, padding: "8px 10px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                          <FolderOpen style={{ width: 10, height: 10, color: "var(--color-accent)" }} />
+                          <span style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Projects</span>
+                        </div>
+                        <div style={{ fontSize: 26, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)", lineHeight: 1 }}>{active.stats.projects}</div>
                       </div>
                       {/* Latest Activity */}
-                      <div className="card" style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 3 }}>
-                        <div style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Latest Activity</div>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-primary)", lineHeight: 1.3, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                          {active.stats.latestActivity}
+                      <div style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderRadius: 6, padding: "8px 10px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
+                          <Clock style={{ width: 10, height: 10, color: "var(--color-accent)" }} />
+                          <span style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Latest Activity</span>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 2 }}>
-                          <Clock style={{ width: 9, height: 9, color: "var(--color-text-muted)" }} />
-                          <span style={{ fontSize: 9, color: "var(--color-text-muted)" }}>2h ago</span>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-primary)", lineHeight: 1.3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {active.projects[0]?.title || "—"}
                         </div>
+                        <div style={{ fontSize: 9, color: "var(--color-text-muted)", marginTop: 2 }}>Updated recently</div>
                       </div>
-                      {/* Latest Commit */}
-                      <div className="card" style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 3, borderLeft: "2px solid #238636" }}>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                          <div style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Latest Commit</div>
-                          <Github style={{ width: 9, height: 9, color: "var(--color-text-muted)" }} />
+                      {/* Top Tech */}
+                      <div style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderRadius: 6, padding: "8px 10px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 6 }}>
+                          <Cpu style={{ width: 10, height: 10, color: "var(--color-accent)" }} />
+                          <span style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Top Tech</span>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                          <GitCommit style={{ width: 10, height: 10, color: "#238636", flexShrink: 0 }} />
-                          <span style={{ fontSize: 11, fontWeight: 600, color: "#238636", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{active.stats.commitRepo}</span>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                          {getTopTechs(active.projects).map(([tech, count]) => (
+                            <TechChip key={tech} tech={tech} count={count} />
+                          ))}
                         </div>
-                        <div style={{ fontSize: 9, color: "var(--color-text-muted)" }}>just now</div>
                       </div>
                     </div>
                   </div>
@@ -399,7 +377,9 @@ const ProfilePreviewSection = () => {
                               <Github style={{ width: 11, height: 11, color: "var(--color-text-primary)" }} />
                             </div>
                           ) : (
-                            <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--color-accent)", marginTop: 4 }} />
+                            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "var(--color-accent-subtle)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <Zap style={{ width: 11, height: 11, color: "var(--color-accent)" }} />
+                            </div>
                           )}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>

@@ -20,10 +20,12 @@ const Navbar = () => {
         background: "var(--color-header-bg)",
         backdropFilter: "blur(20px) saturate(120%)",
         WebkitBackdropFilter: "blur(20px) saturate(120%)",
+        borderBottom: "1px solid var(--color-header-border)",
         padding: "var(--space-sm) 0",
       }}
     >
       <div
+        className="navbar-inner"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -49,12 +51,7 @@ const Navbar = () => {
           }}
         >
           <Code2
-            style={{
-              width: "22px",
-              height: "22px",
-              color: "var(--color-accent)",
-              strokeWidth: 2.5,
-            }}
+            style={{ width: "22px", height: "22px", color: "var(--color-accent)", strokeWidth: 2.5 }}
           />
           <span
             style={{
@@ -69,8 +66,9 @@ const Navbar = () => {
           </span>
         </button>
 
-        {/* ── Pill nav (center) ── */}
+        {/* ── Pill nav (center, desktop only) ── */}
         <nav
+          className="navbar-pill-nav"
           style={{
             display: "flex",
             alignItems: "center",
@@ -98,22 +96,49 @@ const Navbar = () => {
                   : "var(--font-weight-medium)",
                 color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)",
                 background: isActive ? "var(--color-accent-subtle)" : "transparent",
-                boxShadow: "none",
                 textDecoration: "none",
-                transition:
-                  "background var(--transition), color var(--transition), box-shadow var(--transition)",
+                transition: "background var(--transition), color var(--transition)",
                 whiteSpace: "nowrap",
               })}
               className="pill-nav-link"
             >
               <Icon style={{ width: "14px", height: "14px", flexShrink: 0 }} />
-              <span className="back-to-home-text">{label}</span>
+              {label}
             </NavLink>
           ))}
         </nav>
 
-        {/* ── Theme toggle (right) ── */}
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* ── Right: desktop theme toggle / mobile icon-nav + toggle ── */}
+        <div className="navbar-right-desktop" style={{ display: "flex", justifyContent: "flex-end" }}>
+          <ThemeToggle />
+        </div>
+
+        {/* Mobile: icon-nav + toggle (replaces pill nav + right toggle) */}
+        <div className="navbar-mobile-right" style={{ display: "none", alignItems: "center", gap: "4px", justifyContent: "flex-end" }}>
+          {NAV_LINKS.map(({ to, label, Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              title={label}
+              aria-label={label}
+              style={({ isActive }) => ({
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "34px",
+                height: "34px",
+                borderRadius: "8px",
+                color: isActive ? "var(--color-accent)" : "var(--color-text-muted)",
+                background: isActive ? "var(--color-accent-subtle)" : "transparent",
+                textDecoration: "none",
+                transition: "background var(--transition), color var(--transition)",
+                flexShrink: 0,
+              })}
+            >
+              <Icon style={{ width: "17px", height: "17px" }} />
+            </NavLink>
+          ))}
           <ThemeToggle />
         </div>
       </div>

@@ -1,51 +1,90 @@
-import { Github, Linkedin, Globe, Pencil, UserCircle } from "lucide-react";
+import { Code2, MapPin, Github, Linkedin, Globe, Pencil, UserCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import TechBadge from "./TechBadge";
 
-/* Shared link badge style — neutral, consistent */
-const linkBadgeBase = {
-  fontSize: "var(--font-size-sm)",
-  fontWeight: "var(--font-weight-medium)",
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "6px",
-  padding: "6px 12px",
-  background: "var(--color-bg-elevated)",
-  borderRadius: "var(--radius-sm)",
-  border: "1px solid var(--color-border)",
-  color: "var(--color-text-secondary)",
-  transition: "border-color var(--transition), background var(--transition), color var(--transition)",
-  textDecoration: "none",
-};
+/* ── Medium icon (inline SVG — not in Lucide) ── */
+const MediumIcon = ({ size = 16 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
+  </svg>
+);
 
-const LinkBadge = ({ href, icon: Icon, label }) => (
+/* ── App-icon style link button ── */
+const IconLinkBtn = ({ href, icon: Icon, label, color, bg }) => (
   <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    style={linkBadgeBase}
+    title={label}
+    aria-label={label}
+    style={{
+      width: "30px",
+      height: "30px",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "8px",
+      border: "none",
+      background: bg,
+      color: color,
+      textDecoration: "none",
+      flexShrink: 0,
+      transition: "opacity var(--transition), transform var(--transition)",
+    }}
     onMouseEnter={(e) => {
-      e.currentTarget.style.borderColor = "var(--color-border-hover)";
-      e.currentTarget.style.color = "var(--color-text-primary)";
-      e.currentTarget.style.background = "var(--color-surface-hover)";
+      e.currentTarget.style.opacity = "0.82";
+      e.currentTarget.style.transform = "scale(1.08)";
     }}
     onMouseLeave={(e) => {
-      e.currentTarget.style.borderColor = "var(--color-border)";
-      e.currentTarget.style.color = "var(--color-text-secondary)";
-      e.currentTarget.style.background = "var(--color-bg-elevated)";
+      e.currentTarget.style.opacity = "1";
+      e.currentTarget.style.transform = "scale(1)";
     }}
   >
-    <Icon style={{ width: "15px", height: "15px" }} />
-    {label}
+    <Icon size={15} />
   </a>
 );
 
+/* ── App-icon style action button (non-link) ── */
+const IconActionBtn = ({ onClick, icon: Icon, label }) => (
+  <button
+    onClick={onClick}
+    title={label}
+    aria-label={label}
+    style={{
+      width: "30px",
+      height: "30px",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "8px",
+      border: "none",
+      background: "var(--color-bg-elevated)",
+      color: "var(--color-text-secondary)",
+      cursor: "pointer",
+      flexShrink: 0,
+      fontFamily: "inherit",
+      transition: "opacity var(--transition), transform var(--transition)",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.opacity = "0.82";
+      e.currentTarget.style.transform = "scale(1.08)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.opacity = "1";
+      e.currentTarget.style.transform = "scale(1)";
+    }}
+  >
+    <Icon size={14} />
+  </button>
+);
+
 const ProfileHeader = ({ profile, onEditClick }) => {
-  const isEmpty =
-    !profile.name &&
-    !profile.username &&
-    !profile.role &&
-    !profile.bio;
+  const isEmpty = !profile.name && !profile.username && !profile.role;
 
   if (isEmpty) {
     return (
@@ -71,10 +110,9 @@ const ProfileHeader = ({ profile, onEditClick }) => {
             margin: "0 auto var(--space-md)",
           }}
         >
-          <UserCircle style={{ width: "22px", height: "22px", color: "var(--color-accent)" }} />
+          <UserCircle size={22} color="var(--color-accent)" />
         </div>
-
-        <h3 style={{ fontSize: "15px", fontWeight: "var(--font-weight-semibold)", marginBottom: "var(--space-sm)" }}>
+        <h3 style={{ fontSize: "15px", fontWeight: "600", marginBottom: "var(--space-sm)" }}>
           No profile yet
         </h3>
         <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: "var(--space-lg)" }}>
@@ -87,178 +125,173 @@ const ProfileHeader = ({ profile, onEditClick }) => {
     );
   }
 
+  const { name, role, location, bio, avatar, links } = profile;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="profile-card card"
-      style={{ padding: "var(--space-lg)" }}
+      className="card profile-card"
+      style={{ padding: "var(--space-md) var(--space-lg)" }}
     >
       {/* Top accent strip */}
       <div className="profile-card-strip" />
 
-      {/* Edit button — desktop */}
-      <button
-        onClick={onEditClick}
-        className="edit-profile-button-desktop btn-secondary"
-        style={{
-          position: "absolute",
-          top: "var(--space-md)",
-          right: "var(--space-md)",
-          padding: "6px 12px",
-        }}
-      >
-        <Pencil style={{ width: "13px", height: "13px" }} />
-        <span>Edit</span>
-      </button>
-
-      {/* Header row */}
+      {/* ── Main row ── */}
       <div
         className="profile-header-row"
         style={{
           display: "flex",
-          gap: "var(--space-md)",
-          alignItems: "center",
-          marginBottom: "var(--space-md)",
+          alignItems: "flex-start",
+          gap: "var(--space-lg)",
         }}
       >
-        {/* Avatar */}
-        {profile.avatar ? (
-          <img
-            src={profile.avatar}
-            alt={profile.name}
-            className="profile-avatar avatar-ring"
+        {/* ── Left: Avatar ── */}
+        <div style={{ flexShrink: 0, position: "relative" }}>
+          {avatar ? (
+            <img
+              src={avatar}
+              alt={name}
+              className="profile-avatar avatar-ring"
+              style={{ width: "90px", height: "90px", borderRadius: "50%", objectFit: "cover", display: "block" }}
+            />
+          ) : (
+            <div
+              className="profile-avatar avatar-ring"
+              style={{
+                width: "90px",
+                height: "90px",
+                borderRadius: "50%",
+                background: "var(--color-accent)",
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "32px",
+                fontWeight: "700",
+                fontFamily: "var(--font-heading)",
+              }}
+            >
+              {name[0]}
+            </div>
+          )}
+          {/* Online dot */}
+          <div
             style={{
-              width: "60px",
-              height: "60px",
+              position: "absolute",
+              bottom: "5px",
+              right: "5px",
+              width: "13px",
+              height: "13px",
               borderRadius: "50%",
-              objectFit: "cover",
-              flexShrink: 0,
+              background: "#22c55e",
+              border: "2.5px solid var(--color-surface)",
             }}
           />
-        ) : (
-          <div
-            className="profile-avatar avatar-ring"
-            style={{
-              width: "60px",
-              height: "60px",
-              borderRadius: "50%",
-              background: "var(--color-accent)",
-              color: "#ffffff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "20px",
-              fontWeight: "var(--font-weight-semibold)",
-              fontFamily: "var(--font-heading)",
-              flexShrink: 0,
-            }}
-          >
-            {profile.name[0]}
+        </div>
+
+        {/* ── Right: all text + buttons ── */}
+        <div className="profile-info-row" style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "flex-start", gap: "var(--space-md)" }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+
+            {/* Row 1: Name · Location */}
+            <div style={{ display: "flex", alignItems: "baseline", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
+              <h1
+                className="profile-name"
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "700",
+                  color: "var(--color-text-primary)",
+                  margin: 0,
+                  fontFamily: "var(--font-heading)",
+                  letterSpacing: "-0.02em",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {name}
+              </h1>
+              {location && (
+                <>
+                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                    <MapPin size={12} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
+                    <span style={{ fontSize: "var(--font-size-meta)", color: "var(--color-text-muted)", whiteSpace: "nowrap" }}>
+                      {location}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Row 2: Role */}
+            {role && (
+              <div style={{ display: "flex", alignItems: "center", gap: "5px", marginBottom: "6px" }}>
+                <Code2 size={13} color="var(--color-accent)" style={{ flexShrink: 0 }} />
+                <span
+                  className="profile-role"
+                  style={{
+                    fontSize: "var(--font-size-sm)",
+                    color: "var(--color-accent)",
+                    fontWeight: "var(--font-weight-semibold)",
+                  }}
+                >
+                  {role}
+                </span>
+              </div>
+            )}
+
+            {/* Row 3: Bio */}
+            {bio && (
+              <p
+                className="profile-bio"
+                style={{
+                  fontSize: "var(--font-size-sm)",
+                  color: "var(--color-text-secondary)",
+                  lineHeight: "var(--line-height-base)",
+                  margin: 0,
+                  maxWidth: "480px",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                title={bio}
+              >
+                {bio}
+              </p>
+            )}
           </div>
-        )}
 
-        <div>
-          <h1
-            className="profile-name"
+          {/* Icon-only action buttons */}
+          <div
+            className="profile-action-buttons"
             style={{
-              fontSize: "20px",
-              fontWeight: "var(--font-weight-semibold)",
-              color: "var(--color-text-primary)",
-              marginBottom: "3px",
+              display: "flex",
+              gap: "6px",
+              alignItems: "center",
+              flexShrink: 0,
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
             }}
           >
-            {profile.name}
-          </h1>
-          <span
-            className="profile-username"
-            style={{
-              color: "var(--color-text-muted)",
-              fontSize: "var(--font-size-sm)",
-            }}
-          >
-            {profile.username}
-          </span>
+            {links?.github && (
+              <IconLinkBtn href={links.github} icon={Github} label="GitHub"
+                color="#ffffff" bg="#24292e" />
+            )}
+            {links?.linkedin && (
+              <IconLinkBtn href={links.linkedin} icon={Linkedin} label="LinkedIn"
+                color="#ffffff" bg="#0077B5" />
+            )}
+            {links?.medium && (
+              <IconLinkBtn href={links.medium} icon={MediumIcon} label="Medium"
+                color="#ffffff" bg="#00ab6c" />
+            )}
+            {links?.portfolio && (
+              <IconLinkBtn href={links.portfolio} icon={Globe} label="Portfolio"
+                color="#ffffff" bg="#6366f1" />
+            )}
+            <IconActionBtn onClick={onEditClick} icon={Pencil} label="Edit profile" />
+          </div>
         </div>
-      </div>
-
-      {/* Role + Bio */}
-      <p
-        className="profile-role"
-        style={{
-          color: "var(--color-text-secondary)",
-          fontSize: "var(--font-size-sm)",
-          fontWeight: "var(--font-weight-medium)",
-          marginBottom: "var(--space-xs)",
-        }}
-      >
-        {profile.role}
-      </p>
-
-      <p
-        className="profile-bio"
-        style={{
-          color: "var(--color-text-secondary)",
-          fontSize: "var(--font-size-sm)",
-          lineHeight: "var(--line-height-base)",
-          marginTop: "var(--space-xs)",
-        }}
-      >
-        {profile.bio}
-      </p>
-
-      {/* Tech stack */}
-      {profile.tech?.length > 0 && (
-        <div
-          className="profile-tech-stack"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "var(--space-xs)",
-            marginTop: "var(--space-md)",
-          }}
-        >
-          {profile.tech.map((tech) => (
-            <TechBadge key={tech} tech={tech} />
-          ))}
-        </div>
-      )}
-
-      {/* Links */}
-      <div
-        className="profile-links"
-        style={{
-          marginTop: "var(--space-md)",
-          display: "flex",
-          gap: "var(--space-sm)",
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        {profile.links?.github && (
-          <LinkBadge href={profile.links.github} icon={Github} label="GitHub" />
-        )}
-        {profile.links?.linkedin && (
-          <LinkBadge href={profile.links.linkedin} icon={Linkedin} label="LinkedIn" />
-        )}
-        {profile.links?.portfolio && (
-          <LinkBadge href={profile.links.portfolio} icon={Globe} label="Portfolio" />
-        )}
-
-        {/* Edit button — mobile */}
-        <button
-          onClick={onEditClick}
-          className="edit-profile-button-mobile btn-secondary"
-          style={{
-            display: "none",
-            alignItems: "center",
-            marginLeft: "auto",
-            padding: "6px",
-          }}
-        >
-          <Pencil style={{ width: "13px", height: "13px" }} />
-        </button>
       </div>
     </motion.div>
   );

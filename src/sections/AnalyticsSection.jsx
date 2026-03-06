@@ -1,234 +1,104 @@
-﻿import { Clock, GitCommit, Github } from "lucide-react";
+import { BarChart2, FolderOpen, Clock, Cpu } from "lucide-react";
 import { motion } from "framer-motion";
-import MetricCard from "../components/shared/MetricCard";
-import LanguageChart from "../components/LanguageChart";
 import { timeAgo } from "../utils/github";
+import { getLangColor } from "../utils/techColors";
 
-/* ── Latest Activity Card ── */
-const LatestActivityCard = ({ activity }) => (
-  <div
-    className="card"
-    style={{
-      padding: "var(--space-md)",
-      display: "flex",
-      flexDirection: "column",
-      gap: "var(--space-xs)",
-    }}
-  >
-    <p
-      style={{
-        margin: 0,
-        fontSize: "var(--font-size-meta)",
-        fontWeight: "var(--font-weight-medium)",
-        color: "var(--color-text-muted)",
-        textTransform: "uppercase",
-        letterSpacing: "0.06em",
-      }}
-    >
-      Latest Activity
-    </p>
-
-    {activity ? (
-      <div style={{ marginTop: "var(--space-xs)" }}>
-        <p
-          style={{
-            fontSize: "var(--font-size-sm)",
-            color: "var(--color-text-primary)",
-            fontWeight: "var(--font-weight-medium)",
-            margin: "0 0 var(--space-xs) 0",
-            lineHeight: "var(--line-height-snug)",
-            wordBreak: "break-word",
-          }}
-        >
-          {activity.message}
-        </p>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-xs)",
-            marginTop: "var(--space-xs)",
-          }}
-        >
-          <Clock
-            style={{ width: "12px", height: "12px", color: "var(--color-text-muted)" }}
-          />
-          <span
-            style={{
-              fontSize: "var(--font-size-meta)",
-              color: "var(--color-text-muted)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {activity.source}
-          </span>
-        </div>
-        <p
-          style={{
-            fontSize: "11px",
-            color: "var(--color-text-muted)",
-            margin: "var(--space-xs) 0 0 0",
-          }}
-        >
-          {activity.time}
-        </p>
-      </div>
-    ) : (
-      <p
-        style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--color-text-muted)",
-          margin: "var(--space-xs) 0 0 0",
-        }}
-      >
-        No recent activity
-      </p>
-    )}
-  </div>
-);
-
-/* ── Latest Commit Card ── */
-const LatestCommitCard = ({ commit, loading, error, username }) => (
-  <div
-    className="card"
-    style={{
-      padding: "var(--space-md)",
-      display: "flex",
-      flexDirection: "column",
-      gap: "var(--space-xs)",
-      borderLeft: "3px solid #238636",
-    }}
-  >
+/* ── Top-3 tech chips ── */
+const TechChip = ({ tech, count }) => {
+  const color = getLangColor(tech, 0);
+  return (
     <div
       style={{
-        display: "flex",
+        display: "inline-flex",
         alignItems: "center",
-        justifyContent: "space-between",
+        gap: "5px",
+        padding: "3px 8px",
+        borderRadius: "999px",
+        background: color + "18",
+        border: "1px solid " + color + "40",
       }}
     >
-      <p
+      <span
         style={{
-          margin: 0,
-          fontSize: "var(--font-size-meta)",
-          fontWeight: "var(--font-weight-medium)",
-          color: "var(--color-text-muted)",
-          textTransform: "uppercase",
-          letterSpacing: "0.06em",
+          width: "7px",
+          height: "7px",
+          borderRadius: "50%",
+          background: color,
+          flexShrink: 0,
         }}
-      >
-        Latest Commit
-      </p>
-      <Github
-        style={{ width: "13px", height: "13px", color: "var(--color-text-muted)" }}
       />
+      <span style={{ fontSize: "11px", fontWeight: "600", color: "var(--color-text-primary)" }}>
+        {tech}
+      </span>
+      <span style={{ fontSize: "11px", color: "var(--color-text-muted)" }}>×{count}</span>
     </div>
+  );
+};
 
-    {!username ? (
-      <p
+/* ── Single metric row ── */
+const MetricRow = ({ icon: Icon, label, children }) => (
+  <div
+    style={{
+      padding: "12px 14px",
+      border: "1px solid var(--color-border)",
+      borderRadius: "var(--radius-sm)",
+      background: "var(--color-bg-elevated)",
+    }}
+  >
+    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
+      <Icon style={{ width: "13px", height: "13px", color: "var(--color-accent)", flexShrink: 0 }} />
+      <span
         style={{
-          fontSize: "var(--font-size-sm)",
+          fontSize: "var(--font-size-meta)",
           color: "var(--color-text-muted)",
-          margin: "var(--space-xs) 0 0 0",
+          fontWeight: "var(--font-weight-medium)",
         }}
       >
-        Add your GitHub link in profile
-      </p>
-    ) : loading ? (
-      <p
-        style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--color-text-muted)",
-          margin: "var(--space-xs) 0 0 0",
-        }}
-      >
-        Loading…
-      </p>
-    ) : error ? (
-      <p
-        style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--color-danger)",
-          margin: "var(--space-xs) 0 0 0",
-        }}
-      >
-        {error}
-      </p>
-    ) : commit ? (
-      <div style={{ marginTop: "var(--space-xs)" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-xs)",
-            marginBottom: "var(--space-xs)",
-          }}
-        >
-          <GitCommit style={{ width: "14px", height: "14px", color: "#238636", flexShrink: 0 }} />
-          <span
-            style={{
-              fontSize: "var(--font-size-sm)",
-              color: "#238636",
-              fontWeight: "var(--font-weight-semibold)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {commit.repo}
-          </span>
-        </div>
-        <p
-          style={{
-            fontSize: "11px",
-            color: "var(--color-text-muted)",
-            margin: 0,
-          }}
-        >
-          {timeAgo(commit.timestamp)}
-        </p>
-      </div>
-    ) : (
-      <p
-        style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--color-text-muted)",
-          margin: "var(--space-xs) 0 0 0",
-        }}
-      >
-        No commits found
-      </p>
-    )}
+        {label}
+      </span>
+    </div>
+    <div>{children}</div>
   </div>
 );
 
 /* ── AnalyticsSection ── */
-const AnalyticsSection = ({
-  projects,
-  latestCommit,
-  ghLoading,
-  ghError,
-  githubUsername,
-  latestActivity,
-}) => {
-  const validProjects =
-    projects?.filter((p) => p.title && p.title.trim() !== "") || [];
+const AnalyticsSection = ({ projects }) => {
+  const validProjects = (projects || []).filter((p) => p.title?.trim());
   const projectCount = validProjects.length;
 
+  // Latest activity — most recently updated project
+  const sorted = [...validProjects].sort(
+    (a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0)
+  );
+  const latest = sorted[0];
+  const latestTime = latest?.updatedAt || latest?.createdAt;
+
+  // Top 3 most-used techs
+  const techCount = {};
+  validProjects.forEach((p) => {
+    (p.tech || []).forEach((t) => {
+      const key = t.trim();
+      if (key) techCount[key] = (techCount[key] || 0) + 1;
+    });
+  });
+  const topTechs = Object.entries(techCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+
   return (
-    <motion.section
+    <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.15 }}
-      className="analytics-section-mobile"
-      style={{ background: "transparent", padding: 0 }}
+      transition={{ duration: 0.4, delay: 0.1 }}
+      className="card"
+      style={{ padding: "var(--space-md)" }}
     >
-      <div className="section-header-row">
-        <div className="section-pip" />
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "var(--space-md)" }}>
+        <BarChart2 style={{ width: "18px", height: "18px", color: "var(--color-accent)" }} />
         <h2
           style={{
-            fontSize: "var(--font-size-h2)",
+            fontSize: "var(--font-size-sm)",
             fontWeight: "var(--font-weight-semibold)",
             margin: 0,
             color: "var(--color-text-primary)",
@@ -238,37 +108,66 @@ const AnalyticsSection = ({
         </h2>
       </div>
 
-      {/* 3-column overview grid */}
-      <div
-        className="analytics-grid"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: "var(--space-sm)",
-        }}
-      >
-        <MetricCard
-          label="Projects"
-          value={projectCount}
-          sub="Total in DevMate"
-          style={{ borderLeft: "3px solid var(--color-accent)" }}
-        />
+      {/* Metric rows */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
 
-        <LatestActivityCard activity={latestActivity} />
+        {/* Projects */}
+        <MetricRow icon={FolderOpen} label="Projects">
+          <span
+            style={{
+              fontSize: "28px",
+              fontWeight: "700",
+              color: "var(--color-text-primary)",
+              fontFamily: "var(--font-heading)",
+              letterSpacing: "-0.03em",
+              lineHeight: 1,
+            }}
+          >
+            {projectCount}
+          </span>
+        </MetricRow>
 
-        <LatestCommitCard
-          commit={latestCommit}
-          loading={ghLoading}
-          error={ghError}
-          username={githubUsername}
-        />
+        {/* Latest activity */}
+        <MetricRow icon={Clock} label="Latest Activity">
+          {latest ? (
+            <div>
+              <p
+                style={{
+                  fontSize: "var(--font-size-sm)",
+                  fontWeight: "var(--font-weight-semibold)",
+                  color: "var(--color-text-primary)",
+                  margin: "0 0 2px 0",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {latest.title}
+              </p>
+              <span style={{ fontSize: "11px", color: "var(--color-text-muted)" }}>
+                {latestTime ? timeAgo(latestTime) : "—"}
+              </span>
+            </div>
+          ) : (
+            <span style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>No activity yet</span>
+          )}
+        </MetricRow>
+
+        {/* Top tech */}
+        <MetricRow icon={Cpu} label="Top Tech">
+          {topTechs.length > 0 ? (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {topTechs.map(([tech, count]) => (
+                <TechChip key={tech} tech={tech} count={count} />
+              ))}
+            </div>
+          ) : (
+            <span style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>Add tech to projects</span>
+          )}
+        </MetricRow>
+
       </div>
-
-      {/* Language chart — full width below the grid */}
-      <div style={{ marginTop: "var(--space-sm)" }}>
-        <LanguageChart projects={validProjects} />
-      </div>
-    </motion.section>
+    </motion.div>
   );
 };
 

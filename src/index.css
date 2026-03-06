@@ -399,6 +399,10 @@ html {
    ============================================================ */
 
 @media (max-width: 1024px) {
+  .profile-content-grid {
+    grid-template-columns: 260px 1fr !important;
+  }
+
   .preview-grid {
     grid-template-columns: 1fr 1fr !important;
   }
@@ -433,6 +437,26 @@ html {
 
   .hero-illustration-container {
     margin-top: var(--space-xl) !important;
+  }
+}
+
+/* ── Navbar mobile override ── */
+@media (max-width: 640px) {
+  .navbar-inner {
+    grid-template-columns: 1fr auto !important;
+    padding: 0 var(--space-md) !important;
+    gap: var(--space-sm) !important;
+  }
+
+  /* Hide desktop pill-nav and solo toggle */
+  .navbar-pill-nav,
+  .navbar-right-desktop {
+    display: none !important;
+  }
+
+  /* Show compact icon-nav + toggle in the second grid cell */
+  .navbar-mobile-right {
+    display: flex !important;
   }
 }
 
@@ -521,8 +545,41 @@ html {
     display: flex !important;
   }
 
-  .profile-name {
+  /* ── Profile card mobile ── */
+  .profile-header-row {
+    align-items: flex-start !important;
+    gap: var(--space-sm) !important;
+  }
+
+  .profile-avatar {
+    width: 60px !important;
+    height: 60px !important;
     font-size: 20px !important;
+  }
+
+  /* Stack text + buttons vertically on mobile */
+  .profile-info-row {
+    flex-direction: column !important;
+    gap: var(--space-sm) !important;
+  }
+
+  .profile-name {
+    font-size: 18px !important;
+  }
+
+  .profile-bio {
+    max-width: 100% !important;
+    font-size: var(--font-size-meta) !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+  }
+
+  .profile-action-buttons {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    padding-top: var(--space-sm) !important;
+    border-top: 1px solid var(--color-border) !important;
   }
 
   .page-heading {
@@ -642,12 +699,25 @@ html {
     display: block !important;
   }
 
+  /* Profile page new layout */
+  .profile-content-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+  }
+
   .footer-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 28px var(--space-lg) !important;
     padding: 28px var(--space-lg) 20px !important;
     align-items: start !important;
+  }
+
+  .footer-nav-list {
+    gap: 0 !important;
   }
 
   .footer-grid > div:first-child {
