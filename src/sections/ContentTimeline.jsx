@@ -4,7 +4,6 @@ import { timeAgo } from "../utils/github";
 
 const ACTION_VERBS = ["Deployed", "Finished", "Launched", "Completed", "Built", "Released"];
 
-/** Build DevMate activity items from local projects + profile. */
 function buildDevmateEvents(projects, profile) {
   const validProjects = (projects || []).filter((p) => p.title?.trim());
   const events = validProjects.map((project, i) => ({
@@ -26,160 +25,124 @@ function buildDevmateEvents(projects, profile) {
   return events;
 }
 
-/** Returns icon component + colors for an activity item */
-function getIconConfig(item) {
-  if (item.source === "github") {
-    return { Icon: Github, color: "var(--color-text-primary)", bg: "var(--color-bg-elevated)" };
-  }
-  // DevMate events
-  return { Icon: Zap, color: "var(--color-accent)", bg: "var(--color-accent-subtle)" };
-}
+/* ── Single activity item — compact card style ── */
+const ActivityItem = ({ item }) => {
+  const isGH = item.source === "github";
+  const Icon = isGH ? Github : Zap;
+  const accentColor = isGH ? "var(--color-text-muted)" : "var(--color-accent)";
+  const borderColor = isGH ? "var(--color-border)" : "var(--color-accent)";
 
-/** Renders text with the sub portion highlighted in accent color (GitHub events only) */
-function renderText(item) {
+  /* Build display text */
   const displayText =
     item.type === "PushEvent" && item.sub
       ? "Pushed to " + item.sub
       : item.text;
 
-  if (item.source === "github" && item.sub && displayText.includes(item.sub)) {
-    const idx = displayText.indexOf(item.sub);
-    return (
-      <>
-        {displayText.slice(0, idx)}
-        <span style={{ color: "var(--color-accent)", fontWeight: "var(--font-weight-semibold)" }}>
-          {item.sub}
-        </span>
-        {displayText.slice(idx + item.sub.length)}
-      </>
-    );
-  }
-  return displayText;
-}
-
-/* ── Single activity item ── */
-const ActivityItem = ({ item }) => {
-  const { Icon, color, bg } = getIconConfig(item);
+  /* Highlight repo/project name */
+  const renderText = () => {
+    if (item.sub && displayText.includes(item.sub)) {
+      const idx = displayText.indexOf(item.sub);
+      return (
+        <>
+          {displayText.slice(0, idx)}
+          <span style={{ color: "var(--color-accent)", fontWeight: "var(--font-weight-semibold)" }}>
+            {item.sub}
+          </span>
+          {displayText.slice(idx + item.sub.length)}
+        </>
+      );
+    }
+    return displayText;
+  };
 
   return (
     <div
       style={{
+        background: "var(--color-bg-elevated)",
+        border: "1px solid var(--color-border)",
+        borderLeft: `2px solid ${borderColor}`,
+        borderRadius: "var(--radius-sm)",
+        padding: "10px 12px",
         display: "flex",
-        gap: "var(--space-md)",
-        alignItems: "flex-start",
-        padding: "var(--space-md) 0",
-        borderBottom: "1px solid var(--color-border)",
+        flexDirection: "column",
+        gap: "5px",
       }}
     >
-      {/* Colored icon circle */}
-      <div
-        style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "50%",
-          background: bg,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          marginTop: "1px",
-        }}
-      >
-        <Icon style={{ width: "15px", height: "15px", color }} />
-      </div>
-
-      {/* Text block */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p
+      {/* Top row: icon + text + timestamp */}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "7px" }}>
+        <Icon
           style={{
+            width: "13px",
+            height: "13px",
+            color: accentColor,
+            flexShrink: 0,
+            marginTop: "2px",
+          }}
+        />
+        <span
+          style={{
+            flex: 1,
             fontSize: "var(--font-size-sm)",
             color: "var(--color-text-primary)",
             fontWeight: "var(--font-weight-medium)",
-            margin: "0 0 4px 0",
             lineHeight: "var(--line-height-snug)",
           }}
         >
-          {renderText(item)}
-        </p>
-
-        {/* Commit message for PushEvents */}
-        {item.type === "PushEvent" && item.commitMessage && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "5px",
-              background: "var(--color-bg-elevated)",
-              border: "1px solid var(--color-border)",
-              borderLeft: "2px solid #238636",
-              borderRadius: "var(--radius-sm)",
-              padding: "4px 8px",
-              margin: "4px 0",
-            }}
-          >
-            <GitCommit
-              style={{ width: "11px", height: "11px", color: "#238636", marginTop: "2px", flexShrink: 0 }}
-            />
-            <span
-              style={{
-                fontSize: "var(--font-size-meta)",
-                color: "var(--color-text-primary)",
-                fontFamily: "monospace",
-                lineHeight: "1.4",
-              }}
-            >
-              {item.commitMessage}
-            </span>
-          </div>
-        )}
-
+          {renderText()}
+        </span>
         <span
           style={{
-            fontSize: "var(--font-size-meta)",
+            fontSize: "11px",
             color: "var(--color-text-muted)",
+            flexShrink: 0,
+            marginTop: "2px",
+            whiteSpace: "nowrap",
           }}
         >
           {timeAgo(item.timestamp)}
         </span>
       </div>
+
+      {/* Commit message — simple mono line, no box */}
+      {item.type === "PushEvent" && item.commitMessage && (
+        <div style={{ display: "flex", alignItems: "center", gap: "5px", paddingLeft: "20px" }}>
+          <GitCommit style={{ width: "10px", height: "10px", color: "#238636", flexShrink: 0 }} />
+          <span
+            style={{
+              fontSize: "11px",
+              fontFamily: "monospace",
+              color: "var(--color-text-secondary)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {item.commitMessage}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
 
-/* ── GitHub nudge banner ── */
-const GitHubNudge = ({ onEditProfile }) => (
+/* ── GitHub nudge — subtle inline bar ── */
+const GitHubNudge = () => (
   <div
     style={{
       display: "flex",
       alignItems: "center",
-      gap: "var(--space-md)",
-      padding: "var(--space-md) 0",
-      borderBottom: "1px solid var(--color-border)",
+      gap: "8px",
+      padding: "8px 12px",
+      borderRadius: "var(--radius-sm)",
+      background: "var(--color-accent-subtle)",
+      border: "1px solid var(--color-accent-border)",
+      marginBottom: "var(--space-sm)",
     }}
   >
-    <div
-      style={{
-        width: "32px",
-        height: "32px",
-        borderRadius: "50%",
-        background: "var(--color-bg-elevated)",
-        border: "1px solid var(--color-border)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-      }}
-    >
-      <Github style={{ width: "15px", height: "15px", color: "var(--color-text-secondary)" }} />
-    </div>
-    <div>
-      <p style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--font-weight-medium)", color: "var(--color-text-primary)", margin: "0 0 2px 0" }}>
-        Connect GitHub to see live activity
-      </p>
-      <p style={{ fontSize: "var(--font-size-meta)", color: "var(--color-text-muted)", margin: 0 }}>
-        Add your GitHub link in profile settings
-      </p>
-    </div>
+    <Github style={{ width: "13px", height: "13px", color: "var(--color-accent)", flexShrink: 0 }} />
+    <p style={{ fontSize: "var(--font-size-meta)", color: "var(--color-text-secondary)", margin: 0 }}>
+      Add your GitHub username in profile to see live activity
+    </p>
   </div>
 );
 
@@ -200,17 +163,10 @@ const ContentTimeline = ({ projects, profile, ghEvents, ghLoading, githubUsernam
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.25 }}
       className="card activity-section-mobile"
-      style={{ padding: "var(--space-md)", width: "100%" }}
+      style={{ padding: "var(--space-md)", width: "100%", border: "1px solid transparent", background: "transparent", boxShadow: "none" }}
     >
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          marginBottom: "var(--space-xs)",
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
         <History style={{ width: "18px", height: "18px", color: "var(--color-accent)" }} />
         <h2
           style={{
@@ -223,29 +179,18 @@ const ContentTimeline = ({ projects, profile, ghEvents, ghLoading, githubUsernam
           Recent Activity
         </h2>
       </div>
-
-      <p
-        style={{
-          fontSize: "var(--font-size-meta)",
-          color: "var(--color-text-muted)",
-          margin: "0 0 var(--space-xs) 0",
-        }}
-      >
-        {isEmpty
-          ? "Your activity timeline will appear here"
-          : "Recent updates from DevMate and GitHub"}
+      <p style={{ fontSize: "var(--font-size-meta)", color: "var(--color-text-muted)", margin: "0 0 var(--space-md) 0" }}>
+        Recent updates from DevMate and GitHub
       </p>
 
-      {/* Nudge */}
+      {/* GitHub nudge */}
       {!githubUsername && <GitHubNudge />}
 
-      {/* Loading state */}
+      {/* Loading */}
       {ghLoading && devmateEvents.length === 0 && (
-        <div style={{ padding: "var(--space-md) 0", textAlign: "center" }}>
-          <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)", margin: 0 }}>
-            Loading GitHub activity…
-          </p>
-        </div>
+        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)", margin: 0 }}>
+          Loading GitHub activity…
+        </p>
       )}
 
       {/* Empty state */}
@@ -253,32 +198,32 @@ const ContentTimeline = ({ projects, profile, ghEvents, ghLoading, githubUsernam
         <div style={{ padding: "var(--space-xl) 0", textAlign: "center" }}>
           <div
             style={{
-              width: "40px",
-              height: "40px",
+              width: "36px",
+              height: "36px",
               borderRadius: "50%",
               background: "var(--color-accent-subtle)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              margin: "0 auto var(--space-md)",
+              margin: "0 auto var(--space-sm)",
             }}
           >
-            <Activity style={{ width: "18px", height: "18px", color: "var(--color-accent)" }} />
+            <Activity style={{ width: "16px", height: "16px", color: "var(--color-accent)" }} />
           </div>
           <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", margin: 0 }}>
-            No activity yet — your timeline will update automatically
+            No activity yet
           </p>
         </div>
       )}
 
-      {/* Activity list — 2-col grid */}
+      {/* 2-col activity grid */}
       {allEvents.length > 0 && (
         <div
           className="timeline-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: "0 var(--space-lg)",
+            gap: "var(--space-sm)",
           }}
         >
           {allEvents.map((item) => (

@@ -1,4 +1,4 @@
-import { Trash2, Pencil, FolderOpen, ArrowRight, Plus, Clock, Star } from "lucide-react";
+import { Trash2, Pencil, FolderOpen, ArrowRight, Plus, Clock, Star, Github, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 import TechBadge from "../components/TechBadge";
 import { timeAgo } from "../utils/github";
@@ -225,7 +225,7 @@ const ProjectsSection = ({
                   </div>
                 )}
 
-                {/* Footer: timestamp + stars */}
+                {/* Footer: timestamp + link buttons */}
                 <div
                   style={{
                     display: "flex",
@@ -236,25 +236,83 @@ const ProjectsSection = ({
                     borderTop: "1px solid var(--color-border)",
                   }}
                 >
+                  {/* Timestamp */}
                   <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <Clock
-                      style={{ width: "11px", height: "11px", color: "var(--color-text-muted)" }}
-                    />
+                    <Clock style={{ width: "11px", height: "11px", color: "var(--color-text-muted)" }} />
                     <span style={{ fontSize: "11px", color: "var(--color-text-muted)" }}>
                       {updatedTime ? `Updated ${timeAgo(updatedTime)}` : "No date"}
                     </span>
                   </div>
 
-                  {project.stars != null && (
-                    <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                      <Star
-                        style={{ width: "11px", height: "11px", color: "var(--color-text-muted)" }}
-                      />
-                      <span style={{ fontSize: "11px", color: "var(--color-text-muted)" }}>
-                        {project.stars}
-                      </span>
-                    </div>
-                  )}
+                  {/* GitHub + Live link buttons */}
+                  <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                    {(project.githubLink) && (
+                      <a
+                        href={project.githubLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="View on GitHub"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "6px",
+                          background: "var(--color-bg-elevated)",
+                          border: "1px solid var(--color-border)",
+                          color: "var(--color-text-secondary)",
+                          textDecoration: "none",
+                          transition: "background var(--transition), color var(--transition), border-color var(--transition)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "#24292e";
+                          e.currentTarget.style.color = "#fff";
+                          e.currentTarget.style.borderColor = "#24292e";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "var(--color-bg-elevated)";
+                          e.currentTarget.style.color = "var(--color-text-secondary)";
+                          e.currentTarget.style.borderColor = "var(--color-border)";
+                        }}
+                      >
+                        <Github style={{ width: "12px", height: "12px" }} />
+                      </a>
+                    )}
+                    {(project.liveLink || project.link) && (
+                      <a
+                        href={project.liveLink || project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="View live demo"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "6px",
+                          background: "var(--color-bg-elevated)",
+                          border: "1px solid var(--color-border)",
+                          color: "var(--color-text-secondary)",
+                          textDecoration: "none",
+                          transition: "background var(--transition), color var(--transition), border-color var(--transition)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "var(--color-accent)";
+                          e.currentTarget.style.color = "#fff";
+                          e.currentTarget.style.borderColor = "var(--color-accent)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "var(--color-bg-elevated)";
+                          e.currentTarget.style.color = "var(--color-text-secondary)";
+                          e.currentTarget.style.borderColor = "var(--color-border)";
+                        }}
+                      >
+                        <Globe style={{ width: "12px", height: "12px" }} />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             );

@@ -20,7 +20,7 @@ const Navbar = () => {
         background: "var(--color-header-bg)",
         backdropFilter: "blur(20px) saturate(120%)",
         WebkitBackdropFilter: "blur(20px) saturate(120%)",
-        borderBottom: "1px solid var(--color-header-border)",
+        borderBottom: "none",
         padding: "var(--space-sm) 0",
       }}
     >
@@ -29,7 +29,7 @@ const Navbar = () => {
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
-          padding: "0 var(--space-xl)",
+          padding: "0 var(--space-3xl)",
           display: "grid",
           gridTemplateColumns: "1fr auto 1fr",
           alignItems: "center",

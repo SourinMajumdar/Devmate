@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { Code2, Clock, Github, Linkedin, Cpu, FolderOpen, Zap, MapPin } from "lucide-react";
+import { Code2, Clock, Github, GitCommit, Linkedin, Cpu, FolderOpen, Zap, MapPin } from "lucide-react";
 import { getLangColor } from "../utils/techColors";
 
 /* ── Stagger variants ───────────────────────────────── */
@@ -161,7 +161,7 @@ const DashboardMockup = () => {
                 </div>
 
                 {/* ── Overview card ── */}
-                <div style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderRadius: "8px", padding: "8px" }}>
+                <div style={{ padding: "2px 0" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "6px" }}>
                     <div style={{ width: "2px", height: "10px", borderRadius: "999px", background: "var(--color-accent)", flexShrink: 0 }} />
                     <span style={{ fontSize: "9px", fontWeight: "700", color: "var(--color-text-primary)", fontFamily: "var(--font-heading)" }}>Overview</span>
@@ -203,7 +203,7 @@ const DashboardMockup = () => {
                 </div>
 
                 {/* Mini language chart */}
-                <div style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "7px 8px", display: "flex", flexDirection: "column", gap: "5px" }}>
+                <div style={{ padding: "2px 0", display: "flex", flexDirection: "column", gap: "5px" }}>
                   <div style={{ fontSize: "7px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" }}>Languages</div>
                   <div style={{ display: "flex", height: "5px", borderRadius: "999px", overflow: "hidden", gap: "1px" }}>
                     {mockLang.map((l) => (
@@ -259,21 +259,22 @@ const DashboardMockup = () => {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px" }}>
                 {mockActivity.map((a, i) => {
                   const isGH = a.source === "github";
+                  const Icon = isGH ? Github : Zap;
+                  const iconColor = isGH ? "var(--color-text-muted)" : "var(--color-accent)";
+                  const leftBorder = isGH ? "var(--color-border)" : "var(--color-accent)";
                   return (
-                    <div key={i} style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "6px", padding: "6px 7px", display: "flex", gap: "5px", alignItems: "flex-start" }}>
-                      <div style={{ width: "16px", height: "16px", borderRadius: "50%", background: isGH ? "var(--color-bg-elevated)" : "var(--color-accent-subtle)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: "1px" }}>
-                        {isGH
-                          ? <Github style={{ width: "8px", height: "8px", color: "var(--color-text-primary)" }} />
-                          : <Zap style={{ width: "8px", height: "8px", color: "var(--color-accent)" }} />
-                        }
+                    <div key={i} style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderLeft: `2px solid ${leftBorder}`, borderRadius: "4px", padding: "5px 7px", display: "flex", flexDirection: "column", gap: "3px" }}>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: "4px" }}>
+                        <Icon style={{ width: "8px", height: "8px", color: iconColor, flexShrink: 0, marginTop: "1px" }} />
+                        <span style={{ flex: 1, fontSize: "8px", fontWeight: "500", color: "var(--color-text-primary)", lineHeight: 1.3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.text}</span>
+                        <span style={{ fontSize: "7px", color: "var(--color-text-muted)", flexShrink: 0, marginTop: "1px" }}>{a.time}</span>
                       </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: "8px", fontWeight: "500", color: "var(--color-text-secondary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: "2px" }}>{a.text}</div>
-                        {isGH && a.commitMessage && (
-                          <div style={{ fontSize: "7px", color: "var(--color-text-primary)", fontFamily: "monospace", background: "var(--color-bg-elevated)", borderLeft: "2px solid #238636", padding: "1px 4px", borderRadius: "2px", marginBottom: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.commitMessage}</div>
-                        )}
-                        <div style={{ fontSize: "7px", color: "var(--color-text-muted)" }}>{a.time}</div>
-                      </div>
+                      {isGH && a.commitMessage && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "3px", paddingLeft: "12px" }}>
+                          <GitCommit style={{ width: "7px", height: "7px", color: "#238636", flexShrink: 0 }} />
+                          <span style={{ fontSize: "7px", fontFamily: "monospace", color: "var(--color-text-secondary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.commitMessage}</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })}

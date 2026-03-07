@@ -91,7 +91,7 @@ const AnalyticsSection = ({ projects }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 }}
       className="card"
-      style={{ padding: "var(--space-md)" }}
+      style={{ padding: "var(--space-md)", border: "1px solid transparent", background: "transparent", boxShadow: "none" }}
     >
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "var(--space-md)" }}>

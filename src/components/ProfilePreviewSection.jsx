@@ -286,7 +286,7 @@ const ProfilePreviewSection = () => {
                   </div>
 
                   {/* Overview section */}
-                  <div className="card" style={{ padding: "12px 14px" }}>
+                  <div style={{ padding: "2px 0" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 10 }}>
                       <div style={{ width: 2, height: 12, borderRadius: 999, background: "var(--color-accent)", flexShrink: 0 }} />
                       <span style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-primary)", fontFamily: "var(--font-heading)" }}>Overview</span>
@@ -327,7 +327,7 @@ const ProfilePreviewSection = () => {
                   </div>
 
                   {/* Language chart */}
-                  <div className="card" style={{ padding: "10px 12px" }}>
+                  <div style={{ padding: "2px 0" }}>
                     <MiniLanguageChart projects={active.projects} />
                   </div>
                 </div>
@@ -368,33 +368,36 @@ const ProfilePreviewSection = () => {
                 <div className="preview-activity-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
                   {active.activity.map((a, i) => {
                     const isGH = a.source === "github";
+                    const Icon = isGH ? Github : Zap;
+                    const iconColor = isGH ? "var(--color-text-muted)" : "var(--color-accent)";
+                    const leftBorder = isGH ? "var(--color-border)" : "var(--color-accent)";
                     return (
-                      <div key={i} className="card" style={{ padding: "10px 12px", display: "flex", gap: 8, alignItems: "flex-start" }}>
-                        {/* Source indicator — matches ContentTimeline */}
-                        <div style={{ paddingTop: 1, flexShrink: 0 }}>
-                          {isGH ? (
-                            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "var(--color-bg-elevated)", border: "1.5px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                              <Github style={{ width: 11, height: 11, color: "var(--color-text-primary)" }} />
-                            </div>
-                          ) : (
-                            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "var(--color-accent-subtle)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                              <Zap style={{ width: 11, height: 11, color: "var(--color-accent)" }} />
-                            </div>
-                          )}
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 11, fontWeight: 600, color: "var(--color-text-secondary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 2 }}>
+                      <div
+                        key={i}
+                        style={{
+                          background: "var(--color-bg-elevated)",
+                          border: "1px solid var(--color-border)",
+                          borderLeft: `2px solid ${leftBorder}`,
+                          borderRadius: 6,
+                          padding: "8px 10px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 4,
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
+                          <Icon style={{ width: 11, height: 11, color: iconColor, flexShrink: 0, marginTop: 1 }} />
+                          <span style={{ flex: 1, fontSize: 11, fontWeight: 500, color: "var(--color-text-primary)", lineHeight: 1.35, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {a.text}
-                          </div>
-                          {/* Commit message block for GitHub items */}
-                          {isGH && a.isPush && a.commitMessage && (
-                            <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)", borderLeft: "2px solid #238636", borderRadius: 3, padding: "3px 6px", marginBottom: 3 }}>
-                              <GitCommit style={{ width: 9, height: 9, color: "#238636", flexShrink: 0 }} />
-                              <span style={{ fontSize: 10, color: "var(--color-text-primary)", fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.commitMessage}</span>
-                            </div>
-                          )}
-                          <span style={{ fontSize: 10, color: "var(--color-text-muted)" }}>{a.time}</span>
+                          </span>
+                          <span style={{ fontSize: 10, color: "var(--color-text-muted)", flexShrink: 0, marginTop: 1 }}>{a.time}</span>
                         </div>
+                        {isGH && a.isPush && a.commitMessage && (
+                          <div style={{ display: "flex", alignItems: "center", gap: 5, paddingLeft: 17 }}>
+                            <GitCommit style={{ width: 9, height: 9, color: "#238636", flexShrink: 0 }} />
+                            <span style={{ fontSize: 10, fontFamily: "monospace", color: "var(--color-text-secondary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.commitMessage}</span>
+                          </div>
+                        )}
                       </div>
                     );
                   })}

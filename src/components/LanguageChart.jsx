@@ -32,7 +32,7 @@ const LanguageChart = ({ projects }) => {
     return (
       <div
         className="card"
-        style={{ padding: "var(--space-md)" }}
+        style={{ padding: "var(--space-md)", border: "1px solid transparent", background: "transparent", boxShadow: "none" }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "var(--space-md)" }}>
           <BarChart2 style={{ width: "18px", height: "18px", color: "var(--color-accent)" }} />
@@ -59,7 +59,7 @@ const LanguageChart = ({ projects }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
       className="card"
-      style={{ padding: "var(--space-md)" }}
+      style={{ padding: "var(--space-md)", border: "1px solid transparent", background: "transparent", boxShadow: "none" }}
     >
       {/* Header */}
       <div
