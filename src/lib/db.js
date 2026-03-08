@@ -42,15 +42,23 @@ function dbRowToProject(row) {
 
 /** Fetch the current user's profile (returns null if not set up yet). */
 export async function getProfile(userId) {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
 
-  // PGRST116 = row not found — that's fine for first-time users
-  if (error && error.code !== "PGRST116") throw error;
-  return dbRowToProfile(data);
+    // maybeSingle returns null if not found, error if query fails
+    if (error) {
+      console.warn("[Devmate] getProfile error for", userId, ":", error.message);
+      return null;
+    }
+    return dbRowToProfile(data);
+  } catch (err) {
+    console.error("[Devmate] getProfile exception:", err);
+    return null;
+  }
 }
 
 /** Fetch a profile by username (for public /u/:username route). */
@@ -97,14 +105,22 @@ export async function upsertProfile(userId, profileData) {
 
 /** Fetch all projects for a user. */
 export async function getProjects(userId) {
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: true });
+  try {
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true });
 
-  if (error) throw error;
-  return (data || []).map(dbRowToProject);
+    if (error) {
+      console.warn("[Devmate] getProjects error for", userId, ":", error.message);
+      return [];
+    }
+    return (data || []).map(dbRowToProject);
+  } catch (err) {
+    console.error("[Devmate] getProjects exception:", err);
+    return [];
+  }
 }
 
 /** Fetch all projects for a user by their profile UUID (for public pages). */

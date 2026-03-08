@@ -20,15 +20,20 @@ export function AuthProvider({ children }) {
   // ── Bootstrap: get session + subscribe to auth changes ──────────
   useEffect(() => {
     // Grab the existing session (handles page reload and OAuth redirects)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      if (currentUser) {
-        loadUserData(currentUser.id);
-      } else {
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        if (currentUser) {
+          loadUserData(currentUser.id);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("[Devmate] getSession error:", err);
         setLoading(false);
-      }
-    });
+      });
 
     const {
       data: { subscription },
@@ -48,17 +53,24 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function loadUserData(userId) {
-    if (!userId) return;
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const [profileData, projectsData] = await Promise.all([
         getProfile(userId),
         getProjects(userId),
       ]);
-      setProfile(profileData);
+      console.log("[Devmate] Loaded user data:", { profile: profileData, projects: projectsData?.length });
+      setProfile(profileData || null);
       setProjects(projectsData || []);
     } catch (err) {
       console.error("[Devmate] Error loading user data:", err);
+      // Even on error, set defaults so loading stops
+      setProfile(null);
+      setProjects([]);
     } finally {
       setLoading(false);
     }
