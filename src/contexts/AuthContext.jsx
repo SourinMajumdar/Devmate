@@ -48,6 +48,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function loadUserData(userId) {
+    if (!userId) return;
     setLoading(true);
     try {
       const [profileData, projectsData] = await Promise.all([
@@ -93,6 +94,14 @@ export function AuthProvider({ children }) {
   async function signOut() {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+
+    setUser(null);
+    setProfile(null);
+    setProjects([]);
+    
+    localStorage.clear();
+
+    window.location.href = "/";
   }
 
   // ── Profile methods ───────────────────────────────────────────────
