@@ -1,119 +1,118 @@
-﻿import { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { profile as initialProfile } from "./data/profile";
-import { projects as initialProjects } from "./data/projects";
+import { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
 
 import HeroPage from "./pages/HeroPage";
 import AboutPage from "./pages/AboutPage";
 import ProfilePage from "./pages/ProfilePage";
 import AllProjectsPage from "./pages/AllProjectsPage";
+import AuthPage from "./pages/AuthPage";
+import PublicProfilePage from "./pages/PublicProfilePage";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import ProjectModal from "./components/ProjectModal";
 import DeleteProjectModal from "./components/DeleteProjectModal";
 import EditModal from "./components/EditModal";
 
 function App() {
-  const [profile, setProfile] = useState(() => {
-    const saved = localStorage.getItem("devmate-profile");
-    return saved ? JSON.parse(saved) : initialProfile;
-  });
+  const { profile, projects, saveProfile, saveProject, deleteProject } = useAuth();
 
-  const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem("devmate-projects");
-    return saved ? JSON.parse(saved) : initialProjects;
-  });
-
-  // â”€â”€ Profile modal â”€â”€
+  // ── Profile modal ──────────────────────────────────────────────
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // â”€â”€ Project modal â”€â”€
+  // ── Project modal ──────────────────────────────────────────────
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [editingProjectIndex, setEditingProjectIndex] = useState(null);
+  const [editingProjectId, setEditingProjectId] = useState(null);
 
-  // â”€â”€ Delete modal â”€â”€
+  // ── Delete modal ───────────────────────────────────────────────
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [projectToDeleteIndex, setProjectToDeleteIndex] = useState(null);
+  const [projectToDeleteId, setProjectToDeleteId] = useState(null);
 
-  // â”€â”€ Handlers: profile â”€â”€
-  const handleSaveProfile = (updatedProfile) => {
-    setProfile({ ...updatedProfile, updatedAt: new Date().toISOString() });
-    setIsEditModalOpen(false);
+  // ── Handlers: profile ──────────────────────────────────────────
+  const handleSaveProfile = async (updatedProfile) => {
+    try {
+      await saveProfile(updatedProfile);
+      setIsEditModalOpen(false);
+    } catch (err) {
+      console.error("[Devmate] Error saving profile:", err);
+    }
   };
 
-  // â”€â”€ Handlers: projects â”€â”€
+  // ── Handlers: projects ─────────────────────────────────────────
   const openAddProject = () => {
-    setEditingProjectIndex(null);
+    setEditingProjectId(null);
     setIsProjectModalOpen(true);
   };
 
-  const openEditProject = (index) => {
-    setEditingProjectIndex(index);
+  const openEditProject = (projectId) => {
+    setEditingProjectId(projectId);
     setIsProjectModalOpen(true);
   };
 
-  const saveProject = (project) => {
-    const now = new Date().toISOString();
-    setProjects((prev) => {
-      if (editingProjectIndex !== null) {
-        const updated = [...prev];
-        updated[editingProjectIndex] = { ...project, updatedAt: now, createdAt: prev[editingProjectIndex]?.createdAt || now };
-        return updated;
-      }
-      return [...prev, { ...project, createdAt: now, updatedAt: now }];
-    });
-    setIsProjectModalOpen(false);
-    setEditingProjectIndex(null);
+  const handleSaveProject = async (projectData) => {
+    try {
+      await saveProject(projectData);
+      setIsProjectModalOpen(false);
+      setEditingProjectId(null);
+    } catch (err) {
+      console.error("[Devmate] Error saving project:", err);
+    }
   };
 
-  const openDeleteProject = (index) => {
-    setProjectToDeleteIndex(index);
+  const openDeleteProject = (projectId) => {
+    setProjectToDeleteId(projectId);
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDeleteProject = () => {
-    setProjects((prev) => prev.filter((_, i) => i !== projectToDeleteIndex));
-    setIsDeleteModalOpen(false);
-    setProjectToDeleteIndex(null);
+  const confirmDeleteProject = async () => {
+    try {
+      await deleteProject(projectToDeleteId);
+      setIsDeleteModalOpen(false);
+      setProjectToDeleteId(null);
+    } catch (err) {
+      console.error("[Devmate] Error deleting project:", err);
+    }
   };
 
-  // â”€â”€ Persist â”€â”€
-  useEffect(() => {
-    localStorage.setItem("devmate-projects", JSON.stringify(projects));
-  }, [projects]);
-
-  useEffect(() => {
-    localStorage.setItem("devmate-profile", JSON.stringify(profile));
-  }, [profile]);
+  const editingProject = projects.find((p) => p.id === editingProjectId) ?? null;
 
   return (
     <>
       <Routes>
+        {/* ── Public routes ── */}
         <Route path="/" element={<HeroPage />} />
-
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/u/:username" element={<PublicProfilePage />} />
 
+        {/* ── Protected routes ── */}
         <Route
           path="/dashboard"
           element={
-            <ProfilePage
-              profile={profile}
-              projects={projects}
-              onEditProfile={() => setIsEditModalOpen(true)}
-              onAddProject={openAddProject}
-              onEditProject={openEditProject}
-              onDeleteProject={openDeleteProject}
-            />
+            <ProtectedRoute>
+              <ProfilePage
+                profile={profile || {}}
+                projects={projects}
+                onEditProfile={() => setIsEditModalOpen(true)}
+                onAddProject={openAddProject}
+                onEditProject={openEditProject}
+                onDeleteProject={openDeleteProject}
+              />
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/projects"
           element={
-            <AllProjectsPage
-              projects={projects}
-              onAddProject={openAddProject}
-              onEditProject={openEditProject}
-              onDeleteProject={openDeleteProject}
-            />
+            <ProtectedRoute>
+              <AllProjectsPage
+                projects={projects}
+                onAddProject={openAddProject}
+                onEditProject={openEditProject}
+                onDeleteProject={openDeleteProject}
+              />
+            </ProtectedRoute>
           }
         />
 
@@ -121,20 +120,23 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* â”€â”€ Global modals â”€â”€ */}
+      {/* ── Global modals ── */}
       {isEditModalOpen && (
         <EditModal
-          profile={profile}
+          profile={profile || {}}
           onClose={() => setIsEditModalOpen(false)}
           onSave={handleSaveProfile}
-          isSetup={!profile.name}
+          isSetup={!profile?.name}
         />
       )}
       {isProjectModalOpen && (
         <ProjectModal
-          project={projects[editingProjectIndex]}
-          onSave={saveProject}
-          onClose={() => setIsProjectModalOpen(false)}
+          project={editingProject}
+          onSave={handleSaveProject}
+          onClose={() => {
+            setIsProjectModalOpen(false);
+            setEditingProjectId(null);
+          }}
         />
       )}
       {isDeleteModalOpen && (
@@ -142,7 +144,7 @@ function App() {
           onConfirm={confirmDeleteProject}
           onCancel={() => {
             setIsDeleteModalOpen(false);
-            setProjectToDeleteIndex(null);
+            setProjectToDeleteId(null);
           }}
         />
       )}
@@ -151,5 +153,3 @@ function App() {
 }
 
 export default App;
-
-

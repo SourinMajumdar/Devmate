@@ -13,6 +13,7 @@ const ProjectsSection = ({
   onDeleteProject,
   onSeeAll,
   isAllProjectsView = false,
+  isReadOnly = false,
 }) => {
   const displayProjects = isAllProjectsView ? projects : projects.slice(0, 4);
   const hasMoreProjects = !isAllProjectsView && projects.length > 4;
@@ -49,16 +50,18 @@ const ProjectsSection = ({
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
-          <button
-            onClick={onAddProject}
-            className="btn-secondary"
-            style={{ padding: "6px 10px", fontSize: "var(--font-size-meta)" }}
-            title="Add project"
-          >
-            <Plus style={{ width: "13px", height: "13px" }} />
-            Add
-          </button>
-          {!isAllProjectsView && (
+          {!isReadOnly && (
+            <button
+              onClick={onAddProject}
+              className="btn-secondary"
+              style={{ padding: "6px 10px", fontSize: "var(--font-size-meta)" }}
+              title="Add project"
+            >
+              <Plus style={{ width: "13px", height: "13px" }} />
+              Add
+            </button>
+          )}
+          {!isAllProjectsView && onSeeAll && (
             <button
               onClick={onSeeAll}
               style={{
@@ -125,10 +128,6 @@ const ProjectsSection = ({
           }}
         >
           {displayProjects.map((project, displayIndex) => {
-            const actualIndex = isAllProjectsView
-              ? projects.findIndex((p) => p.id === project.id)
-              : displayIndex;
-
             const borderColor = CARD_BORDER_COLORS[displayIndex % CARD_BORDER_COLORS.length];
             const updatedTime = project.updatedAt || project.createdAt;
 
@@ -145,33 +144,35 @@ const ProjectsSection = ({
                   gap: "var(--space-xs)",
                 }}
               >
-                {/* Action buttons */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "var(--space-sm)",
-                    right: "var(--space-sm)",
-                    display: "flex",
-                    gap: "4px",
-                  }}
-                >
-                  <button
-                    onClick={() => onEditProject(actualIndex)}
-                    className="btn-secondary"
-                    style={{ padding: "4px", width: "26px", height: "26px" }}
-                    title="Edit project"
+                {/* Action buttons — hidden in read-only mode */}
+                {!isReadOnly && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "var(--space-sm)",
+                      right: "var(--space-sm)",
+                      display: "flex",
+                      gap: "4px",
+                    }}
                   >
-                    <Pencil style={{ width: "11px", height: "11px" }} />
-                  </button>
-                  <button
-                    onClick={() => onDeleteProject(actualIndex)}
-                    className="btn-secondary"
-                    style={{ padding: "4px", width: "26px", height: "26px", color: "var(--color-danger)" }}
-                    title="Delete project"
-                  >
-                    <Trash2 style={{ width: "11px", height: "11px" }} />
-                  </button>
-                </div>
+                    <button
+                      onClick={() => onEditProject(project.id)}
+                      className="btn-secondary"
+                      style={{ padding: "4px", width: "26px", height: "26px" }}
+                      title="Edit project"
+                    >
+                      <Pencil style={{ width: "11px", height: "11px" }} />
+                    </button>
+                    <button
+                      onClick={() => onDeleteProject(project.id)}
+                      className="btn-secondary"
+                      style={{ padding: "4px", width: "26px", height: "26px", color: "var(--color-danger)" }}
+                      title="Delete project"
+                    >
+                      <Trash2 style={{ width: "11px", height: "11px" }} />
+                    </button>
+                  </div>
+                )}
 
                 {/* Title */}
                 <h3

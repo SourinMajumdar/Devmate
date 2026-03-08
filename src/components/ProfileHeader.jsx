@@ -83,7 +83,7 @@ const IconActionBtn = ({ onClick, icon: Icon, label }) => (
   </button>
 );
 
-const ProfileHeader = ({ profile, onEditClick }) => {
+const ProfileHeader = ({ profile, onEditClick, isReadOnly = false }) => {
   const isEmpty = !profile.name && !profile.username && !profile.role;
 
   if (isEmpty) {
@@ -289,7 +289,9 @@ const ProfileHeader = ({ profile, onEditClick }) => {
               <IconLinkBtn href={links.portfolio} icon={Globe} label="Portfolio"
                 color="#ffffff" bg="#6366f1" />
             )}
-            <IconActionBtn onClick={onEditClick} icon={Pencil} label="Edit profile" />
+            {!isReadOnly && onEditClick && (
+              <IconActionBtn onClick={onEditClick} icon={Pencil} label="Edit profile" />
+            )}
           </div>
         </div>
       </div>

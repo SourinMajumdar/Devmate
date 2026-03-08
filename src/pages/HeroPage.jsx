@@ -4,18 +4,23 @@ import Navbar from "../components/Navbar";
 import LandingSections from "../components/LandingSections";
 import Footer from "../components/Footer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import { useAuth } from "../contexts/AuthContext";
 
 const HeroPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // If already logged in, "Get Started" goes to dashboard; otherwise to login
+  const handleGetStarted = () => navigate(user ? "/dashboard" : "/login");
 
   return (
     <div style={{ background: "var(--color-bg)", width: "100%" }}>
       <Navbar />
       <Hero
-        onGetStarted={() => navigate("/dashboard")}
+        onGetStarted={handleGetStarted}
         onLearnMore={() => navigate("/about")}
       />
-      <LandingSections onGetStarted={() => navigate("/dashboard")} />
+      <LandingSections onGetStarted={handleGetStarted} />
       <Footer />
       <ScrollToTopButton />
     </div>
