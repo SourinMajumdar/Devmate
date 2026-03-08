@@ -40,6 +40,7 @@ export const TECH_LOGOS = {
   PHP:          `${DEVICON_BASE}php/php-original.svg`,
   Ruby:         `${DEVICON_BASE}ruby/ruby-original.svg`,
   "Framer Motion": `${DEVICON_BASE}framermotion/framermotion-original.svg`,
+  Supabase:     `${DEVICON_BASE}supabase/supabase-original.svg`,
 };
 
 /**

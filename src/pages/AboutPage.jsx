@@ -11,7 +11,7 @@ import Footer from "../components/Footer.jsx";
 import TechBadge from "../components/TechBadge.jsx";
 import ScrollToTopButton from "../components/ScrollToTopButton.jsx";
 
-/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Animations */
 const fadeIn = {
   hidden: { opacity: 0, y: 14 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } },
@@ -44,27 +44,19 @@ const currentFeatures = [
     label: "Unified Activity Feed",
     desc: "A merged, reverse-chronological timeline combining DevMate events (projects added, profile edits) with live GitHub activity (commits, PRs, issues). Up to 8 items shown.",
   },
-];
-
-const plannedItems = [
   {
     icon: Users,
     label: "Multi-user & auth",
     desc: "Accounts, login, and backend persistence so your data isn't tied to a single browser.",
   },
   {
-    icon: Palette,
-    label: "More themes",
-    desc: "Additional colour schemes — more dark variants, a high-contrast option, and custom accent colours.",
-  },
-  {
     icon: Share2,
-    label: "Portfolio export",
-    desc: "Generate a shareable public URL or static HTML export of your DevMate profile to send to recruiters or collaborators.",
+    label: "Portfolio showcase",
+    desc: "Have a shareable public URL for your DevMate profile to send to recruiters or collaborators.",
   },
 ];
 
-/* â”€â”€ Dashboard sections detail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Dashboard sections detail */
 const dashboardSections = [
   {
     icon: UserCircle,
@@ -102,26 +94,9 @@ const dashboardSections = [
 
 /* â”€â”€ Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const stackItems = [
-  "React", "Vite", "JavaScript", "Framer Motion",
+  "React", "Vite", "JavaScript", "Framer Motion", "Supabase"
 ];
 
-const localFirstPoints = [
-  {
-    icon: Shield,
-    title: "Zero data collection",
-    body: "Nothing ever leaves your browser. No telemetry, no analytics, no third-party calls.",
-  },
-  {
-    icon: Database,
-    title: "localStorage persistence",
-    body: "Your profile and projects are saved locally and survive page refreshes instantly.",
-  },
-  {
-    icon: Zap,
-    title: "No signup friction",
-    body: "Open the app and start using it. No account, no email, no onboarding maze.",
-  },
-];
 
 /* â”€â”€ Stat pill â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const StatPill = ({ value, label }) => (
@@ -152,7 +127,6 @@ const StatPill = ({ value, label }) => (
   </div>
 );
 
-/* â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const AboutPage = () => {
   const navigate = useNavigate();
 
@@ -359,7 +333,7 @@ const AboutPage = () => {
         </motion.div>
 
         {/* â”€â”€ Numbers strip â”€â”€ */}
-        <motion.div
+        {/* <motion.div
           initial="hidden" whileInView="visible" viewport={viewport} variants={fadeIn}
           className="card about-stats-grid"
           style={{
@@ -372,63 +346,13 @@ const AboutPage = () => {
         >
           <StatPill value="100%" label="Local — no backend" />
           <StatPill value="0" label="Servers or accounts" />
-          <StatPill value="âˆž" label="Projects you can log" />
+          <StatPill value="" label="Projects you can log" />
           <StatPill value="4" label="Core features" />
-        </motion.div>
+        </motion.div> */}
 
-        {/* â”€â”€ Why local-first â”€â”€ */}
-        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
-          <motion.p
-            variants={fadeIn}
-            style={{
-              fontSize: "12px",
-              fontWeight: "600",
-              color: "var(--color-accent)",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              marginBottom: "8px",
-            }}
-          >
-            Philosophy
-          </motion.p>
-          <motion.h2
-            variants={fadeIn}
-            style={{
-              fontSize: "22px",
-              fontWeight: "700",
-              fontFamily: "var(--font-heading)",
-              color: "var(--color-text-primary)",
-              marginBottom: "var(--space-lg)",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Why local-first?
-          </motion.h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: "var(--space-sm)",
-            }}
-          >
-            {localFirstPoints.map((p, i) => (
-              <motion.div
-                key={i} variants={fadeIn} className="card"
-                style={{ padding: "var(--space-lg)", display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}
-              >
-                <p.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)", flexShrink: 0 }} />
-                <h3 style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--font-weight-semibold)", color: "var(--color-text-primary)", margin: 0 }}>
-                  {p.title}
-                </h3>
-                <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", lineHeight: "var(--line-height-base)", margin: 0 }}>
-                  {p.body}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        
 
-        {/* â”€â”€ Built with â”€â”€ */}
+        {/* ==== Built with ===*/}
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
           <motion.p
             variants={fadeIn}
@@ -457,20 +381,8 @@ const AboutPage = () => {
                 marginBottom: 0,
               }}
             >
-              Entirely front-end. No Node server, no database, no cloud functions — just
-              React running in your browser with data persisted via{" "}
-              <code
-                style={{
-                  background: "var(--color-bg-elevated)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "4px",
-                  padding: "1px 6px",
-                  fontSize: "13px",
-                  fontFamily: "monospace",
-                }}
-              >
-                localStorage
-              </code>.
+              Built with React and Vite on the front end, with Supabase handling
+              authentication and data persistence for your profile and projects.
             </p>
           </motion.div>
         </motion.div>
@@ -518,48 +430,6 @@ const AboutPage = () => {
           </div>
         </motion.div>
 
-        {/* â”€â”€ Planned â”€â”€ */}
-        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={stagger}>
-          <motion.p
-            variants={fadeIn}
-            style={{ fontSize: "12px", fontWeight: "600", color: "var(--color-accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}
-          >
-            What's next
-          </motion.p>
-          <motion.h2
-            variants={fadeIn}
-            style={{ fontSize: "22px", fontWeight: "700", fontFamily: "var(--font-heading)", color: "var(--color-text-primary)", marginBottom: "var(--space-lg)", letterSpacing: "-0.02em" }}
-          >
-            Planned features
-          </motion.h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "var(--space-sm)" }}>
-            {plannedItems.map((item, i) => (
-              <motion.div
-                key={i} variants={fadeIn} className="card"
-                style={{ padding: "var(--space-lg)", display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <item.icon style={{ width: "20px", height: "20px", color: "var(--color-accent)" }} />
-                  <span
-                    style={{
-                      fontSize: "11px", fontWeight: "600", padding: "2px 8px",
-                      borderRadius: "999px", background: "var(--color-bg-elevated)",
-                      color: "var(--color-text-muted)", border: "1px solid var(--color-border)",
-                    }}
-                  >
-                    Planned
-                  </span>
-                </div>
-                <h3 style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--font-weight-semibold)", color: "var(--color-text-primary)", margin: 0 }}>
-                  {item.label}
-                </h3>
-                <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", lineHeight: "var(--line-height-base)", margin: 0 }}>
-                  {item.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
 
         {/* â”€â”€ CTA â”€â”€ */}
         <motion.div
