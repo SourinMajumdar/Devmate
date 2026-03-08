@@ -7,6 +7,7 @@ const ProjectModal = ({ project, onSave, onClose }) => {
   const [tech, setTech] = useState("");
   const [githubLink, setGithubLink] = useState("");
   const [liveLink, setLiveLink] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (project) {
@@ -31,15 +32,24 @@ const ProjectModal = ({ project, onSave, onClose }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [project, onClose]);
 
-  const handleSave = () => {
-    onSave({
-      id: project?.id ?? Date.now(),
-      title,
-      description,
-      tech: tech.split(",").map((t) => t.trim()).filter(Boolean),
-      githubLink,
-      liveLink,
-    });
+  const handleSave = async () => {
+    if (saving || !title.trim()) return;
+    setSaving(true);
+    try {
+      await onSave({
+        // include id only when editing an existing project (UUID); omit for new
+        ...(project?.id ? { id: project.id } : {}),
+        title,
+        description,
+        tech: tech.split(",").map((t) => t.trim()).filter(Boolean),
+        githubLink,
+        liveLink,
+      });
+    } catch (err) {
+      console.error("[Devmate] ProjectModal save error:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -112,16 +122,33 @@ const ProjectModal = ({ project, onSave, onClose }) => {
 
         {/* Actions */}
         <div style={buttonRowStyle}>
-          <button onClick={handleSave} className="btn-primary" style={{ flex: 1, padding: "10px" }}>
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving || !title.trim()}
+            className="btn-primary"
+            style={{ flex: 1, padding: "10px", gap: "8px", opacity: saving ? 0.75 : 1 }}
+          >
+            {saving && <span style={savingSpinnerStyle} />}
+            {saving ? "Saving…" : "Save"}
           </button>
-          <button onClick={onClose} className="btn-secondary" style={{ flex: 1, padding: "10px" }}>
+          <button onClick={onClose} disabled={saving} className="btn-secondary" style={{ flex: 1, padding: "10px" }}>
             Cancel
           </button>
         </div>
       </div>
     </div>
   );
+};
+
+const savingSpinnerStyle = {
+  display: "inline-block",
+  width: "14px",
+  height: "14px",
+  border: "2px solid rgba(255,255,255,0.35)",
+  borderTopColor: "#fff",
+  borderRadius: "50%",
+  animation: "spin 0.6s linear infinite",
+  flexShrink: 0,
 };
 
 /* ── Styles ── */

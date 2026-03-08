@@ -22,6 +22,7 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
 
   const [avatarError, setAvatarError] = useState("");
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -81,27 +82,35 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
     setAvatarError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave({
-      ...profile,
-      name: formData.name,
-      username: formData.username,
-      role: formData.role,
-      location: formData.location,
-      bio: formData.bio,
-      avatar: formData.avatar,
-      tech: formData.tech
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean),
-      links: {
-        github: formData.github,
-        linkedin: formData.linkedin,
-        medium: formData.medium,
-        portfolio: formData.portfolio,
-      },
-    });
+    if (saving) return;
+    setSaving(true);
+    try {
+      await onSave({
+        ...profile,
+        name: formData.name,
+        username: formData.username,
+        role: formData.role,
+        location: formData.location,
+        bio: formData.bio,
+        avatar: formData.avatar,
+        tech: formData.tech
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        links: {
+          github: formData.github,
+          linkedin: formData.linkedin,
+          medium: formData.medium,
+          portfolio: formData.portfolio,
+        },
+      });
+    } catch (err) {
+      console.error("[Devmate] EditModal save error:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const initials = formData.name ? formData.name[0].toUpperCase() : "?";
@@ -263,7 +272,8 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
                 Cancel
               </button>
             )}
-            <button type="submit" className="btn-primary" style={{ padding: "10px 20px" }}>
+          <button type="submit" disabled={saving} className="btn-primary" style={{ padding: "10px 20px", gap: "8px", opacity: saving ? 0.75 : 1 }}>
+              {saving && <span style={spinnerStyle} />}
               {isSetup ? "Get Started" : "Save"}
             </button>
           </div>
@@ -273,7 +283,18 @@ const EditModal = ({ profile, onClose, onSave, isSetup = false }) => {
   );
 };
 
-/* â”€â”€ Styles â”€â”€ */
+const spinnerStyle = {
+  display: "inline-block",
+  width: "14px",
+  height: "14px",
+  border: "2px solid rgba(255,255,255,0.35)",
+  borderTopColor: "#fff",
+  borderRadius: "50%",
+  animation: "spin 0.6s linear infinite",
+  flexShrink: 0,
+};
+
+/* â"€â"€ Styles â"€â"€ */
 
 const overlayStyle = {
   position: "fixed",
