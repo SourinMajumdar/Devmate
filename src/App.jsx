@@ -15,8 +15,7 @@ import DeleteProjectModal from "./components/DeleteProjectModal";
 import EditModal from "./components/EditModal";
 
 function App() {
-  const { profile, projects, saveProfile, saveProject, deleteProject } = useAuth();
-
+  const { profile, projects, saveProfile, saveProject, deleteProject, loading } = useAuth();
   // ── Profile modal ──────────────────────────────────────────────
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -121,12 +120,12 @@ function App() {
       </Routes>
 
       {/* ── Global modals ── */}
-      {isEditModalOpen && (
+      {!loading && isEditModalOpen && (
         <EditModal
           profile={profile || {}}
           onClose={() => setIsEditModalOpen(false)}
           onSave={handleSaveProfile}
-          isSetup={!profile?.name}
+          isSetup={profile === null}
         />
       )}
       {isProjectModalOpen && (

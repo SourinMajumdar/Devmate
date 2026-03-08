@@ -24,11 +24,11 @@ const ProfilePage = ({
 
   // Auto-open setup modal on first visit if profile is empty
   useEffect(() => {
-    if (!profile?.name && !hasAutoOpened.current) {
+    if (!profile?.id && !hasAutoOpened.current) {
       hasAutoOpened.current = true;
       onEditProfile();
     }
-  }, []);
+  }, [profile]);
 
   // Extract GitHub username from the stored GitHub link
   const githubUsername = extractGitHubUsername(

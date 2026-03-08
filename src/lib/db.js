@@ -49,11 +49,13 @@ export async function getProfile(userId) {
       .eq("id", userId)
       .maybeSingle();
 
-    // maybeSingle returns null if not found, error if query fails
     if (error) {
       console.warn("[Devmate] getProfile error for", userId, ":", error.message);
       return null;
     }
+
+    if (!data) return null;
+
     return dbRowToProfile(data);
   } catch (err) {
     console.error("[Devmate] getProfile exception:", err);

@@ -17,31 +17,43 @@ export function AuthProvider({ children }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ── Bootstrap: get session + subscribe to auth changes ──────────
+  // ── Bootstrap session ───────────────────────────────────────────
   useEffect(() => {
-    // Grab the existing session (handles page reload and OAuth redirects)
-    supabase.auth.getSession()
-      .then(({ data: { session } }) => {
-        const currentUser = session?.user ?? null;
+    let mounted = true;
+
+    const init = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        const currentUser = data.session?.user ?? null;
+
+        if (!mounted) return;
+
         setUser(currentUser);
+
         if (currentUser) {
-          loadUserData(currentUser.id);
+          await loadUserData(currentUser.id);
         } else {
           setLoading(false);
         }
-      })
-      .catch((err) => {
-        console.error("[Devmate] getSession error:", err);
+      } catch (err) {
+        console.error("[Devmate] Session bootstrap error:", err);
         setLoading(false);
-      });
+      }
+    };
+
+    init();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       const currentUser = session?.user ?? null;
+
+      if (!mounted) return;
+
       setUser(currentUser);
+
       if (currentUser) {
-        await loadUserData(currentUser.id);
+        loadUserData(currentUser.id);
       } else {
         setProfile(null);
         setProjects([]);
@@ -49,26 +61,34 @@ export function AuthProvider({ children }) {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
+  // ── Load user data ──────────────────────────────────────────────
   async function loadUserData(userId) {
     if (!userId) {
       setLoading(false);
       return;
     }
-    setLoading(true);
+
     try {
+      setLoading(true);
+
       const [profileData, projectsData] = await Promise.all([
         getProfile(userId),
         getProjects(userId),
       ]);
-      console.log("[Devmate] Loaded user data:", { profile: profileData, projects: projectsData?.length });
-      setProfile(profileData || null);
-      setProjects(projectsData || []);
+
+      console.log("PROFILE DATA:", profileData);
+      console.log("PROJECTS:", projectsData);
+
+      setProfile(profileData ?? null);
+      setProjects(projectsData ?? []);
     } catch (err) {
       console.error("[Devmate] Error loading user data:", err);
-      // Even on error, set defaults so loading stops
       setProfile(null);
       setProjects([]);
     } finally {
@@ -83,12 +103,17 @@ export function AuthProvider({ children }) {
       email,
       password,
     });
+
     if (error) throw error;
     return data;
   }
 
   async function signUp(email, password) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
     if (error) throw error;
     return data;
   }
@@ -100,28 +125,28 @@ export function AuthProvider({ children }) {
         redirectTo: window.location.origin + "/dashboard",
       },
     });
+
     if (error) throw error;
   }
 
   async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    try {
+      await supabase.auth.signOut();
 
-    setUser(null);
-    setProfile(null);
-    setProjects([]);
-    
-    localStorage.clear();
+      setUser(null);
+      setProfile(null);
+      setProjects([]);
 
-    window.location.href = "/";
+      localStorage.clear();
+
+      window.location.replace("/");
+    } catch (err) {
+      console.error("[Devmate] Sign out error:", err);
+    }
   }
 
-  // ── Profile methods ───────────────────────────────────────────────
+  // ── Profile methods ─────────────────────────────────────────────
 
-  /**
-   * Save profile. If the avatar is a base64 data URL,
-   * it is uploaded to Supabase Storage first.
-   */
   async function saveProfile(profileData) {
     if (!user) throw new Error("Not authenticated");
 
@@ -131,7 +156,7 @@ export function AuthProvider({ children }) {
       try {
         avatarValue = await uploadAvatar(user.id, avatarValue);
       } catch (err) {
-        console.warn("[Devmate] Avatar upload failed, skipping:", err.message);
+        console.warn("[Devmate] Avatar upload failed:", err.message);
         avatarValue = "";
       }
     }
@@ -145,19 +170,22 @@ export function AuthProvider({ children }) {
     return updated;
   }
 
-  // ── Project methods ───────────────────────────────────────────────
+  // ── Project methods ─────────────────────────────────────────────
 
   async function saveProject(projectData) {
     if (!user) throw new Error("Not authenticated");
+
     const saved = await upsertProject(user.id, projectData);
 
     setProjects((prev) => {
       const idx = prev.findIndex((p) => p.id === saved.id);
+
       if (idx >= 0) {
         const updated = [...prev];
         updated[idx] = saved;
         return updated;
       }
+
       return [...prev, saved];
     });
 
@@ -166,7 +194,9 @@ export function AuthProvider({ children }) {
 
   async function deleteProject(projectId) {
     if (!user) throw new Error("Not authenticated");
+
     await deleteProjectById(projectId);
+
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
   }
 
@@ -177,12 +207,10 @@ export function AuthProvider({ children }) {
         profile,
         projects,
         loading,
-        // auth
         signIn,
         signUp,
         signInWithGitHub,
         signOut,
-        // data
         saveProfile,
         saveProject,
         deleteProject,
