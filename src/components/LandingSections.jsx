@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { UserCircle, FolderOpen, Flame, ArrowRight } from "lucide-react";
+import { UserCircle, FolderOpen, ArrowRight, ChartColumn } from "lucide-react";
 import ProfilePreviewSection from "./ProfilePreviewSection";
 
 /* ── Shared animation ────────────────────────────────── */
@@ -27,9 +27,9 @@ const features = [
     desc: "Add projects with a title, description, tech stack and a link. Edit or delete any time. Dashboard shows your latest three; see all on a dedicated page.",
   },
   {
-    icon: Flame,
-    title: "Momentum Stats",
-    desc: "Tracks how many projects you've logged, when you last updated one, and your active day streak — all calculated automatically from your data.",
+    icon: ChartColumn,
+    title: "Overview and Activity",
+    desc: "Tracks the number of projects you've logged, recent activites accross GithHub and DevMate, and stats about languages and techs in your projects.",
   },
 ];
 
@@ -47,7 +47,7 @@ const steps = [
   {
     num: "03",
     title: "Watch your momentum",
-    desc: "Stats and activity timeline update automatically every time you add or edit a project.",
+    desc: "Tech stats and activity timeline update automatically every GitHub or dashboard activity.",
   },
 ];
 
@@ -102,7 +102,7 @@ const FeaturesSection = () => (
             lineHeight: "1.7",
           }}
         >
-          A lightweight personal dashboard — no accounts, no syncing, no fluff. Everything lives in your browser.
+          Devmate is a personal dashboard for developers to log projects, track them, and showcase their work as one shareable profile.
         </p>
       </motion.div>
 
@@ -367,7 +367,7 @@ const CTASection = ({ onGetStarted }) => (
           margin: "0 auto 36px",
         }}
       >
-        Join developers who use Devmate to track their work, measure progress, and showcase their journey.
+        Join developers who use Devmate to track their work and showcase their journey.
       </p>
       <button
         onClick={onGetStarted}

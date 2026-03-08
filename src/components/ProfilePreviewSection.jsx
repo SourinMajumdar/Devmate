@@ -150,7 +150,7 @@ const ProfilePreviewSection = () => {
               lineHeight: 1.7,
             }}
           >
-            Browse real developer profiles. This is exactly what you get — no signup, no fluff.
+            Browse real developer profiles. This is exactly what you get - no fluff.
           </p>
         </motion.div>
 

@@ -1,94 +1,160 @@
 -- ============================================================
---  DEVMATE — Supabase Schema
---  Run this in: Supabase Dashboard → SQL Editor → New Query
+-- DEVMATE — CLEAN SUPABASE SCHEMA
+-- Run in: Supabase → SQL Editor → New Query
 -- ============================================================
 
--- ── 1. Profiles ──────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS profiles (
-  id            UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
-  username      TEXT UNIQUE,
-  name          TEXT,
-  role          TEXT,
-  bio           TEXT,
-  location      TEXT,
-  avatar_url    TEXT,
-  tech          TEXT[]   DEFAULT '{}',
-  github_url    TEXT,
-  linkedin_url  TEXT,
-  medium_url    TEXT,
-  portfolio_url TEXT,
-  updated_at    TIMESTAMPTZ DEFAULT NOW()
+-- ────────────────────────────────────────────────────────────
+-- 1. Profiles Table
+-- ────────────────────────────────────────────────────────────
+create table public.profiles (
+  id uuid references auth.users(id) on delete cascade primary key,
+  username text unique,
+  name text,
+  role text,
+  bio text,
+  location text,
+  avatar_url text,
+  tech text[] default '{}',
+  github_url text,
+  linkedin_url text,
+  medium_url text,
+  portfolio_url text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
 );
 
--- ── 2. Projects ──────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS projects (
-  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id     UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
-  title       TEXT NOT NULL,
-  description TEXT,
-  tech        TEXT[]   DEFAULT '{}',
-  link        TEXT,
-  github_link TEXT,
-  live_link   TEXT,
-  created_at  TIMESTAMPTZ DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ DEFAULT NOW()
+-- ────────────────────────────────────────────────────────────
+-- 2. Projects Table
+-- ────────────────────────────────────────────────────────────
+create table public.projects (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  title text not null,
+  description text,
+  tech text[] default '{}',
+  link text,
+  github_link text,
+  live_link text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
 );
 
--- ── 3. Row Level Security ────────────────────────────────────
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+create index idx_projects_user_id on public.projects(user_id);
 
--- Profiles: public read, owner write
-CREATE POLICY "Anyone can view profiles"
-  ON profiles FOR SELECT USING (true);
+-- ────────────────────────────────────────────────────────────
+-- 3. Enable Row Level Security
+-- ────────────────────────────────────────────────────────────
+alter table public.profiles enable row level security;
+alter table public.projects enable row level security;
 
-CREATE POLICY "Users can insert own profile"
-  ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+-- ────────────────────────────────────────────────────────────
+-- 4. Profiles Policies
+-- ────────────────────────────────────────────────────────────
 
-CREATE POLICY "Users can update own profile"
-  ON profiles FOR UPDATE USING (auth.uid() = id);
+-- Public can view profiles (for portfolio pages)
+create policy "Profiles are publicly readable"
+on public.profiles
+for select
+using (true);
 
--- Projects: public read, owner write
-CREATE POLICY "Anyone can view projects"
-  ON projects FOR SELECT USING (true);
+-- User can insert their own profile
+create policy "Users can insert own profile"
+on public.profiles
+for insert
+with check (auth.uid() = id);
 
-CREATE POLICY "Users can insert own projects"
-  ON projects FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- User can update their own profile
+create policy "Users can update own profile"
+on public.profiles
+for update
+using (auth.uid() = id);
 
-CREATE POLICY "Users can update own projects"
-  ON projects FOR UPDATE USING (auth.uid() = user_id);
+-- ────────────────────────────────────────────────────────────
+-- 5. Projects Policies
+-- ────────────────────────────────────────────────────────────
 
-CREATE POLICY "Users can delete own projects"
-  ON projects FOR DELETE USING (auth.uid() = user_id);
+-- Public can view projects
+create policy "Projects are publicly readable"
+on public.projects
+for select
+using (true);
 
--- ── 4. Storage — Avatars bucket ──────────────────────────────
--- Run the following in Supabase Dashboard → Storage → New Bucket
--- OR paste the SQL below:
+-- User can insert their own projects
+create policy "Users can insert own projects"
+on public.projects
+for insert
+with check (auth.uid() = user_id);
 
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('avatars', 'avatars', true)
-ON CONFLICT (id) DO NOTHING;
+-- User can update their own projects
+create policy "Users can update own projects"
+on public.projects
+for update
+using (auth.uid() = user_id);
 
-CREATE POLICY "Avatars are publicly readable"
-  ON storage.objects FOR SELECT USING (bucket_id = 'avatars');
+-- User can delete their own projects
+create policy "Users can delete own projects"
+on public.projects
+for delete
+using (auth.uid() = user_id);
 
-CREATE POLICY "Authenticated users can upload avatars"
-  ON storage.objects FOR INSERT
-  WITH CHECK (bucket_id = 'avatars' AND auth.role() = 'authenticated');
+-- ────────────────────────────────────────────────────────────
+-- 6. Auto-create profile when a user signs up
+-- ────────────────────────────────────────────────────────────
 
-CREATE POLICY "Users can update own avatar"
-  ON storage.objects FOR UPDATE
-  USING (bucket_id = 'avatars' AND auth.uid()::text = (storage.foldername(name))[1]);
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+as $$
+begin
+  insert into public.profiles (id)
+  values (new.id);
+  return new;
+end;
+$$;
 
-CREATE POLICY "Users can delete own avatar"
-  ON storage.objects FOR DELETE
-  USING (bucket_id = 'avatars' AND auth.uid()::text = (storage.foldername(name))[1]);
+create trigger on_auth_user_created
+after insert on auth.users
+for each row
+execute procedure public.handle_new_user();
 
--- ── 5. Auth settings (manual steps) ─────────────────────────
--- In Supabase Dashboard → Authentication → URL Configuration:
---   Site URL:       http://localhost:5173          (dev)
---   Redirect URLs:  http://localhost:5173/**        (dev)
--- Also add your production URL when deploying.
---
--- To enable GitHub OAuth:
---   Authentication → Providers → GitHub → enable + add Client ID & Secret
+-- ────────────────────────────────────────────────────────────
+-- 7. Storage bucket for avatars
+-- ────────────────────────────────────────────────────────────
+
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+-- Public read
+create policy "Avatar images are public"
+on storage.objects
+for select
+using (bucket_id = 'avatars');
+
+-- Authenticated users upload
+create policy "Authenticated users upload avatars"
+on storage.objects
+for insert
+with check (
+  bucket_id = 'avatars'
+  and auth.role() = 'authenticated'
+);
+
+-- Users update their avatar
+create policy "Users update their avatar"
+on storage.objects
+for update
+using (
+  bucket_id = 'avatars'
+  and auth.uid()::text = (storage.foldername(name))[1]
+);
+
+-- Users delete their avatar
+create policy "Users delete their avatar"
+on storage.objects
+for delete
+using (
+  bucket_id = 'avatars'
+  and auth.uid()::text = (storage.foldername(name))[1]
+);
