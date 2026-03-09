@@ -92,7 +92,6 @@ const dashboardSections = [
   },
 ];
 
-/* â”€â”€ Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const stackItems = [
   "React", "Vite", "JavaScript", "Framer Motion", "Supabase"
 ];
@@ -430,8 +429,6 @@ const AboutPage = ({ onSignOut }) => {
           </div>
         </motion.div>
 
-
-        {/* â”€â”€ CTA â”€â”€ */}
         <motion.div
           initial="hidden" whileInView="visible" viewport={viewport} variants={fadeIn}
           style={{

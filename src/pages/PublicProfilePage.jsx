@@ -9,6 +9,7 @@ import ProfileHeader from "../components/ProfileHeader";
 import AnalyticsSection from "../sections/AnalyticsSection";
 import ProjectsSection from "../sections/ProjectsSection";
 import ContentTimeline from "../sections/ContentTimeline";
+import LanguageChart from "../components/LanguageChart";
 import ThemeToggle from "../components/ThemeToggle";
 import Footer from "../components/Footer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
@@ -113,6 +114,7 @@ const PublicProfilePage = () => {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
             <AnalyticsSection projects={projects} />
+            <LanguageChart projects={validProjects} />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
