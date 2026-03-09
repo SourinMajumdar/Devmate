@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { Code2, Mail, Lock, Github, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Code2, Mail, Lock, Github, ArrowRight, AlertCircle, CheckCircle2, Home } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import ThemeToggle from "../components/ThemeToggle";
 
@@ -14,7 +14,6 @@ const AuthPage = () => {
   const [tab, setTab] = useState(defaultTab);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
   const [error, setError] = useState("");
@@ -73,8 +72,38 @@ const AuthPage = () => {
 
   return (
     <div style={pageStyle}>
-      {/* Top-right theme toggle */}
-      <div style={{ position: "fixed", top: "20px", right: "24px", zIndex: 10 }}>
+      {/* Top-right controls */}
+      <div style={{ position: "fixed", top: "20px", right: "24px", zIndex: 10, display: "flex", alignItems: "center", gap: "12px" }}>
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "36px",
+            height: "36px",
+            borderRadius: "8px",
+            background: "var(--color-bg-elevated)",
+            border: "1px solid var(--color-border)",
+            color: "var(--color-text-secondary)",
+            cursor: "pointer",
+            transition: "all var(--transition)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--color-accent-subtle)";
+            e.currentTarget.style.color = "var(--color-accent)";
+            e.currentTarget.style.borderColor = "var(--color-accent)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "var(--color-bg-elevated)";
+            e.currentTarget.style.color = "var(--color-text-secondary)";
+            e.currentTarget.style.borderColor = "var(--color-border)";
+          }}
+          title="Go to home"
+          aria-label="Go to home"
+        >
+          <Home style={{ width: "18px", height: "18px" }} />
+        </button>
         <ThemeToggle />
       </div>
 
@@ -82,9 +111,7 @@ const AuthPage = () => {
       <div style={cardStyle}>
         {/* Logo */}
         <div style={logoRowStyle}>
-          <div style={logoIconWrap}>
-            <Code2 style={{ width: "20px", height: "20px", color: "#fff" }} />
-          </div>
+          <Code2 style={{ width: "20px", height: "20px", color: "var(--color-accent)" }} />
           <Link to="/" style={{ textDecoration: "none" }}>
             <span style={logoTextStyle}>Devmate</span>
           </Link>
@@ -157,25 +184,15 @@ const AuthPage = () => {
             <div style={inputWrapStyle}>
               <Lock style={inputIconStyle} />
               <input
-                type={showPassword ? "text" : "password"}
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={tab === "signup" ? "At least 6 characters" : "Your password"}
                 required
                 minLength={6}
                 autoComplete={tab === "login" ? "current-password" : "new-password"}
-                style={{ ...inputStyle, paddingRight: "42px" }}
+                style={inputStyle}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword((s) => !s)}
-                style={eyeBtnStyle}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword
-                  ? <EyeOff style={{ width: "15px", height: "15px" }} />
-                  : <Eye style={{ width: "15px", height: "15px" }} />}
-              </button>
             </div>
           </label>
 
@@ -197,14 +214,14 @@ const AuthPage = () => {
           </button>
         </form>
 
-        {/* Divider */}
+        {/* Divider and GitHub OAuth commented out */}
+        {/*
         <div style={dividerStyle}>
           <div style={dividerLineStyle} />
           <span style={dividerTextStyle}>or</span>
           <div style={dividerLineStyle} />
         </div>
 
-        {/* GitHub OAuth */}
         <button
           onClick={handleGitHub}
           disabled={githubLoading}
@@ -217,6 +234,7 @@ const AuthPage = () => {
           )}
           Continue with GitHub
         </button>
+        */}
 
         {/* Footer switch */}
         <p style={switchTextStyle}>
@@ -268,17 +286,6 @@ const logoRowStyle = {
   justifyContent: "center",
   gap: "10px",
   marginBottom: "28px",
-};
-
-const logoIconWrap = {
-  width: "36px",
-  height: "36px",
-  borderRadius: "10px",
-  background: "var(--color-accent)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexShrink: 0,
 };
 
 const logoTextStyle = {
@@ -410,6 +417,7 @@ const submitBtnStyle = {
   fontWeight: "var(--font-weight-semibold)",
   width: "100%",
   marginTop: "4px",
+  marginBottom: "12px",
   gap: "8px",
 };
 

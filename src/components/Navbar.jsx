@@ -3,18 +3,9 @@ import { Code2, Home, LayoutDashboard, Info, LogOut, LogIn } from "lucide-react"
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "../contexts/AuthContext";
 
-const Navbar = () => {
+const Navbar = ({ onSignOut }) => {
   const navigate = useNavigate();
-  const { user, profile, signOut } = useAuth();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate("/", { replace: true });
-    } catch (err) {
-      console.error("[Devmate] Sign out error:", err);
-    }
-  };
+  const { user, profile } = useAuth();
 
   const NAV_LINKS = [
     { to: "/", label: "Home", Icon: Home, end: true },
@@ -160,7 +151,7 @@ const Navbar = () => {
 
               {/* Sign out */}
               <button
-                onClick={handleSignOut}
+                onClick={onSignOut}
                 title="Sign out"
                 aria-label="Sign out"
                 className="btn-secondary"
@@ -173,7 +164,7 @@ const Navbar = () => {
           ) : (
             <button
               onClick={() => navigate("/login")}
-              className="btn-primary"
+              className="btn-secondary"
               style={{ padding: "7px 14px", gap: "5px", fontSize: "var(--font-size-meta)" }}
             >
               <LogIn style={{ width: "13px", height: "13px" }} />
@@ -215,7 +206,7 @@ const Navbar = () => {
           ))}
           {user && (
             <button
-              onClick={handleSignOut}
+              onClick={onSignOut}
               title="Sign out"
               aria-label="Sign out"
               style={{

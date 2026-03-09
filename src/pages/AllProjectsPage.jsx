@@ -7,6 +7,7 @@ const AllProjectsPage = ({
   onAddProject,
   onEditProject,
   onDeleteProject,
+  onSignOut,
 }) => {
   return (
     <div style={{
@@ -17,7 +18,7 @@ const AllProjectsPage = ({
       flexDirection: "column",
     }}>
       {/* Dashboard Header */}
-      <Navbar />
+      <Navbar onSignOut={onSignOut} />
 
       {/* Main container */}
       <div className="main-container" style={{

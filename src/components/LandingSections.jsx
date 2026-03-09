@@ -374,7 +374,7 @@ const CTASection = ({ onGetStarted }) => (
         className="btn-primary"
         style={{ padding: "13px 32px", fontSize: "15px", gap: "8px" }}
       >
-        Get Started — it's free
+        Get Started - it's free
         <ArrowRight style={{ width: "16px", height: "16px" }} />
       </button>
     </motion.div>

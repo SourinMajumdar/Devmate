@@ -13,9 +13,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ProjectModal from "./components/ProjectModal";
 import DeleteProjectModal from "./components/DeleteProjectModal";
 import EditModal from "./components/EditModal";
+import SignOutModal from "./components/SignOutModal";
 
 function App() {
-  const { profile, projects, saveProfile, saveProject, deleteProject, loading } = useAuth();
+  const { profile, projects, saveProfile, saveProject, deleteProject, loading, signOut } = useAuth();
+  const navigate = useNavigate();
   // ── Profile modal ──────────────────────────────────────────────
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -26,6 +28,9 @@ function App() {
   // ── Delete modal ───────────────────────────────────────────────
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [projectToDeleteId, setProjectToDeleteId] = useState(null);
+
+  // ── Sign out modal ────────────────────────────────────────────
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
 
   // ── Handlers: profile ──────────────────────────────────────────
   const handleSaveProfile = async (updatedProfile) => {
@@ -75,12 +80,22 @@ function App() {
 
   const editingProject = projects.find((p) => p.id === editingProjectId) ?? null;
 
+  // ── Sign out handler ──────────────────────────────────────────
+  const handleConfirmSignOut = async () => {
+    try {
+      await signOut();
+      setIsSignOutModalOpen(false);
+    } catch (err) {
+      console.error("[Devmate] Sign out error:", err);
+    }
+  };
+
   return (
     <>
       <Routes>
         {/* ── Public routes ── */}
-        <Route path="/" element={<HeroPage />} />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/" element={<HeroPage onSignOut={() => setIsSignOutModalOpen(true)} />} />
+        <Route path="/about" element={<AboutPage onSignOut={() => setIsSignOutModalOpen(true)} />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/u/:username" element={<PublicProfilePage />} />
 
@@ -96,6 +111,7 @@ function App() {
                 onAddProject={openAddProject}
                 onEditProject={openEditProject}
                 onDeleteProject={openDeleteProject}
+                onSignOut={() => setIsSignOutModalOpen(true)}
               />
             </ProtectedRoute>
           }
@@ -110,9 +126,15 @@ function App() {
                 onAddProject={openAddProject}
                 onEditProject={openEditProject}
                 onDeleteProject={openDeleteProject}
+                onSignOut={() => setIsSignOutModalOpen(true)}
               />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/"
+          element={<HeroPage onSignOut={() => setIsSignOutModalOpen(true)} />}
         />
 
         {/* Fallback */}
@@ -145,6 +167,13 @@ function App() {
             setIsDeleteModalOpen(false);
             setProjectToDeleteId(null);
           }}
+        />
+      )}
+      {isSignOutModalOpen && (
+        <SignOutModal
+          isOpen={isSignOutModalOpen}
+          onConfirm={handleConfirmSignOut}
+          onCancel={() => setIsSignOutModalOpen(false)}
         />
       )}
     </>

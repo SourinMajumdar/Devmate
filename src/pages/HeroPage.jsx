@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { useAuth } from "../contexts/AuthContext";
 
-const HeroPage = () => {
+const HeroPage = ({ onSignOut }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -15,7 +15,7 @@ const HeroPage = () => {
 
   return (
     <div style={{ background: "var(--color-bg)", width: "100%" }}>
-      <Navbar />
+      <Navbar onSignOut={onSignOut} />
       <Hero
         onGetStarted={handleGetStarted}
         onLearnMore={() => navigate("/about")}

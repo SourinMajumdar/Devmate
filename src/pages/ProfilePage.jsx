@@ -18,6 +18,7 @@ const ProfilePage = ({
   onAddProject,
   onEditProject,
   onDeleteProject,
+  onSignOut,
 }) => {
   const navigate = useNavigate();
   const hasAutoOpened = useRef(false);
@@ -57,7 +58,7 @@ const ProfilePage = ({
         flexDirection: "column",
       }}
     >
-      <Navbar />
+      <Navbar onSignOut={onSignOut} />
 
       <div
         className="main-container"

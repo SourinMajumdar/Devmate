@@ -127,7 +127,7 @@ const StatPill = ({ value, label }) => (
   </div>
 );
 
-const AboutPage = () => {
+const AboutPage = ({ onSignOut }) => {
   const navigate = useNavigate();
 
   return (
@@ -140,7 +140,7 @@ const AboutPage = () => {
         flexDirection: "column",
       }}
     >
-      <Navbar />
+      <Navbar onSignOut={onSignOut} />
 
       <main
         className="about-main"
