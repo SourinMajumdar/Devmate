@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { Code2, Mail, Lock, Github, ArrowRight, AlertCircle, CheckCircle2, Home } from "lucide-react";
+import { Code2, Mail, Lock, Github, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle2, Home } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import ThemeToggle from "../components/ThemeToggle";
 
@@ -14,6 +14,7 @@ const AuthPage = () => {
   const [tab, setTab] = useState(defaultTab);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
   const [error, setError] = useState("");
@@ -184,15 +185,32 @@ const AuthPage = () => {
             <div style={inputWrapStyle}>
               <Lock style={inputIconStyle} />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={tab === "signup" ? "At least 6 characters" : "Your password"}
                 required
                 minLength={6}
                 autoComplete={tab === "login" ? "current-password" : "new-password"}
-                style={inputStyle}
+                style={{
+                  ...inputStyle,
+                  paddingRight: "42px",
+                  // Disable browser's built-in password reveal button
+                  WebkitAppearance: "none",
+                  MozAppearance: "none",
+                  appearance: "none",
+                }}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                style={eyeBtnStyle}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword
+                  ? <EyeOff style={{ width: "15px", height: "15px" }} />
+                  : <Eye style={{ width: "15px", height: "15px" }} />}
+              </button>
             </div>
           </label>
 

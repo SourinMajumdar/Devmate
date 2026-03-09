@@ -85,6 +85,7 @@ function App() {
     try {
       await signOut();
       setIsSignOutModalOpen(false);
+      navigate("/", { replace: true });
     } catch (err) {
       console.error("[Devmate] Sign out error:", err);
     }

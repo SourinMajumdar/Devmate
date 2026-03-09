@@ -139,7 +139,7 @@ export function AuthProvider({ children }) {
 
       localStorage.clear();
 
-      window.location.replace("/");
+      // Navigation will be handled by the component
     } catch (err) {
       console.error("[Devmate] Sign out error:", err);
     }
